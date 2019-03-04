@@ -89,6 +89,7 @@ class CartController extends Controller {
         $billing['is_default'] = 1;
         $billing['address_type'] = 'billing';
         $cart->setBillingAddress($billing);
+		$products = $cart->getCart();
         if(isset($products['shop']) && sizeof($products['shop']) > 0){
             $shipping['first_name'] = $add['ship_first_name'];
             $shipping['last_name'] = $add['ship_last_name'];
@@ -109,7 +110,6 @@ class CartController extends Controller {
 			if ($cart->getCart() == NULL) {
 				return $this->redirect(['/cart']);
 			}
-			$products = $cart->getCart();
 			$items = [];
 			if(isset($products['shop'])){
 				foreach($products['shop'] as $shop){

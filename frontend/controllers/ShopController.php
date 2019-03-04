@@ -37,7 +37,7 @@ class ShopController extends Controller {
 
     public function actionDetail($product) {
         $info = \backend\models\Products::findOne(['slug' => $product]);
-        $p_gallery = ProductGallery::find(['product' => $info->id])->all();
+        $p_gallery = ProductGallery::find()->where('product = :product' ,[':product' => $info->id])->all();
         $gallery = [];
         if($p_gallery !== null){
             foreach($p_gallery as $g){

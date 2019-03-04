@@ -22,7 +22,7 @@ $this->title = "8thwonderpromos Shop: ".$model->name;
 						<a href="<?php echo $model->main_image; ?>">
 							<img class="xzoom-gallery4" width="80" src="<?php echo $model->main_image; ?>" xpreview="<?php echo $model->main_image; ?>" title="The description goes here">
 						</a>
-						<?php if(sizeof($info->gallery) > 0): ?>
+						<?php if(sizeof($gallery) > 0): ?>
 							<?php foreach($info->gallery as $g): ?>
 								<a href="<?php echo $g; ?>">
 									<img class="xzoom-gallery4" width="80" src="<?php echo $g; ?>" xpreview="<?php echo $g; ?>" title="The description goes here">

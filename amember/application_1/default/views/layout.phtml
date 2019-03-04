@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" class="svg">
+
+<head>
+    <meta charset="utf-8">
+    <title>8thwonderpromos</title>
+    <meta name="description" content="Music, Video, Recordpool, DJ, DJPool, DJ Pool,VJ, VJPool, VJ Pool">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <meta name="apple-mobile-web-app-title" content="Flatkit">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="shortcut icon" sizes="196x196" href="/amember/application/default/views/public/img/logo.png">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/amember/application/default/views/public/css/animate/animate.min.css">
+    <link rel="stylesheet" href="/amember/application/default/views/public/css/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/amember/application/default/views/public/css/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/amember/application/default/views/public/css/glyphicons/glyphicons.css">
+    <link rel="stylesheet" href="/amember/application/default/views/public/css/material-design-icons/material-design-icons.css">
+    <link rel="stylesheet" href="/amember/application/default/views/public/css/styles/app.min.css">
+    <link rel="stylesheet" href="/amember/application/default/views/public/css/theme/primary.css">
+    <!--STYLES END-->
+    <?php $this->printLayoutHead(); ?>
+</head>
+
+    <body  <?php if (!empty($body_class)): ?> class="<?php p($body_class) ?>"<?php endif; ?> data-ui-class="" style="">
+        <?php echo $this->placeholder('body-start'); ?>
+        <div class="app dk" id="app">
+            <div class="padding">
+                <div class="navbar">
+		    <div class="pull-center">
+                        <a href="http://pool.8thwonderpromos.com" class="navbar-brand md">
+                            <img src="/amember/application/default/views/public/img/logo.png" alt="." class=""> 
+                            <span class="hidden-folded inline">8thwonder</span>
+                        </a>
+                        <a href="http://pool.8thwonderpromos.com" class="md"><span class="hidden-folded inline" style="
+    margin-top: 11px;
+    font-size: 20px;
+    position: absolute;
+    right: 0;
+"><i class="fa fa-database"></i>Pool</span></a>
+                    </div>
+                </div>
+            </div>
+            <?php include $this->_script('_content.phtml'); ?>
+        </div>
+        <?php echo $this->placeholder('body-finish'); ?>
+  </body>
+</html>

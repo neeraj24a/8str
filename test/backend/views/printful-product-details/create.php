@@ -1,0 +1,19 @@
+<?php
+
+use yii\helpers\Html;
+
+
+/* @var $this yii\web\View */
+/* @var $model backend\models\PrintfulProducts */
+
+$this->title = Yii::t('app', 'Add Printful Product Details');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Printful Products'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
+?>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <?php echo $this->render('_form', array('model'=>$model)); ?>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+<?php include $this->_script('_error.phtml'); ?>
+<?php echo $this->blocks('login/form/before') ?>
+<?php echo $content ?>
+<?php echo $this->blocks('login/form/after') ?>
+<section id="forget-block" class="am-sendpass-form-wrapper" <?php if (array_key_exists('sendpass', $_GET)): ?>style="display:block;"<?php else: ?>style="display:none;"<?php endif; ?>>
+    <div class="container">
+        <div class="login-form am-sendpass-form">
+            <h4><?php __e('Lost Password') ?></h4>
+            <form name="sendpass" method="post" action="<?php echo $this->url('sendpass') ?>" id="am-sendpass-form">
+                <input type="text" name="login" class="frgt-pass" id="sendpass" size="15" placeholder="<?php __e('Username/Email') ?>" />
+                <?php if ($showRecaptcha) : ?>
+                    <div class="row row-wide row-sendpass-recaptcha" id="recaptcha-sendpass-row" data-recaptcha-theme="<?php echo $di->config->get('recaptcha-theme', 'light'); ?>" data-recaptcha-size="<?php echo $di->config->get('recaptcha-size', 'normal'); ?>">
+                        <div class="element am-element-recaptcha" id="sendpass-recaptcha-element"></div>
+                    </div>
+                <?php endif; ?>
+                <input type="submit" class="password-link" value="<?php __e('Get Password') ?>" />
+                <p class="remeber-head">
+                    <?php if (@$this_config['remember_login'] && !@$this_config['remember_auto']): ?>
+                        <label class="element-title" for="remember_login" id="am-form-login-remember">
+                            <input type="checkbox" name="remember_login" value="1"<?php if (@$_REQUEST['remember_login']): ?>checked="checked"<?php endif ?>> <?php __e('Stay signed in') ?>
+                        </label>
+                    <?php endif ?>
+                    <a href="<?php echo $this->url('login') ?>" class="local-link am-form-login-switch"><?php __e('Log In') ?></a>
+                </p>
+            </form>
+            <h6>Don’t have an account? <a href="https://www.8thwonderpromos.com/amember/signup">Join now</a></h6>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+    jQuery('.am-form-login-switch').click(function () {
+        jQuery('.am-login-form-wrapper, .am-sendpass-form-wrapper').toggle();
+        jQuery('.am-login-form-wrapper .errors, .am-sendpass-form-wrapper .errors, .am-body-content .errors').remove();
+        return false;
+    });
+    jQuery('.am-login-form-wrapper form, .am-sendpass-form-wrapper form').submit(function () {
+        jQuery('.am-body-content .errors').remove();
+    });
+<?php if ($showRecaptcha) : ?>
+        if (typeof grecaptcha == "undefined")
+        {
+            window.onLoadGrecaptcha = function () {
+                jQuery('#sendpass-recaptcha-element, #recaptcha-element').each(function () {
+                    jQuery(this).closest('form').data('recaptcha', grecaptcha.render(jQuery(this).attr('id'), {
+                        sitekey: '<?php p($di->recaptcha->getPublicKey()) ?>',
+                        theme: jQuery(this).closest('.row').data('recaptcha-theme')
+                    }));
+                });
+            }
+            jQuery.getScript('//www.google.com/recaptcha/api.js?onload=onLoadGrecaptcha&render=explicit');
+        }
+<?php endif; ?>
+</script>

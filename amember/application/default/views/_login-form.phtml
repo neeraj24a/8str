@@ -1,0 +1,23 @@
+<section id="forget-block" class="am-login-form-wrapper" <?php if (array_key_exists('sendpass', $_GET)): ?>style="display:none;"<?php else: ?>style="display:block;"<?php endif; ?>>
+    <div class="container">
+        <div class="login-form am-login-form">
+            <h4><?php __e('Login to your Account') ?></h4>
+            <form name="login" method="post" <?php if ($form_action) echo "action='$form_action'"; ?> id="am-login-form">
+                <input type="text" id="amember-login" class="frgt-pass" name="<?php p($loginFieldName) ?>" size="15" value="<?php p($loginFieldValue) ?>" autofocus="autofocus"  placeholder="<?php __e('Username/Email') ?>" />
+                <input type="password" id="amember-pass" class="frgt-pass" name="<?php p($passFieldName) ?>" class="am-pass-reveal" size="15" placeholder="<?php __e('Password') ?>" />
+                <input type="submit" class="password-link" value="<?php __e('Login') ?>" />
+                <p class="remeber-head">
+                <?php if (@$this_config['remember_login'] && !@$this_config['remember_auto']): ?>
+                    <label class="element-title" for="remember_login" id="am-form-login-remember">
+                        <input type="checkbox" name="remember_login" value="1"<?php if (@$_REQUEST['remember_login']): ?>checked="checked"<?php endif ?>> <?php __e('Stay signed in') ?>
+                    </label>
+                <?php endif ?>
+                    <a href="<?php echo $this->url('login?sendpass') ?>" class="local-link am-form-login-switch"><?php __e('Forgot password?') ?></a>
+                </p>
+                <?php echo Am_Html::renderArrayAsInputHiddens($hidden) ?>
+            </form>
+            <h6>Don’t have an account? <a href="https://www.8thwonderpromos.com/amember/signup">Join now</a></h6>
+            <h5>By clicking your agree to all our <a target="_blank" href="https://pool.8thwonderpromos.com/terms">terms & conditions.</a></h5>
+        </div>
+    </div>
+</section>

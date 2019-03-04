@@ -1,0 +1,35 @@
+<?php
+$totalPaid = $di->db->selectCell("SELECT ROUND(SUM(amount/base_currency_multi),2) "
+    . "FROM ?_invoice_payment "
+    . "WHERE user_id=?", $user->pk());
+$totalRefund = $di->db->selectCell("SELECT ROUND(SUM(amount/base_currency_multi),2) "
+    . "FROM ?_invoice_refund "
+    . "WHERE user_id=?", $user->pk());
+?>
+<div class="info">
+    <div style="float:right">
+    <?php if ($di->authAdmin->getUser()->hasPermission('grid_u', 'delete')) : ?>
+    <a style="color:#F44336;" target="_top"
+       href="<?php echo $this->url('admin-users/delete', array('id' => $user->pk())); ?>"
+    ><?php __e('Delete User') ?></a>
+    <?php endif; ?>
+    </div>
+    <?php
+    printf('%s: <strong>%d</strong> &middot; %s: <strong>%s</strong>%s &middot; %s%s: <a class="link" href="%s">%s</a> &middot; %s: <span style="color:#488f37">%s</span>%s',
+        ___('ID'), $user->pk(),
+        ___('Username'), $user->login,
+        $di->authAdmin->getUser()->hasPermission('grid_u', 'login-as') ?
+            sprintf(' <a class="link" href="%s" target="_blank">%s</a>',
+                $this->url('admin-users/login-as', array('id' => $user->pk())),
+                ___('Login as User')) : '',
+                ($user->name_f || $user->name_l) ?
+                sprintf('%s: <strong>%s</strong> &middot; ', ___('Name'), trim(Am_Html::escape($user->name_f." ".$user->name_l))) :
+                '',
+        ___('Email'),
+        $this->url('admin-email', array('search-type'=>'advanced', 'search'=>json_encode(array('member_id_filter'=>array('val'=>$user->pk()))))),
+        Am_Html::escape($user->email),
+        ___('Total Paid'), Am_Currency::render($totalPaid),
+        ($totalRefund > 0 ? sprintf(' &middot; %s: <span class="red">%s<span>', ___('Refunds'), Am_Currency::render($totalRefund)) : '')
+        );
+    ?>
+</div>

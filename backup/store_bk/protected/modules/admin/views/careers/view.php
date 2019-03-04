@@ -1,0 +1,38 @@
+<?php
+/* @var $this CareersController */
+/* @var $model Careers */
+
+$this->breadcrumbs=array(
+	'Careers'=>array('index'),
+	$model->id,
+);
+
+$this->menu=array(
+	array('label'=>'List Careers', 'url'=>array('index')),
+	array('label'=>'Create Careers', 'url'=>array('create')),
+	array('label'=>'Update Careers', 'url'=>array('update', 'id'=>$model->id)),
+	array('label'=>'Delete Careers', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
+	array('label'=>'Manage Careers', 'url'=>array('admin')),
+);
+?>
+
+<h1>View Careers #<?php echo $model->id; ?></h1>
+
+<?php $this->widget('zii.widgets.CDetailView', array(
+	'data'=>$model,
+	'attributes'=>array(
+		'id',
+		'first_name',
+		'middle_name',
+		'last_name',
+		'email',
+		'mobile',
+		'cv',
+		'status',
+		'deleted',
+		'created_by',
+		'modified_by',
+		'date_entered',
+		'date_modified',
+	),
+)); ?>

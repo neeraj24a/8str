@@ -1,0 +1,55 @@
+<?php include $this->_script('_error.phtml'); ?>
+<div class="b-t">
+    <div class="center-block w-xxl w-auto-xs p-y-md text-center">
+        <div class="p-a-md">
+            <div class="am-login-form-wrapper"  <?php if(array_key_exists('sendpass', $_GET)): ?>style="display:none;"<?php endif;?>>
+                <?php echo $this->blocks('login/form/before') ?>
+                <div class="am-form am-auth-form am-login-form">
+                    <?php echo $content ?>
+                </div>
+                <?php echo $this->blocks('login/form/after') ?>
+            </div>
+            <div class="am-sendpass-form-wrapper" <?php if(array_key_exists('sendpass', $_GET)): ?>style="display:block;"<?php endif;?>>
+                <div class="am-form am-auth-form am-sendpass-form">
+                    <form name="sendpass" method="post" action="<?php echo $this->url('sendpass') ?>" id="am-sendpass-form">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="login" id="sednpass" size="15" placeholder="Username/Email" required="">
+                        </div>
+                        <button type="submit" class="btn btn-lg black p-x-lg"><?php __e('Get Password') ?></button>
+                    </form>
+                    <div class="m-y">
+                        <a href="<?php echo $this->url('login?sendpass') ?>" class="local-link am-form-login-switch _600">Log In</a>
+                    </div>
+                    <div>Do not have an account? 
+                        <a href="/amember/signup" class="text-primary _600">Sign up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+jQuery('.am-form-login-switch').click(function(){
+    jQuery('.am-login-form-wrapper, .am-sendpass-form-wrapper').toggle();
+    jQuery('.am-login-form-wrapper .errors, .am-sendpass-form-wrapper .errors, .am-body-content .errors').remove();
+    return false;
+});
+jQuery('.am-login-form-wrapper form, .am-sendpass-form-wrapper form').submit(function(){
+    jQuery('.am-body-content .errors').remove();
+});
+<?php if ($showRecaptcha) : ?>
+if (typeof grecaptcha == "undefined")
+{
+    window.onLoadGrecaptcha = function(){
+        jQuery('#sendpass-recaptcha-element, #recaptcha-element').each(function(){
+           jQuery(this).closest('form').data('recaptcha', grecaptcha.render(jQuery(this).attr('id'), {
+                sitekey: '<?php p($di->recaptcha->getPublicKey()) ?>',
+                theme: jQuery(this).closest('.row').data('recaptcha-theme')
+            }));
+        });
+    }
+    jQuery.getScript('//www.google.com/recaptcha/api.js?onload=onLoadGrecaptcha&render=explicit');
+}
+<?php endif; ?>
+</script>

@@ -1,0 +1,16 @@
+<div class="am-helpdesk-history">
+    <div class="am-helpdesk-history-title">
+        <div class="am-helpdesk-history-title-action"><a class="local" href="javascript:;"><?php __e('Requester History') ?> (<?php p($userTotalTickets) ?>)</a></div>
+        <div class="am-helpdesk-history-user">
+            <a class="link" href="<?php p($this->userUrl($user->user_id)); ?>">
+            <?php p($user->login) ?></a>
+            <?php if (trim($user->getName())) : ?>
+            (<strong><?php p($user->getName()) ?></strong>)
+            <?php endif; ?>
+            <?php p(implode(', ', $di->productTable->getProductTitles($user->getActiveProductIds()))) ?>
+        </div>
+    </div>
+    <div class="am-helpdesk-history-content">
+        <?php echo $historyGrid ?>
+    </div>
+</div>

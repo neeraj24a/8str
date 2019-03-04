@@ -1,0 +1,22 @@
+<form name="login" method="post" <?php if ($form_action) echo "action='$form_action'"; ?> id="am-login-form">
+    <div class="form-group">
+        <input type="text" class="form-control" id="amember-login" name="amember_login" placeholder="Username" required="">
+    </div>
+    <div class="form-group">
+        <input type="password" id="amember-pass" class="form-control" name="amember_pass" placeholder="Password" required="">
+    </div>
+    <div class="m-b-md">
+        <?php if (@$this_config['remember_login'] && !@$this_config['remember_auto']): ?>
+            <label class="md-check" for="remember_login" id="am-form-login-remember">
+                <input type="checkbox" name="remember_login" value="1"<?php if (@$_REQUEST['remember_login']): ?>checked="checked"<?php endif ?>> <?php __e('Keep me signed in') ?></label>
+        <?php endif ?>
+    </div>
+    <button type="submit" class="btn btn-lg black p-x-lg">Sign in</button>
+    <?php echo Am_Html::renderArrayAsInputHiddens($hidden) ?>
+</form>
+<div class="m-y">
+    <a href="<?php echo $this->url('login?sendpass') ?>" class="local-link am-form-login-switch _600">Forgot password?</a>
+</div>
+<div>Do not have an account? 
+    <a href="/amember/signup" class="text-primary _600">Sign up</a>
+</div>

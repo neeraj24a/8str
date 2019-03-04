@@ -1,0 +1,627 @@
+
+@media screen and (min-width : 1101px) and (max-width :1200px) {
+   
+.container {width:1080px; margin:0 auto; padding:0;}
+
+}
+   
+@media screen and (min-width : 971px) and (max-width :1100px) {
+  
+.container {width:950px; margin:0 auto; padding:0;}
+
+}
+   
+@media screen and (min-width : 768px) and (max-width : 970px) {
+   
+.container {width:748px; margin:0 auto; padding:0;}
+
+}
+ 
+@media screen and (min-width : 640px) and (max-width: 767px) {
+   
+.container {width:620px; margin:0 auto; padding:0;}
+
+a.logo {
+    margin: 0 auto;
+    display: table;
+    width: 100px;
+}
+form input#head_search{
+	width: 100%;
+	padding: 5px 0;
+}
+
+ul.user_toggle li a#menu_toggle{
+	float: right;
+}
+
+.nav-tabs{border-bottom: none;}
+.nav-tabs>li {width: 100%; margin: 4px 0; border-radius: 0;}
+.nav-tabs>li>a {
+    font-size: 14px;
+    padding: 5px 0;
+}
+
+ul.video-audio-button {
+    width: auto;
+    float: none;
+    margin: 0 auto;
+    display: table;}
+
+a#add {
+    margin: 5px auto 0;
+}
+
+.playlists-no h4 {
+    font-size: 18px;
+    text-align: center;
+}
+
+.playlists-no h6 {
+    text-align: center;
+}
+
+.playlists-no p {
+    text-align: center;
+}
+
+a.promos-box {
+    margin: 0 auto;
+     position: initial; 
+    display: table;
+}
+
+ul.rating-bar {
+    margin: 10px 0 0 60px;
+}
+
+a#download-btn {
+    top: 15px;
+    right: 60px;
+}
+
+.term_contents h6 {
+    font-size: 15px;
+    text-align: center;
+}
+
+.term_contents p {
+    font-size: 14px;
+    text-align: center;
+}
+
+.term_contents h4 {
+    font-size: 15px;
+    text-align: center;
+}
+
+.feedback_form form input.feedbck-fields {
+    padding: 6px;
+    font-size: 15px;
+}
+
+.term_contents h2 {
+    font-size: 12px;
+    text-align: center;
+}
+
+ul.terms_lists {
+	margin: 15px 0 0;
+}
+
+ul.terms_lists li {
+	margin: 5px 0;
+	font-size: 18px;
+	text-align: center;
+}
+
+.feedback_form form input.feedbck_btn {
+    float: none;
+    margin: 10px auto 0;
+    display: table;
+}
+
+.contact-details {
+	margin: 10px 0 0;
+}
+
+.contact-details h4 {
+    font-size: 21px;
+    text-align: center;
+}
+
+.contact-details h5 {
+    font-size: 16px;
+    text-align: center;
+    padding: 0 0 10px;
+}
+
+.contact-details h5 br{
+	display: none;
+}
+
+ul.social-icons {
+    width: auto;
+    float: none;
+    margin: 0 auto;
+    display: table;
+}
+
+ul.social-icons li{
+	margin: 0 10px;
+	width: auto;
+}
+
+div#waveform {
+    width: 80%;
+    float: right;
+}
+
+button.wavesurfer-play {
+    top: 50px;
+    left: 45px;
+    font-size: 20px;
+    line-height: 30px;
+    width: 30px;
+    height: 30px;
+}
+
+}
+
+
+@media screen and (min-width : 480px) and (max-width: 639px) {
+   
+.container {width:460px; margin:0 auto; padding:0;}    
+
+a.logo {
+    margin: 0 auto;
+    display: table;
+    width: 100px;
+}
+form input#head_search{
+	width: 100%;
+	padding: 5px 0;
+}
+
+ul.user_toggle li a#menu_toggle{
+	float: right;
+}
+
+.nav-tabs{border-bottom: none;}
+.nav-tabs>li {width: 100%; margin: 4px 0; border-radius: 0;}
+.nav-tabs>li>a {
+    font-size: 14px;
+    padding: 5px 0;
+}
+
+ul.video-audio-button {
+    width: auto;
+    float: none;
+    margin: 0 auto;
+    display: table;}
+
+a#add {
+    margin: 5px auto 0;
+}
+
+.playlists-no h4 {
+    font-size: 18px;
+    text-align: center;
+}
+
+.playlists-no h6 {
+    text-align: center;
+}
+
+.playlists-no p {
+    text-align: center;
+}
+
+a.promos-box {
+    margin: 0 auto;
+     position: initial; 
+    display: table;
+}
+
+ul.rating-bar {
+    margin: 10px 0 0 60px;
+}
+
+a#download-btn {
+    top: 15px;
+    right: 60px;
+}
+
+.term_contents h6 {
+    font-size: 15px;
+    text-align: center;
+}
+
+.term_contents p {
+    font-size: 14px;
+    text-align: center;
+}
+
+.term_contents h4 {
+    font-size: 15px;
+    text-align: center;
+}
+
+.feedback_form form input.feedbck-fields {
+    padding: 6px;
+    font-size: 15px;
+}
+
+.term_contents h2 {
+    font-size: 12px;
+    text-align: center;
+}
+
+ul.terms_lists {
+	margin: 15px 0 0;
+}
+
+ul.terms_lists li {
+	margin: 5px 0;
+	font-size: 18px;
+	text-align: center;
+}
+
+.feedback_form form input.feedbck_btn {
+    float: none;
+    margin: 10px auto 0;
+    display: table;
+}
+
+.contact-details {
+	margin: 10px 0 0;
+}
+
+.contact-details h4 {
+    font-size: 21px;
+    text-align: center;
+}
+
+.contact-details h5 {
+    font-size: 16px;
+    text-align: center;
+    padding: 0 0 10px;
+}
+
+.contact-details h5 br{
+	display: none;
+}
+
+ul.social-icons {
+    width: auto;
+    float: none;
+    margin: 0 auto;
+    display: table;
+}
+
+ul.social-icons li{
+	margin: 0 10px;
+	width: auto;
+}
+
+div#waveform {
+    width: 80%;
+    float: right;
+}
+
+button.wavesurfer-play {
+    top: 50px;
+    left: 45px;
+    font-size: 20px;
+    line-height: 30px;
+    width: 30px;
+    height: 30px;
+}
+
+}
+
+@media screen and (min-width : 360px) and (max-width: 479px) {
+   
+.container {width:340px; margin:0 auto; padding:0;}
+
+
+a.logo {
+    margin: 0 auto;
+    display: table;
+    width: 100px;
+}
+form input#head_search{
+	width: 100%;
+	padding: 5px 0;
+}
+
+ul.user_toggle li a#menu_toggle{
+	float: right;
+}
+
+.nav-tabs{border-bottom: none;}
+.nav-tabs>li {width: 100%; margin: 4px 0; border-radius: 0;}
+.nav-tabs>li>a {
+    font-size: 14px;
+    padding: 5px 0;
+}
+
+ul.video-audio-button {
+    width: auto;
+    float: none;
+    margin: 0 auto;
+    display: table;}
+
+a#add {
+    margin: 5px auto 0;
+}
+
+.playlists-no h4 {
+    font-size: 18px;
+    text-align: center;
+}
+
+.playlists-no h6 {
+    text-align: center;
+}
+
+.playlists-no p {
+    text-align: center;
+}
+
+a.promos-box {
+    margin: 0 auto;
+     position: initial; 
+    display: table;
+}
+
+ul.rating-bar {
+    margin: 10px 0 0 60px;
+}
+
+a#download-btn {
+    top: 15px;
+    right: 60px;
+}
+
+.term_contents h6 {
+    font-size: 15px;
+    text-align: center;
+}
+
+.term_contents p {
+    font-size: 14px;
+    text-align: center;
+}
+
+.term_contents h4 {
+    font-size: 15px;
+    text-align: center;
+}
+
+.feedback_form form input.feedbck-fields {
+    padding: 6px;
+    font-size: 15px;
+}
+
+.term_contents h2 {
+    font-size: 12px;
+    text-align: center;
+}
+
+ul.terms_lists {
+	margin: 15px 0 0;
+}
+
+ul.terms_lists li {
+	margin: 5px 0;
+	font-size: 18px;
+	text-align: center;
+}
+
+.feedback_form form input.feedbck_btn {
+    float: none;
+    margin: 10px auto 0;
+    display: table;
+}
+
+.contact-details {
+	margin: 10px 0 0;
+}
+
+.contact-details h4 {
+    font-size: 21px;
+    text-align: center;
+}
+
+.contact-details h5 {
+    font-size: 16px;
+    text-align: center;
+    padding: 0 0 10px;
+}
+
+.contact-details h5 br{
+	display: none;
+}
+
+ul.social-icons {
+    width: auto;
+    float: none;
+    margin: 0 auto;
+    display: table;
+}
+
+ul.social-icons li{
+	margin: 0 10px;
+	width: auto;
+}
+
+div#waveform {
+    width: 80%;
+    float: right;
+}
+
+button.wavesurfer-play {
+    top: 50px;
+    left: 28px;
+    font-size: 20px;
+    line-height: 30px;
+    width: 30px;
+    height: 30px;
+}
+
+
+}
+
+
+@media screen and (min-width : 320px) and (max-width: 359px) {
+     
+.container {width:300px; margin:0 auto; padding:0;}
+
+a.logo {
+    margin: 0 auto;
+    display: table;
+    width: 100px;
+}
+form input#head_search{
+	width: 100%;
+	padding: 5px 0;
+}
+
+ul.user_toggle li a#menu_toggle{
+	float: right;
+}
+
+.nav-tabs{border-bottom: none;}
+.nav-tabs>li {width: 100%; margin: 4px 0; border-radius: 0;}
+.nav-tabs>li>a {
+    font-size: 14px;
+    padding: 5px 0;
+}
+
+ul.video-audio-button {
+    width: auto;
+    float: none;
+    margin: 0 auto;
+    display: table;}
+
+a#add {
+    margin: 5px auto 0;
+}
+
+.playlists-no h4 {
+    font-size: 18px;
+    text-align: center;
+}
+
+.playlists-no h6 {
+    text-align: center;
+}
+
+.playlists-no p {
+    text-align: center;
+}
+
+a.promos-box {
+    margin: 0 auto;
+     position: initial; 
+    display: table;
+}
+
+ul.rating-bar {
+    margin: 10px 0 0 60px;
+}
+
+a#download-btn {
+    top: 15px;
+    right: 60px;
+}
+
+.term_contents h6 {
+    font-size: 15px;
+    text-align: center;
+}
+
+.term_contents p {
+    font-size: 14px;
+    text-align: center;
+}
+
+.term_contents h4 {
+    font-size: 15px;
+    text-align: center;
+}
+
+.feedback_form form input.feedbck-fields {
+    padding: 6px;
+    font-size: 15px;
+}
+
+.term_contents h2 {
+    font-size: 12px;
+    text-align: center;
+}
+
+ul.terms_lists {
+	margin: 15px 0 0;
+}
+
+ul.terms_lists li {
+	margin: 5px 0;
+	font-size: 18px;
+	text-align: center;
+}
+
+.feedback_form form input.feedbck_btn {
+    float: none;
+    margin: 10px auto 0;
+    display: table;
+}
+
+.contact-details {
+	margin: 10px 0 0;
+}
+
+.contact-details h4 {
+    font-size: 21px;
+    text-align: center;
+}
+
+.contact-details h5 {
+    font-size: 16px;
+    text-align: center;
+    padding: 0 0 10px;
+}
+
+.contact-details h5 br{
+	display: none;
+}
+
+ul.social-icons {
+    width: auto;
+    float: none;
+    margin: 0 auto;
+    display: table;
+}
+
+ul.social-icons li{
+	margin: 0 10px;
+	width: auto;
+}
+
+div#waveform {
+    width: 80%;
+    float: right;
+}
+
+button.wavesurfer-play {
+    top: 50px;
+    left: 28px;
+    font-size: 20px;
+    line-height: 30px;
+    width: 30px;
+    height: 30px;
+}
+
+}
+

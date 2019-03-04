@@ -1,0 +1,5 @@
+<?php $title = ___('Unsubscription Confirmation'); $this->setLayout('layout.phtml'); ?>
+<?php include $this->_script('_error.phtml'); ?>
+<div class="am-info"><?php __e('E-Mail')?>: <strong><?php p($user->email) ?></strong></div>
+<?php echo $this->blocks('unsubscribe/before', '%s', array('user' => $user)); ?>
+<?php echo $this->blocks('unsubscribe', '<h2 id="%3$s-head">%2$s</h2><div class="am-block" id="%3$s">%1$s</div>', array('user' => $user, 'ignore_unsubscribe_config' => true)); ?>

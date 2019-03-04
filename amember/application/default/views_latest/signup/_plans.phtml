@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="col-md-12">
+        <?php 
+                $plans = [];
+                $plans['monthly'] = ["title" => "Monthly","name"=>"Monthly Membership","price" => "$19.99","message_1" => "Will Be Renewed Every Month","message_2" => "All Contentd Available For 1 Month","message_3" => "Store Discount","url" => "https://www.8thwonderpromos.com/amember/signup/monthly","position" => "first","is_scaled" => ""];
+                $plans['yearly'] = ["title" => "Yearly","name"=>"Annual Membership","price" => "$199.99","message_1" => "Will Be Renewed Every Year","message_2" => "All Contentd Available For 1 Year","message_3" => "Maximum Store Discount","url" => "https://www.8thwonderpromos.com/amember/signup/yearly","position" => "third","is_scaled" => "scale"];
+                $plans['quaterly'] = ["title" => "Quaterly","name"=>"Quaterly Membership","price" => "$44.99","message_1" => "Will Be Renewed Every in 3 Month","message_2" => "All Contentd Available For 3 Month","message_3" => "Store Discount","url" => "https://www.8thwonderpromos.com/amember/signup/quaterly","position" => "second","is_scaled" => ""];
+        ?>
+        <div class="promos">
+            <?php $plan = $plans[$code]; ?>
+                <div class="promo first scale">
+                <h4><?php echo $plan['title']; ?></h4>
+                <ul class="features">
+                    <li class="brief"><?php echo $plan['name']; ?></li>
+                    <li class="price"><?php echo $plan['price']; ?></span></li>
+                    <li><?php echo $plan['message_1']; ?></li>
+                    <li><?php echo $plan['message_2']; ?></li>
+                    <li><?php echo $plan['message_3']; ?></li>
+                </ul>
+            </div>
+        </div>				
+    </div>	
+</div>

@@ -37,18 +37,18 @@ class ShopController extends Controller {
 
     public function actionDetail($product) {
         $info = \backend\models\Products::findOne(['slug' => $product]);
-        $gallery = ProductGallery::find(['product' => $info->id])->all();
-        $info->gallery = [];
-        if($gallery !== null){
-            foreach($gallery as $g){
+        $p_gallery = ProductGallery::find(['product' => $info->id])->all();
+        $gallery = [];
+        if($p_gallery !== null){
+            foreach($p_gallery as $g){
                 $g->image = str_replace('../', Yii::$app->homeUrl, $g->image);
-                array_push($info->gallery, $g->image);
+                array_push($gallery, $g->image);
             }
         }
         $info->main_image = str_replace('../', Yii::$app->homeUrl, $info->main_image);
         $info->category = \backend\models\Category::findOne($info->category)->category;
         $addToCart = new AddToCartForm();
-        return $this->render('detail',['model' => $info, 'addToCart' => $addToCart]);
+        return $this->render('detail',['model' => $info, 'addToCart' => $addToCart, 'gallery' => $gallery]);
     }
 
     public function actionCategory($name) {

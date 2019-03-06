@@ -174,13 +174,13 @@ class CartController extends Controller {
         }
 		$apiContext = new \PayPal\Rest\ApiContext(
 			new \PayPal\Auth\OAuthTokenCredential(
-				getParam('paypal_clientId'),     // ClientID
-				getParam('paypal_clientSecret')      // ClientSecret
+				getParam('sandbox_clientId'),     // ClientID
+				getParam('sandbox_clientSecret')      // ClientSecret
 			)
 		);
 		$apiContext->setConfig(array(
 			'mode' =>'live',
-			'service.EndPoint' => getParam('paypal_url'),
+			'service.EndPoint' => getParam('sandbox_url'),
 			'http.ConnectionTimeOut' => 30,
 			'log.LogEnabled' => true,
 			'log.FileName' => __DIR__ . '/../../PayPal.log',
@@ -352,14 +352,14 @@ class CartController extends Controller {
 			
 			$apiContext = new \PayPal\Rest\ApiContext(
 				new \PayPal\Auth\OAuthTokenCredential(
-					getParam('paypal_clientId'),     // ClientID
-					getParam('paypal_clientSecret')      // ClientSecret
+					getParam('sandbox_clientId'),     // ClientID
+					getParam('sandbox_clientSecret')      // ClientSecret
 				)
 			);
 			
 			$apiContext->setConfig(array(
 				'mode' =>'live',
-				'service.EndPoint' => getParam('paypal_url'),
+				'service.EndPoint' => getParam('sandbox_url'),
 				'http.ConnectionTimeOut' => 30,
 				'log.LogEnabled' => true,
 				'log.FileName' => __DIR__ . '/../../PayPal-Execution.log',

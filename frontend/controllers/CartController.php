@@ -174,13 +174,13 @@ class CartController extends Controller {
         }
 		$apiContext = new \PayPal\Rest\ApiContext(
 			new \PayPal\Auth\OAuthTokenCredential(
-				getParam('paypal_clientId'),     // ClientID
-				getParam('paypal_clientSecret')      // ClientSecret
+				getParam('sandbox_clientId'),     // ClientID
+				getParam('sandbox_clientSecret')      // ClientSecret
 			)
 		);
 		$apiContext->setConfig(array(
 			'mode' =>'live',
-			'service.EndPoint' => getParam('paypal_url'),
+			'service.EndPoint' => getParam('sandbox_url'),
 			'http.ConnectionTimeOut' => 30,
 			'log.LogEnabled' => true,
 			'log.FileName' => __DIR__ . '/../../PayPal.log',
@@ -352,14 +352,14 @@ class CartController extends Controller {
 			
 			$apiContext = new \PayPal\Rest\ApiContext(
 				new \PayPal\Auth\OAuthTokenCredential(
-					getParam('paypal_clientId'),     // ClientID
-					getParam('paypal_clientSecret')      // ClientSecret
+					getParam('sandbox_clientId'),     // ClientID
+					getParam('sandbox_clientSecret')      // ClientSecret
 				)
 			);
 			
 			$apiContext->setConfig(array(
 				'mode' =>'live',
-				'service.EndPoint' => getParam('paypal_url'),
+				'service.EndPoint' => getParam('sandbox_url'),
 				'http.ConnectionTimeOut' => 30,
 				'log.LogEnabled' => true,
 				'log.FileName' => __DIR__ . '/../../PayPal-Execution.log',
@@ -420,10 +420,7 @@ class CartController extends Controller {
 				exit(1);
 			}
 			
-			
-			if(Yii::$app->user->id){
-				$user = Yii::$app->user->id;
-			} else {
+			if ($cart->isGuest() === 1){
 				$is_guest = 1;
 				$email = $cart->getGuest();
 				$guest = Guests::find()->where(['email' => $email])->one();
@@ -435,6 +432,8 @@ class CartController extends Controller {
 				} else {
 					$user = $guest->id;
 				}
+			} else {
+				$user = Yii::$app->user->id;
 			}
 			
 			$bill_add = $cart->billingAddress();

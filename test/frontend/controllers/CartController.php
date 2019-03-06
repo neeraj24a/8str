@@ -1,7 +1,5 @@
 <?php
-
 namespace frontend\controllers;
-
 use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -12,17 +10,14 @@ use backend\models\Guests;
 use backend\models\Orders;
 use backend\models\OrderDetails;
 use backend\models\PrintfulProductDetails;
-
 use frontend\config\Cart;
 use frontend\config\MonologLogFactory;
 use frontend\models\AddressForm;
 use frontend\models\Users;
 use frontend\config\Paypal;
-
 use Printful\Exceptions\PrintfulApiException;
 use Printful\Exceptions\PrintfulException;
 use Printful\PrintfulApiClient;
-
 use PayPal\Api\Order;
 use PayPal\Api\Amount;
 use PayPal\Api\Details;
@@ -34,9 +29,7 @@ use PayPal\Api\RedirectUrls;
 use PayPal\Api\PaymentExecution;
 use PayPal\Api\Transaction;
 use PayPal\Api\ShippingAddress;
-
 class CartController extends Controller {
-
     /**
      * Displays homepage.
      *
@@ -54,7 +47,6 @@ class CartController extends Controller {
         $totalWithOffer = $cart->getTotalWithOffer();
 		return $this->render('index', ['cart' => $cart->getCart(), 'offer' => $offer, 'subscription' => $subscription, 'total' => $total, 'totalWithOffer' => $totalWithOffer, 'quantity' => $cart->getTotalQuantity()]);
     }
-
     public function actionCheckout() {
         $addresses = Address::findAll(['user' => Yii::$app->user->id]);
         $add_model = new AddressForm;
@@ -68,7 +60,6 @@ class CartController extends Controller {
         }
         return $this->render('checkout', ['addresses' => $addresses, 'offer' => $offer, 'total' => $total, 'totalWithOffer' => $totalWithOffer, 'model' => $model, 'add_model' => $add_model, 'cart' => $cart->getCart(), 'total' => $cart->getTotal()]);
     }
-
     public function actionProcess() {
         $data = Yii::$app->request->post();
         $add = $data['AddressForm'];
@@ -89,6 +80,7 @@ class CartController extends Controller {
         $billing['is_default'] = 1;
         $billing['address_type'] = 'billing';
         $cart->setBillingAddress($billing);
+		$products = $cart->getCart();
         if(isset($products['shop']) && sizeof($products['shop']) > 0){
             $shipping['first_name'] = $add['ship_first_name'];
             $shipping['last_name'] = $add['ship_last_name'];
@@ -109,9 +101,8 @@ class CartController extends Controller {
 			if ($cart->getCart() == NULL) {
 				return $this->redirect(['/cart']);
 			}
-			$products = $cart->getCart();
 			$items = [];
-			if(isset($products['shop']) && sizeof($products['shop']) > 1){
+			if(isset($products['shop'])){
 				foreach($products['shop'] as $shop){
 					$item = [];
 					foreach($shop->var_qnty as $key => $val){
@@ -126,7 +117,6 @@ class CartController extends Controller {
 			}
 			
 			$request['items'] = $items;
-
 			try {
 				// Calculate shipping rates for an order
 				$response = $pf->post('shipping/rates', $request);
@@ -150,7 +140,6 @@ class CartController extends Controller {
 		}
 		
     }
-
     public function actionPayment() {
         $addresses = Address::findAll(['user' => Yii::$app->user->id]);
         $add_model = new AddressForm;
@@ -188,7 +177,6 @@ class CartController extends Controller {
 		));
 		if($shipping_cost != 0 || $shipping_cost != '0'){
 			$shipping_address = new ShippingAddress();
-
 			$shipping_address->setCity($shipping['city']);
 			$shipping_address->setCountryCode('US');
 			$shipping_address->setPostalCode($shipping['zip']);
@@ -215,7 +203,6 @@ class CartController extends Controller {
                 array_push($items, $item);
             }
         }
-
         if(isset($products['drop'])){
             foreach($products['drop'] as $drop){
 				$item = new Item();
@@ -250,7 +237,6 @@ class CartController extends Controller {
         $item['currency'] = 'USD';
         $item['quantity'] = '1';
         array_push($items, $item);
-
         $items = json_encode($items);*/
 		$details = new Details();
 		$details->setShipping($shipping_cost)
@@ -321,7 +307,6 @@ class CartController extends Controller {
                         }]";*/
         return $this->render('payment', ['addresses' => $addresses, 'offer' => $offer, 'totalWithOffer' => $totalWithOffer, 'model' => $model, 'add_model' => $add_model, 'cart' => $cart->getCart(), 'total' => $total, 'billing' => $billing, 'shipping' => $shipping, 'shipping_cost' => $shipping_cost, 'sub_total' => $sub_total, 'approvalUrl' => $approvalUrl, 'guest' => $guest]);
     }
-
     public function actionTransact($success) {
 		if($success == 'false'){
 			return $this->render('error');
@@ -493,8 +478,6 @@ class CartController extends Controller {
 					}
 				}
 			}
-
-
 			$order = new Orders;
 			$order->is_guest = $is_guest;
 			$order->customer = $user;
@@ -527,7 +510,6 @@ class CartController extends Controller {
 					$detail->save(false);
 				}
 			}
-
 			if(isset($products['drop'])){
 				foreach ($products['drop'] as $info) {
 					$detail = new OrderDetails;
@@ -569,7 +551,6 @@ class CartController extends Controller {
 			}
 		
 			$request['items'] = $items;
-
 			try {
 				// Calculate shipping rates for an order
 				$response = $pf->post('orders', $request);
@@ -586,13 +567,11 @@ class CartController extends Controller {
 			return $this->redirect(['/cart/success?order='.$order->order_number]);
 		}
     }
-
     public function actionSuccess($order) {
         $order = Orders::findOne(['order_number' => $order]);
         $detail = OrderDetails::findAll(['order' => $order->id]);
         $shipping_address = Address::findOne(['address_type' => 'shipping', 'id' => $order->shipping_address]);
         $billing_address = Address::findOne(['address_type' => 'billing', 'id' => $order->billing_address]);
-
         $body = $this->renderPartial('_success', ['order' => $order, 'detail' => $detail, 'shipping' => $shipping_address, 'billing' => $billing_address]);
         $guest = '';
         $user = '';
@@ -610,7 +589,6 @@ class CartController extends Controller {
         $session->set('cart', NULL);
         return $this->render('success', ['order' => $order, 'detail' => $detail, 'shipping' => $shipping_address, 'billing' => $billing_address]);
     }
-
     public function actionTest($order) {
         $order = Orders::findOne(['order_number' => $order]);
         $detail = OrderDetails::findAll(['order' => $order->id]);
@@ -618,7 +596,6 @@ class CartController extends Controller {
         $billing_address = Address::findOne(['address_type' => 'billing', 'id' => $order->billing_address]);
         return $this->renderPartial('_success', ['order' => $order, 'detail' => $detail, 'shipping' => $shipping_address, 'billing' => $billing_address]);
     }
-
     public function actionAdd() {
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
@@ -844,7 +821,6 @@ class CartController extends Controller {
             echo json_encode($array);
         }
     }
-
     public function actionRemove() {
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
@@ -884,7 +860,6 @@ class CartController extends Controller {
             }
         }
     }
-
     public function actionLoad() {
         if (Yii::$app->request->isAjax) {
             $cart = new Cart();
@@ -898,5 +873,4 @@ class CartController extends Controller {
             echo json_encode($response);
         }
     }
-
 }

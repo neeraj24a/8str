@@ -120,7 +120,7 @@ $this->title = "8thwonderpromos Cart";
                             </p>
                         </td>
                         <td class="cart__price-wrapper cart-flex-item">
-                            $$<?php echo $info->price; ?>
+                            $<?php echo $info->price; ?>
                             <div class="cart__edit medium-up--hide">
                                 <button type="button" class="btn btn--secondary btn--small js-edit-toggle cart__edit--active" data-target="line1">
                                     <span class="cart__edit-text--edit">Edit</span>
@@ -201,7 +201,7 @@ $this->registerJs("
                     success: function (data) {
                         data = $.parseJSON(data);
                         if(data.quantity == 0){
-                            location.reload();
+                            window.location.reload();
                         }
                     }
                 });
@@ -234,7 +234,7 @@ $this->registerJs("
                     method: 'POST',
                     data: {'products': products},
                     success: function (data) {
-                        location.reload();
+                        window.location.reload();
                     }
                 });
             });

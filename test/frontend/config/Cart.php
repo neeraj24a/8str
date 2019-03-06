@@ -25,10 +25,22 @@ class Cart {
             $this->session['cart'] = [];
         }
     }
+	
+    public function isGuest(){
+        $cart = $this->session->get('cart');
+        if(isset($cart['is_guest']){
+		return $cart['is_guest'];
+	} else {
+		$cart['is_guest'] = 0;
+        	$this->session->set('cart', $cart);
+		return 0;
+	}
+    }
 
     public function setGuest($email){
         $cart = $this->session->get('cart');
         $cart['guest_email'] = $email;
+	$cart['is_guest'] = 1;
         $this->session->set('cart', $cart);
     }
 

@@ -1,11 +1,8 @@
 <?php 
-
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
-
 $this->title = "Checkout";
-
 ?>
 <div class="content" data-content="">
     <div class="wrap">

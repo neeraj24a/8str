@@ -30,10 +30,14 @@ return [
             'identityClass' => 'frontend\models\Users',
             'enableAutoLogin' => false,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+	    'enableSession' => true,
+            'autoRenewCookie' => true,
+	    'authTimeout' => 7 * 24 *60 * 60,
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
             'name' => 'advanced-frontend',
+	    'cookieParams' => ['lifetime' => 7 * 24 *60 * 60]
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

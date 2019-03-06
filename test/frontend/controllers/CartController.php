@@ -420,10 +420,7 @@ class CartController extends Controller {
 				exit(1);
 			}
 			
-			
-			if(Yii::$app->user->id){
-				$user = Yii::$app->user->id;
-			} else {
+			if ($cart->isGuest() === 1){
 				$is_guest = 1;
 				$email = $cart->getGuest();
 				$guest = Guests::find()->where(['email' => $email])->one();
@@ -435,6 +432,8 @@ class CartController extends Controller {
 				} else {
 					$user = $guest->id;
 				}
+			} else {
+				$user = Yii::$app->user->id;
 			}
 			
 			$bill_add = $cart->billingAddress();

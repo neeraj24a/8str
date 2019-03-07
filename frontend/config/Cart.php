@@ -28,7 +28,7 @@ class Cart {
 	
     public function isGuest(){
         $cart = $this->session->get('cart');
-        if(isset($cart['is_guest']){
+        if(isset($cart['is_guest'])){
 		return $cart['is_guest'];
 	} else {
 		$cart['is_guest'] = 0;

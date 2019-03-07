@@ -368,14 +368,15 @@ class CartController extends Controller {
 			try {
 				$result = $payment->execute($execution, $apiContext);
 				pre($result);
-				//$authid = $payment->transactions[0]->related_resources[0]->authorization->id;
+				pre($result->transactions[0]->related_resources[0]);
+				$authid = $result->transactions[0]->related_resources[0]->order->id;
 				$status = 'success';
 				$is_paid = 1;
 			} catch (\PayPal\Exception\PayPalConnectionException $ex) {
 				return $this->render('error');
 				exit(1);
 			}
-			//pre($authid);
+			pre($authid);
 			pre($payment, true);
 			$transactions = $payment->getTransactions();
 			$transaction = $transactions[0];

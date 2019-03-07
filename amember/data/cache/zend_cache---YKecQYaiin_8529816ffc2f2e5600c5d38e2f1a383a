@@ -1,5 +1,5 @@
-a:4:{s:4:"data";s:4581:"s:4571:"<h2>Today<span class="widget-title-info"> &middot;
-            03/04/19    </span></h2>
+a:4:{s:4:"data";s:4586:"s:4576:"<h2>Today<span class="widget-title-info"> &middot;
+            03/06/19    </span></h2>
 <div class="admin-dashboard-wrapper">
 <table class="admin-dashboard">
     <tr>
@@ -7,7 +7,7 @@ a:4:{s:4:"data";s:4581:"s:4571:"<h2>Today<span class="widget-title-info"> &middo
                         <dl>
                 <dt>Sales</dt>
                 <dd>
-                                            <a class="link" href="/amember/default/admin-payments/p/index/index?_payment_filter%5Bdatf%5D=dattm&amp;_payment_filter%5Bdat1%5D=03%2F04%2F19&amp;_payment_filter%5Bdat2%5D=03%2F04%2F19">17 / $420.83</a>
+                                            <a class="link" href="/amember/default/admin-payments/p/index/index?_payment_filter%5Bdatf%5D=dattm&amp;_payment_filter%5Bdat1%5D=03%2F06%2F19&amp;_payment_filter%5Bdat2%5D=03%2F06%2F19">72 / $1,073.28</a>
                                     </dd>
             </dl>
                         <dl>
@@ -21,20 +21,20 @@ a:4:{s:4:"data";s:4581:"s:4571:"<h2>Today<span class="widget-title-info"> &middo
                 <dl>
                     <dt>Registrations</dt>
                                         <dd>
-                                                    <a class="link" href="/amember/admin-users/index?_u_search%5Badded-between%5D%5Bstart%5D=03%2F04%2F19&amp;_u_search%5Badded-between%5D%5Bstop%5D=03%2F04%2F19">2</a>
+                                                    <a class="link" href="/amember/admin-users/index?_u_search%5Badded-between%5D%5Bstart%5D=03%2F06%2F19&amp;_u_search%5Badded-between%5D%5Bstop%5D=03%2F06%2F19">3</a>
                                             </dd>
                 </dl>
                 <dl>
                     <dt>Cancellations</dt>
                                         <dd>
-                                                    <a class="link" href="/amember/default/admin-payments/p/invoices/index?_invoice_filter%5Bdatf%5D=tm_cancelled&amp;_invoice_filter%5Bdat1%5D=03%2F04%2F19&amp;_invoice_filter%5Bdat2%5D=03%2F04%2F19">2</a>
+                                                    <a class="link" href="/amember/default/admin-payments/p/invoices/index?_invoice_filter%5Bdatf%5D=tm_cancelled&amp;_invoice_filter%5Bdat1%5D=03%2F06%2F19&amp;_invoice_filter%5Bdat2%5D=03%2F06%2F19">2</a>
                                             </dd>
                 </dl>
                                 <dl>
-                    <dt>Rebills (<small title="03/04/19&ndash;04/03/19">next 30 days</small>)</dt>
+                    <dt>Rebills (<small title="03/06/19&ndash;04/05/19">next 30 days</small>)</dt>
                                         <dd>
-                                                    <a class="link" href="/amember/default/admin-payments/p/invoices/index?_invoice_filter%5Bdatf%5D=rebill_date&amp;_invoice_filter%5Bdat1%5D=03%2F04%2F19&amp;_invoice_filter%5Bdat2%5D=04%2F03%2F19&amp;_invoice_sort=rebill_date">
-                            2209 / $36,813.91</a>
+                                                    <a class="link" href="/amember/default/admin-payments/p/invoices/index?_invoice_filter%5Bdatf%5D=rebill_date&amp;_invoice_filter%5Bdat1%5D=03%2F06%2F19&amp;_invoice_filter%5Bdat2%5D=04%2F05%2F19&amp;_invoice_sort=rebill_date">
+                            2149 / $35,538.51</a>
                                             </dd>
             </dl>
         </td>
@@ -49,7 +49,7 @@ a:4:{s:4:"data";s:4581:"s:4571:"<h2>Today<span class="widget-title-info"> &middo
                         <dl>
                 <dt>Sales</dt>
                 <dd>
-                                            <a class="link" href="/amember/default/admin-payments/p/index/index?_payment_filter%5Bdatf%5D=dattm&amp;_payment_filter%5Bdat1%5D=03%2F03%2F19&amp;_payment_filter%5Bdat2%5D=03%2F09%2F19">68 / $1,375.32</a>
+                                            <a class="link" href="/amember/default/admin-payments/p/index/index?_payment_filter%5Bdatf%5D=dattm&amp;_payment_filter%5Bdat1%5D=03%2F03%2F19&amp;_payment_filter%5Bdat2%5D=03%2F09%2F19">230 / $4,361.70</a>
                                     </dd>
             </dl>
                         <dl>
@@ -63,23 +63,23 @@ a:4:{s:4:"data";s:4581:"s:4571:"<h2>Today<span class="widget-title-info"> &middo
                 <dl>
                     <dt>Registrations</dt>
                                         <dd>
-                                                    <a class="link" href="/amember/admin-users/index?_u_search%5Badded-between%5D%5Bstart%5D=03%2F03%2F19&amp;_u_search%5Badded-between%5D%5Bstop%5D=03%2F09%2F19">6</a>
+                                                    <a class="link" href="/amember/admin-users/index?_u_search%5Badded-between%5D%5Bstart%5D=03%2F03%2F19&amp;_u_search%5Badded-between%5D%5Bstop%5D=03%2F09%2F19">21</a>
                                             </dd>
                 </dl>
                 <dl>
                     <dt>Cancellations</dt>
                                         <dd>
-                                                    <a class="link" href="/amember/default/admin-payments/p/invoices/index?_invoice_filter%5Bdatf%5D=tm_cancelled&amp;_invoice_filter%5Bdat1%5D=03%2F03%2F19&amp;_invoice_filter%5Bdat2%5D=03%2F09%2F19">8</a>
+                                                    <a class="link" href="/amember/default/admin-payments/p/invoices/index?_invoice_filter%5Bdatf%5D=tm_cancelled&amp;_invoice_filter%5Bdat1%5D=03%2F03%2F19&amp;_invoice_filter%5Bdat2%5D=03%2F09%2F19">12</a>
                                             </dd>
                 </dl>
                                 <dl>
-                    <dt>Rebills (<small title="03/04/19&ndash;04/03/19">next 30 days</small>)</dt>
+                    <dt>Rebills (<small title="03/06/19&ndash;04/05/19">next 30 days</small>)</dt>
                                         <dd>
-                                                    <a class="link" href="/amember/default/admin-payments/p/invoices/index?_invoice_filter%5Bdatf%5D=rebill_date&amp;_invoice_filter%5Bdat1%5D=03%2F04%2F19&amp;_invoice_filter%5Bdat2%5D=04%2F03%2F19&amp;_invoice_sort=rebill_date">
-                            2209 / $36,813.91</a>
+                                                    <a class="link" href="/amember/default/admin-payments/p/invoices/index?_invoice_filter%5Bdatf%5D=rebill_date&amp;_invoice_filter%5Bdat1%5D=03%2F06%2F19&amp;_invoice_filter%5Bdat2%5D=04%2F05%2F19&amp;_invoice_sort=rebill_date">
+                            2149 / $35,538.51</a>
                                             </dd>
             </dl>
         </td>
     </tr>
 </table>
-</div>";";s:8:"lifetime";i:2592000;s:6:"expire";i:1554279926;s:8:"priority";i:8;}
+</div>";";s:8:"lifetime";i:2592000;s:6:"expire";i:1554492607;s:8:"priority";i:8;}

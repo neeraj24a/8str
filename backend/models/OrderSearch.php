@@ -87,7 +87,11 @@ class OrderSearch extends Orders
             ->andFilterWhere(['like', 'deleted', $this->deleted])
             ->andFilterWhere(['like', 'created_by', $this->created_by])
             ->andFilterWhere(['like', 'modified_by', $this->modified_by]);
-
+		$dataProvider->setSort([
+			'defaultOrder' => [
+				'date_entered' => SORT_DESC
+			]
+		]);
         return $dataProvider;
     }
 }

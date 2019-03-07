@@ -37,10 +37,23 @@ $this->params['breadcrumbs'][] = $this->title;
                             'columns' => [
                                 ['class' => 'yii\grid\SerialColumn'],
                                 [
+                                    'attribute' => 'is_guest',
+                                    'filter' => ['0' => 'No', '1' => 'Yes'],
+                                    'value' => function($model) {
+										if($model->is_guest == 0)
+											return 'No';
+										else
+											return 'Yes';
+                                    }
+                                ],
+								[
                                     'attribute' => 'customer',
                                     'filter' => ArrayHelper::map(backend\models\Users::findAll(['status' => 1,'type' => 'general']), 'id', 'username'),
                                     'value' => function($model) {
-                                        return \backend\models\Users::findOne($model->customer)->username;
+										if($model->is_guest == 0)
+											return \backend\models\Users::findOne($model->customer)->username;
+										else
+											return \backend\models\Guests::findOne($model->customer)->email;
                                     }
                                 ],
                                 'order_number',

@@ -186,6 +186,7 @@ class OrdersController extends Controller
 		}
 		
 		$request['items'] = $items;
+		pre($request, true);
 		// $request = json_encode($request);
 		try {
 			// Calculate shipping rates for an order

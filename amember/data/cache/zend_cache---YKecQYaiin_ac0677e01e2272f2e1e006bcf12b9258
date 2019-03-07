@@ -1,108 +1,100 @@
-a:4:{s:4:"data";s:9139:"s:9129:"<div class="admin-last admin-activity">
+a:4:{s:4:"data";s:8229:"s:8219:"<div class="admin-last admin-activity">
     <h2>Recent Activity</h2>
     <div class="grid-container">
         <table class="grid grid-no-highlight">
                         <tr
                 class="grid-row even admin-activity_event admin-activity_event-signin">
                 <td>
-                                                    <strong>b s</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=10346" data-tooltip-url="/amember/admin-users/card?id=10346">chillin</a>)<!--
-    --> logged in from 162.203.108.139                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-04T02:38:57-05:00" title="03/04/19, 02:38 AM">&#x1f550; 46 min ago</time>                                    </td>
-            </tr>
-                        <tr
-                class="grid-row odd admin-activity_event admin-activity_event-payment">
-                <td>
-                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$9.99</span></strong><br />
-                        Payment from         <strong>b s</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=10346" data-tooltip-url="/amember/admin-users/card?id=10346">chillin</a>)<!--
-    -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/10346#invoice-8928" data-tooltip-url="/amember/admin-payments/invoice-card?id=8928">8928/YFUTC</a>
-                        &ndash; 8th Wonder Promos Monthly Membership (loyalty Promo)                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-04T02:38:01-05:00" title="03/04/19, 02:38 AM">&#x1f550; 47 min ago</time><small class="admin-activity_event-extra">, paypal</small>
-                                    </td>
-            </tr>
-                        <tr
-                class="grid-row even admin-activity_event admin-activity_event-signin">
-                <td>
-                                                    <strong>Ronald Garcia</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=10786" data-tooltip-url="/amember/admin-users/card?id=10786">djinky1</a>)<!--
-    --> logged in from 76.172.254.77                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-04T01:58:17-05:00" title="03/04/19, 01:58 AM">&#x1f550; 1 hrs ago</time>                                    </td>
-            </tr>
-                        <tr
-                class="grid-row odd admin-activity_event admin-activity_event-payment">
-                <td>
-                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$99.99</span></strong><br />
-                        Payment from         <strong>Jason Gomez</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=4412" data-tooltip-url="/amember/admin-users/card?id=4412">jwicked</a>)<!--
-    -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/4412#invoice-8927" data-tooltip-url="/amember/admin-payments/invoice-card?id=8927">8927/KTZTA</a>
-                        &ndash; 8th Wonder Promos Annual Membership (Promo)                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-04T01:10:25-05:00" title="03/04/19, 01:10 AM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, paypal</small>
-                                    </td>
-            </tr>
-                        <tr
-                class="grid-row even admin-activity_event admin-activity_event-signin">
-                <td>
-                                                    <strong>Jason Gomez</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=4412" data-tooltip-url="/amember/admin-users/card?id=4412">jwicked</a>)<!--
-    --> logged in from 69.181.125.147                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-04T01:00:27-05:00" title="03/04/19, 01:00 AM">&#x1f550; 2 hrs ago</time>                                    </td>
-            </tr>
-                        <tr
-                class="grid-row odd admin-activity_event admin-activity_event-payment">
-                <td>
-                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$99.99</span></strong><br />
-                        Payment from         <strong>Ben Balagot</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=13231" data-tooltip-url="/amember/admin-users/card?id=13231">swannlake1200</a>)<!--
-    -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/13231#invoice-8926" data-tooltip-url="/amember/admin-payments/invoice-card?id=8926">8926/AY71W</a>
-                        &ndash; 8th Wonder Promos Annual Membership (Promo)                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-04T00:41:31-05:00" title="03/04/19, 12:41 AM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, paypal</small>
-                                    </td>
-            </tr>
-                        <tr
-                class="grid-row even admin-activity_event admin-activity_event-signup">
-                <td>
-                                                    <strong>Wilson Ant&ocirc;nio Da Silva</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15153" data-tooltip-url="/amember/admin-users/card?id=15153">djbranca</a>)<!--
-    --> registered a new account from 201.81.179.189                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-04T00:40:22-05:00" title="03/04/19, 12:40 AM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, 8th Wonder Promos Sign Up Form</small>                                    </td>
+                                                    <strong>Marcelino Razo</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=10382" data-tooltip-url="/amember/admin-users/card?id=10382">djdohboy</a>)<!--
+    --> logged in from 76.168.18.37                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-06T13:56:56-05:00" title="03/06/19, 01:56 PM">&#x1f550; 33 min ago</time>                                    </td>
             </tr>
                         <tr
                 class="grid-row odd admin-activity_event admin-activity_event-signin">
                 <td>
-                                                    <strong>Ben Balagot</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=13231" data-tooltip-url="/amember/admin-users/card?id=13231">swannlake1200</a>)<!--
-    --> logged in from 24.5.32.26                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-04T00:35:40-05:00" title="03/04/19, 12:35 AM">&#x1f550; 2 hrs ago</time>                                    </td>
+                                                    <strong>Charles Bernard</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=14169" data-tooltip-url="/amember/admin-users/card?id=14169">mashupcharlie</a>)<!--
+    --> logged in from 98.118.84.178                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-06T13:37:00-05:00" title="03/06/19, 01:37 PM">&#x1f550; 53 min ago</time>                                    </td>
+            </tr>
+                        <tr
+                class="grid-row even admin-activity_event admin-activity_event-signup">
+                <td>
+                                                    <strong>Alex Ayala</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15168" data-tooltip-url="/amember/admin-users/card?id=15168">02yahlex</a>)<!--
+    --> registered a new account from 174.237.130.197                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-06T12:21:51-05:00" title="03/06/19, 12:21 PM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, 8th Wonder Promos Sign Up Form</small>                                    </td>
+            </tr>
+                        <tr
+                class="grid-row odd admin-activity_event admin-activity_event-signin">
+                <td>
+                                                    <strong>Todd Pugatch</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=7756" data-tooltip-url="/amember/admin-users/card?id=7756">tpugatch</a>)<!--
+    --> logged in from 96.19.18.66                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-06T12:15:03-05:00" title="03/06/19, 12:15 PM">&#x1f550; 2 hrs ago</time>                                    </td>
             </tr>
                         <tr
                 class="grid-row even admin-activity_event admin-activity_event-payment">
                 <td>
-                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$9.99</span></strong><br />
-                        Payment from         <strong>Darrell Sisco</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15152" data-tooltip-url="/amember/admin-users/card?id=15152">djsisco</a>)<!--
+                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$12.99</span></strong><br />
+                        Payment from         <strong>Charles Williams</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=13954" data-tooltip-url="/amember/admin-users/card?id=13954">djchazx</a>)<!--
     -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/15152#invoice-8924" data-tooltip-url="/amember/admin-payments/invoice-card?id=8924">8924/0ZBZA</a>
-                        &ndash; 8th Wonder Promos Monthly Membership (loyalty Promo)                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-04T00:25:55-05:00" title="03/04/19, 12:25 AM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, paypal</small>
+                        <a class="link" href="/amember/admin-user-payments/index/user_id/13954#invoice-7596" data-tooltip-url="/amember/admin-payments/invoice-card?id=7596">7596/R5E0B</a>
+                        &ndash; 8th Wonder Promos Monthly Membership (December Deal)                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-06T12:10:02-05:00" title="03/06/19, 12:10 PM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, paypal</small>
                                     </td>
             </tr>
                         <tr
                 class="grid-row odd admin-activity_event admin-activity_event-payment">
                 <td>
-                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$19.99</span></strong><br />
-                        Payment from         <strong>Brian Scott</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=14940" data-tooltip-url="/amember/admin-users/card?id=14940">mrb1470</a>)<!--
+                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$14.99</span></strong><br />
+                        Payment from         <strong>nobu kanazawa</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=13109" data-tooltip-url="/amember/admin-users/card?id=13109">djzilow</a>)<!--
     -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/14940#invoice-8292" data-tooltip-url="/amember/admin-payments/invoice-card?id=8292">8292/4V3XK</a>
-                        &ndash; 8th Wonder Promos Monthly Membership                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-04T00:20:50-05:00" title="03/04/19, 12:20 AM">&#x1f550; 3 hrs ago</time><small class="admin-activity_event-extra">, stripe</small>
+                        <a class="link" href="/amember/admin-user-payments/index/user_id/13109#invoice-2557" data-tooltip-url="/amember/admin-payments/invoice-card?id=2557">2557/HFJ58</a>
+                        &ndash; 8th Wonder Promos Monthly Membership (Returning Membership)                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-06T11:45:00-05:00" title="03/06/19, 11:45 AM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, paypal</small>
+                                    </td>
+            </tr>
+                        <tr
+                class="grid-row even admin-activity_event admin-activity_event-signin">
+                <td>
+                                                    <strong>kenneth green</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=1940" data-tooltip-url="/amember/admin-users/card?id=1940">djsmiley</a>)<!--
+    --> logged in from 69.248.131.75                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-06T11:33:12-05:00" title="03/06/19, 11:33 AM">&#x1f550; 2 hrs ago</time>                                    </td>
+            </tr>
+                        <tr
+                class="grid-row odd admin-activity_event admin-activity_event-signin">
+                <td>
+                                                    <strong>Glenn Jefferson</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=3922" data-tooltip-url="/amember/admin-users/card?id=3922">djtwoheavy</a>)<!--
+    --> logged in from 75.81.101.247                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-06T11:25:42-05:00" title="03/06/19, 11:25 AM">&#x1f550; 3 hrs ago</time>                                    </td>
+            </tr>
+                        <tr
+                class="grid-row even admin-activity_event admin-activity_event-signin">
+                <td>
+                                                    <strong>Gareth Hogan</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=6212" data-tooltip-url="/amember/admin-users/card?id=6212">garhogan</a>)<!--
+    --> logged in from 89.100.244.3                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-06T11:23:15-05:00" title="03/06/19, 11:23 AM">&#x1f550; 3 hrs ago</time>                                    </td>
+            </tr>
+                        <tr
+                class="grid-row odd admin-activity_event admin-activity_event-payment">
+                <td>
+                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$14.99</span></strong><br />
+                        Payment from         <strong>Ric Kent</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=2314" data-tooltip-url="/amember/admin-users/card?id=2314">cirkent</a>)<!--
+    -->,
+                        <a class="link" href="/amember/admin-user-payments/index/user_id/2314#invoice-2543" data-tooltip-url="/amember/admin-payments/invoice-card?id=2543">2543/X3S72</a>
+                        &ndash; 8th Wonder Promos Monthly Membership (Returning Membership)                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-06T10:51:54-05:00" title="03/06/19, 10:51 AM">&#x1f550; 3 hrs ago</time><small class="admin-activity_event-extra">, paypal</small>
                                     </td>
             </tr>
                     </table>
     </div>
 </div>
-";";s:8:"lifetime";i:2592000;s:6:"expire";i:1554279926;s:8:"priority";i:8;}
+";";s:8:"lifetime";i:2592000;s:6:"expire";i:1554492607;s:8:"priority";i:8;}

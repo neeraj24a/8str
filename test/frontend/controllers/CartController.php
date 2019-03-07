@@ -209,11 +209,6 @@ class CartController extends Controller {
 					->setCurrency('USD')
 					->setQuantity($shop->quantity)
 					->setPrice(number_format($shop->unit_price,2));
-                /*$item = [];
-                $item['name'] = $shop->name;
-                $item['price'] = $shop->unit_price;
-                $item['currency'] = 'USD';
-                $item['quantity'] = $shop->quantity;*/
                 array_push($items, $item);
             }
         }
@@ -225,11 +220,6 @@ class CartController extends Controller {
 					->setCurrency('USD')
 					->setQuantity($drop->quantity)
 					->setPrice(number_format($drop->price,2));
-                /*$item = [];
-                $item['name'] = $drop->title;
-                $item['price'] = $drop->price;
-                $item['currency'] = 'USD';
-                $item['quantity'] = $drop->quantity;*/
                 array_push($items, $item);
             }
         }
@@ -367,20 +357,21 @@ class CartController extends Controller {
 			$execution->addTransaction($transaction);
 			try {
 				$result = $payment->execute($execution, $apiContext);
-				pre($result);
-				pre($result->transactions[0]->related_resources[0]);
 				$authorizationId = $result->transactions[0]->related_resources[0]->order->id;
 				$status = 'success';
 				$is_paid = 1;
 				try {
 				    $authorization = Authorization::get($authorizationId, $apiContext);
-
+					$amt = new Amount();
+					$amt->setCurrency("USD")
+						->setTotal($sub_total);
 				    $capture = new Capture();
-				    $capture->setAmount($amount);
+				    $capture->setAmount($amt);
 
 				    $getCapture = $authorization->capture($capture, $apiContext);
 				} catch (\PayPal\Exception\PayPalConnectionException $ex) {
-				    return $this->render('error');
+					pre($ex, true);
+				    //return $this->render('error');
 				    exit(1);
 				}
 			} catch (\PayPal\Exception\PayPalConnectionException $ex) {
@@ -416,7 +407,6 @@ class CartController extends Controller {
 			} else {
 				$user = Yii::$app->user->id;
 			}
-			
 			$bill_add = $cart->billingAddress();
 			$ship_add = $cart->shippingAddress();
 			if(Yii::$app->user->id){
@@ -425,6 +415,9 @@ class CartController extends Controller {
 			$bill_id = '';
 			if($billing === null){
 				$model = new Address;
+				$model->user = $user;
+				$model->created_by = $user;
+				$model->modified_by = $user;
 				$model->first_name = $bill_add['first_name'];
 				$model->last_name = $bill_add['last_name'];
 				$model->address_line_1 = $bill_add['address_line_1'];
@@ -452,6 +445,9 @@ class CartController extends Controller {
 				}
 				if($shipping === null){
 					$sh_model = new Address;
+					$sh_model->user = $user;
+					$sh_model->created_by = $user;
+					$sh_model->modified_by = $user;
 					$sh_model->first_name = $ship_add['first_name'];
 					$sh_model->last_name = $ship_add['last_name'];
 					$sh_model->address_line_1 = $ship_add['address_line_1'];
@@ -477,6 +473,8 @@ class CartController extends Controller {
 
 			$order = new Orders;
 			$order->is_guest = $is_guest;
+			$order->created_by = $user;
+			$order->modified_by = $user;
 			$order->customer = $user;
 			$order->order_number = getOrderNum();
 			$order->paypal_order_id = $order_id;
@@ -504,6 +502,8 @@ class CartController extends Controller {
 					$detail->purchased_price = number_format($info->unit_price - ($offer/100 * $info->unit_price), 2);
 					$detail->quantity = $info->quantity;
 					$detail->quantity_details = serialize($info->var_qnty);
+					$detail->created_by = $user;
+					$detail->modified_by = $user;
 					$detail->save(false);
 				}
 			}
@@ -530,8 +530,10 @@ class CartController extends Controller {
 			if(isset($products['shop'])){
 				foreach($products['shop'] as $shop){
 					$item = [];
-					$url = Url::base(true);
-					$img = str_replace('/assets', $url.'/assets', $shop->main_image);
+					// $url = Url::base(true);
+					// $img = str_replace('/assets', $url.'/assets', $shop->main_image);
+					$url = 'https://www.8thwonderpromos.com';
+					$img = str_replace('../assets', $url.'/assets', $shop->main_image);
 					foreach($shop->var_qnty as $key => $val){
 						foreach($val as $k => $v){
 							$p = PrintfulProductDetails::find()->where(['and', "printful_product = '".$shop->printful_product."'","color = '".$key."'", "size = '".$k."'"])->one();
@@ -549,7 +551,7 @@ class CartController extends Controller {
 			}
 		
 			$request['items'] = $items;
-
+			pre($request);
 			try {
 				// Calculate shipping rates for an order
 				$response = $pf->post('orders', $request);

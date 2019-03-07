@@ -26,14 +26,20 @@ class OrderDetails extends \yii\db\ActiveRecord
         //pre($model, true);
         if ($this->isNewRecord) {
             $this->id = create_guid();
-            $this->created_by = Yii::$app->user->id;
-            $this->modified_by = Yii::$app->user->id;
+            if(empty($this->created_by)){
+				$this->created_by = Yii::$app->user->id;
+			}
+			if(empty($this->modified_by)){
+				$this->modified_by = Yii::$app->user->id;
+			}
             $this->deleted = 0;
             $this->status = 1;
             $this->date_entered = date("Y-m-d H:i:s");
             $this->date_modified = date("Y-m-d H:i:s");
         } else {
-            $this->modified_by = Yii::$app->user->id;
+            if(empty($this->modified_by)){
+				$this->modified_by = Yii::$app->user->id;
+			}
             $this->date_modified = date("Y-m-d H:i:s");
         }
         return parent::beforeSave($insert);

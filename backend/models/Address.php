@@ -32,15 +32,23 @@ class Address extends \yii\db\ActiveRecord {
         //pre($model, true);
         if ($this->isNewRecord) {
             $this->id = create_guid();
-            $this->user = Yii::$app->user->id;
-            $this->created_by = Yii::$app->user->id;
-            $this->modified_by = Yii::$app->user->id;
+            if(empty($this->user)){
+				$this->user = Yii::$app->user->id;
+			}
+			if(empty($this->created_by)){
+				$this->created_by = Yii::$app->user->id;
+			}
+			if(empty($this->modified_by)){
+				$this->modified_by = Yii::$app->user->id;
+			}
             $this->deleted = 0;
             $this->status = 1;
             $this->date_entered = date("Y-m-d H:i:s");
             $this->date_modified = date("Y-m-d H:i:s");
         } else {
-            $this->modified_by = Yii::$app->user->id;
+			if(empty($this->modified_by)){
+				$this->modified_by = Yii::$app->user->id;
+			}
             $this->date_modified = date("Y-m-d H:i:s");
         }
         return parent::beforeSave($insert);
@@ -58,7 +66,7 @@ class Address extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['id', 'first_name', 'last_name', 'address_line_1', 'city', 'state', 'country', 'zip', 'address_type', 'user', 'created_by', 'modified_by', 'date_entered', 'date_modified'], 'required'],
+            [['first_name', 'last_name', 'address_line_1', 'city', 'state', 'country', 'zip', 'address_type', 'user'], 'required'],
             [['address_type'], 'string'],
             [['date_entered', 'date_modified'], 'safe'],
             [['id', 'user', 'created_by', 'modified_by'], 'string', 'max' => 36],

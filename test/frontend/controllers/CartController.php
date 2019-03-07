@@ -369,15 +369,24 @@ class CartController extends Controller {
 				$result = $payment->execute($execution, $apiContext);
 				pre($result);
 				pre($result->transactions[0]->related_resources[0]);
-				$authid = $result->transactions[0]->related_resources[0]->order->id;
+				$authorizationId = $result->transactions[0]->related_resources[0]->order->id;
 				$status = 'success';
 				$is_paid = 1;
+				try {
+				    $authorization = Authorization::get($authorizationId, $apiContext);
+
+				    $capture = new Capture();
+				    $capture->setAmount($amount);
+
+				    $getCapture = $authorization->capture($capture, $apiContext);
+				} catch (\PayPal\Exception\PayPalConnectionException $ex) {
+				    return $this->render('error');
+				    exit(1);
+				}
 			} catch (\PayPal\Exception\PayPalConnectionException $ex) {
 				return $this->render('error');
 				exit(1);
 			}
-			pre($authid);
-			pre($payment, true);
 			$transactions = $payment->getTransactions();
 			$transaction = $transactions[0];
 			$relatedResources = $transaction->getRelatedResources();
@@ -554,7 +563,7 @@ class CartController extends Controller {
 				echo 'Printful Exception: ' . $e->getMessage();
 				var_export($pf->getLastResponseRaw());
 			}
-			return $this->redirect(['/cart/success?order='.$order->order_number]);
+			// return $this->redirect(['/cart/success?order='.$order->order_number]);
 		}
     }
 

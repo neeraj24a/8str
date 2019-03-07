@@ -365,17 +365,17 @@ class CartController extends Controller {
 			$transaction->setAmount($amount);
 			// Add the above transaction object inside our Execution object.
 			$execution->addTransaction($transaction);
-			pre($payment, true);
 			try {
 				$result = $payment->execute($execution, $apiContext);
-				$authid = $payment->transactions[0]->related_resources[0]->authorization->id;
+				pre($result);
+				//$authid = $payment->transactions[0]->related_resources[0]->authorization->id;
 				$status = 'success';
 				$is_paid = 1;
 			} catch (\PayPal\Exception\PayPalConnectionException $ex) {
 				return $this->render('error');
 				exit(1);
 			}
-			pre($authid);
+			//pre($authid);
 			pre($payment, true);
 			$transactions = $payment->getTransactions();
 			$transaction = $transactions[0];

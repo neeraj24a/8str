@@ -25,6 +25,8 @@ use Printful\PrintfulApiClient;
 
 use PayPal\Api\Order;
 use PayPal\Api\Amount;
+use PayPal\Api\Authorization;
+use PayPal\Api\Capture;
 use PayPal\Api\Details;
 use PayPal\Api\Item;
 use PayPal\Api\ItemList;
@@ -391,6 +393,7 @@ class CartController extends Controller {
 			
 			try {
 				$result = $payment->execute($execution, $apiContext);
+				$authid = $payment->transactions[0]->related_resources[0]->authorization->id;
 				$status = 'success';
 				$is_paid = 1;
 				try {
@@ -405,6 +408,7 @@ class CartController extends Controller {
 				return $this->render('error');
 				exit(1);
 			}
+			pre($authid);
 			pre($payment, true);
 			$transactions = $payment->getTransactions();
 			$transaction = $transactions[0];

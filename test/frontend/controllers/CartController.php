@@ -405,7 +405,7 @@ class CartController extends Controller {
 				return $this->render('error');
 				exit(1);
 			}
-			
+			pre($payment, true);
 			$transactions = $payment->getTransactions();
 			$transaction = $transactions[0];
 			$relatedResources = $transaction->getRelatedResources();

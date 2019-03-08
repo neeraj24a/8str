@@ -33,7 +33,7 @@ $this->title = 'Dashboard';
                     <div class="card-icon">
                         <i class="fa fa-th"></i>
                     </div>
-                    <p class="card-category">Products</p>
+                    <p class="card-category">Products & Drops</p>
                     <h3 class="card-title"><?php echo number_format($products); ?></h3>
                 </div>
                 <div class="card-footer">

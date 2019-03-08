@@ -10,7 +10,10 @@ namespace backend\controllers;
 use Yii;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
-use backend\models\Track;
+use backend\models\Orders;
+use backend\models\Users;
+use backend\models\Products;
+use backend\models\Drops;
 /**
  * Description of LogoutController
  *
@@ -34,9 +37,16 @@ class DashboardController extends \yii\web\Controller {
     
     public function actionIndex()
     {
-//        $audios = Track::findAll(['type' => 'audio']);
-//        $videos = Track::findAll(['type' => 'video']);
-        return $this->render('index',['audio' => '1','video' => '1']);
+        $orders = Orders::find()->all();
+        $total = 0;
+        foreach($orders as $order){
+            $total = $total + $order->order_amount;
+        }
+        $products = Products::find()->count();
+        $drops = Drops::find()->count();
+        $products = $products + $drops;
+        $users = Users::find()->count();
+        return $this->render('index',['orders' => sizeof($orders),'users' => $users, 'products' => $products, 'total' => $total]);
     }
     
 }

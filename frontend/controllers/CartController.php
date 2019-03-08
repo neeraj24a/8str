@@ -551,7 +551,6 @@ class CartController extends Controller {
 			}
 		
 			$request['items'] = $items;
-			pre($request);
 			try {
 				// Calculate shipping rates for an order
 				$response = $pf->post('orders', $request);
@@ -565,7 +564,7 @@ class CartController extends Controller {
 				echo 'Printful Exception: ' . $e->getMessage();
 				var_export($pf->getLastResponseRaw());
 			}
-			// return $this->redirect(['/cart/success?order='.$order->order_number]);
+			return $this->redirect(['/cart/success?order='.$order->order_number]);
 		}
     }
 

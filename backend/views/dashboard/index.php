@@ -48,7 +48,7 @@ $this->title = 'Dashboard';
             <div class="card card-stats">
                 <div class="card-header card-header-warning card-header-icon">
                     <div class="card-icon">
-                        <i class="fa fa-dollar-sign"></i>
+                        <i class="fa fa-dollar"></i>
                     </div>
                     <p class="card-category">Total Sell</p>
                     <h3 class="card-title">$<?php echo number_format($total); ?></h3>

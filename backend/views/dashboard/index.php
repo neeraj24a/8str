@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\admin\models\Users */
@@ -21,7 +22,7 @@ $this->title = 'Dashboard';
                 </div>
                 <div class="card-footer">
                     <div class="stats">
-                        <a href="#"><i class="material-icons">update</i> Just Updated Get Details</a>
+                        <?= Html::a('<i class="material-icons">update</i> Just Updated Get Details', ['/users']) ?>
                     </div>
                 </div>
             </div>
@@ -37,7 +38,7 @@ $this->title = 'Dashboard';
                 </div>
                 <div class="card-footer">
                     <div class="stats">
-                        <a href="#"><i class="material-icons">update</i> Just Updated Get Details</a>
+                        <?= Html::a('<i class="material-icons">update</i> Just Updated Get Details', ['/products']) ?>
                     </div>
                 </div>
             </div>
@@ -55,7 +56,7 @@ $this->title = 'Dashboard';
                 </div>
                 <div class="card-footer">
                     <div class="stats">
-                        <a href="#"><i class="material-icons">update</i> Just Updated Get Details</a>
+                        <?= Html::a('<i class="material-icons">update</i> Just Updated Get Details', ['/orders']) ?>
                     </div>
                 </div>
             </div>
@@ -71,7 +72,7 @@ $this->title = 'Dashboard';
                 </div>
                 <div class="card-footer">
                     <div class="stats">
-                        <a href="#"><i class="material-icons">update</i> Just Updated Get Details</a>
+                        <?= Html::a('<i class="material-icons">update</i> Just Updated Get Details', ['/orders']) ?>
                     </div>
                 </div>
             </div>

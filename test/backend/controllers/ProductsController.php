@@ -162,7 +162,6 @@ class ProductsController extends Controller {
         $link = Url::base(true);
         $url = str_replace("admin", "", $link);
         $img = str_replace('../', $url, $model->main_image);
-        // $img = 'https://www.8thwonderpromos.com/test/assets/uploads/products/81c14c11-8577-63c4-2769-5c385b2b7427.jpg';
         $pf = new PrintfulApiClient('a77vf4jb-a1cw-pwk3:rna8-hab76vppqhbz');
         $request = [];
         $request['sync_product']  = ['name' => $model->name,'thumbnail' => $img];
@@ -186,17 +185,19 @@ class ProductsController extends Controller {
         }
 		
         $request['sync_variants'] = $variants;
-        // pre($request, true);
         
         try {
             // Calculate shipping rates for an order
             $response = $pf->post('store/products', $request);
-		pre($response, true);
-            $printful_id = $response['id'];
+			// $printful_id = $response['id'];
             $external_id = $response['external_id'];
+			$resp = $pf->get('store/products'.$external_id);
+			pre($resp, true);
+            
             $model->is_synced = 1;
             $model->save(false);
-            return $this->redirect(Yii::$app->request->referrer);
+            
+			return $this->redirect(Yii::$app->request->referrer);
         } catch (PrintfulApiException $e) { //API response status code was not successful
             echo 'Printful API Exception: ' . $e->getCode() . ' ' . $e->getMessage();
         } catch (PrintfulException $e) { //API call failed

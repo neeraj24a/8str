@@ -88,7 +88,7 @@ class ProductsController extends Controller {
 	
 	public function actionGetproducts($product) {
 		$type = strtoupper($product);
-		$pf = new PrintfulApiClient('ciac7wnf-7cvl-wa20:io6q-8d0qfxlnvf42');
+		$pf = new PrintfulApiClient('a77vf4jb-a1cw-pwk3:rna8-hab76vppqhbz');
 		$response = $pf->get('products');
 		$products = [];
         foreach($response as $product){
@@ -163,7 +163,7 @@ class ProductsController extends Controller {
         $url = str_replace("admin", "", $link);
         $img = str_replace('../', $url, $model->main_image);
         // $img = 'https://www.8thwonderpromos.com/test/assets/uploads/products/81c14c11-8577-63c4-2769-5c385b2b7427.jpg';
-        $pf = new PrintfulApiClient('ciac7wnf-7cvl-wa20:io6q-8d0qfxlnvf42');
+        $pf = new PrintfulApiClient('a77vf4jb-a1cw-pwk3:rna8-hab76vppqhbz');
         $request = [];
         $request['sync_product']  = ['name' => $model->name,'thumbnail' => $img];
         $variants = [];
@@ -191,6 +191,7 @@ class ProductsController extends Controller {
         try {
             // Calculate shipping rates for an order
             $response = $pf->post('store/products', $request);
+		pre($response, true);
             $printful_id = $response['id'];
             $external_id = $response['external_id'];
             $model->is_synced = 1;

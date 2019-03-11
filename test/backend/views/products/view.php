@@ -54,6 +54,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'available',
                                 'discount',
                                 'main_image',
+								'printful_mock_up',
+								'printful_back_mock'
                             ],
                         ])
                         ?>

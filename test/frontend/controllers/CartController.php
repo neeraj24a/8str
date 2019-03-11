@@ -12,6 +12,7 @@ use backend\models\Guests;
 use backend\models\Orders;
 use backend\models\OrderDetails;
 use backend\models\PrintfulProductDetails;
+use backend\models\ProductSyncData;
 
 use frontend\config\Cart;
 use frontend\config\MonologLogFactory;
@@ -105,7 +106,7 @@ class CartController extends Controller {
             $shipping['is_default'] = 1;
             $shipping['address_type'] = 'shipping';
             $cart->setShippingAddress($shipping);
-			$pf = new PrintfulApiClient('ciac7wnf-7cvl-wa20:io6q-8d0qfxlnvf42');
+			$pf = new PrintfulApiClient('a77vf4jb-a1cw-pwk3:rna8-hab76vppqhbz');
 			$request = [];
 			$request['recipient']  = ['address1' => $add['ship_address_line_1'],'city' => $add['ship_city'],'country_code' => 'US', 'state_code' => $add['ship_state'], 'zip' => $add['ship_zip']];
 			$cart = new Cart();
@@ -522,7 +523,7 @@ class CartController extends Controller {
 				}
 			}
 		
-			$pf = new PrintfulApiClient('ciac7wnf-7cvl-wa20:io6q-8d0qfxlnvf42');
+			$pf = new PrintfulApiClient('a77vf4jb-a1cw-pwk3:rna8-hab76vppqhbz');
 			$request = [];
 			$request['recipient']  = ['address1' => $ship_add['address_line_1'] .' '. $ship_add['address_line_2'],'city' => $ship_add['city'],'country_code' => 'US', 'state_code' => $ship_add['state'], 'zip' => $ship_add['zip']];
 			$products = $cart->getCart();
@@ -537,13 +538,9 @@ class CartController extends Controller {
 					foreach($shop->var_qnty as $key => $val){
 						foreach($val as $k => $v){
 							$p = PrintfulProductDetails::find()->where(['and', "printful_product = '".$shop->printful_product."'","color = '".$key."'", "size = '".$k."'"])->one();
+							$pp = ProductSyncData::find()->where(['and', "product = '".$shop->id."'","variant = '".$p->id."'"])->one();
 							$item['quantity'] = $shop->quantity;
-							$item['variant_id'] = $p->printful_product_id;
-							$item['files'] = [
-								[
-									'url' => $img
-								]
-							];
+							$item['external_variant_id'] = $pp->external_id;
 							array_push($items, $item);
 						}
 					}
@@ -551,7 +548,6 @@ class CartController extends Controller {
 			}
 		
 			$request['items'] = $items;
-			pre($request);
 			try {
 				// Calculate shipping rates for an order
 				$response = $pf->post('orders', $request);
@@ -565,7 +561,7 @@ class CartController extends Controller {
 				echo 'Printful Exception: ' . $e->getMessage();
 				var_export($pf->getLastResponseRaw());
 			}
-			// return $this->redirect(['/cart/success?order='.$order->order_number]);
+			return $this->redirect(['/cart/success?order='.$order->order_number]);
 		}
     }
 

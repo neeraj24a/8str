@@ -25,6 +25,8 @@ use yii\behaviors\SluggableBehavior;
  * @property int $available
  * @property int $discount
  * @property string $main_image
+ * @property string $printful_mock_up
+ * @property string $printful_back_mock
  * @property int $status
  * @property int $deleted
  * @property string $created_by
@@ -75,7 +77,7 @@ class Products extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['printful_product','sku', 'name', 'description', 'category', 'units_in_stock', 'unit_price'], 'required'],
-            ['main_image', 'required', 'on' => 'create'],
+            [['main_image', 'printful_mock_up'], 'required', 'on' => 'create'],
             [['description', 'variation', 'size', 'colors', 'weight_type'], 'string'],
             [['units_in_stock'], 'integer'],
             [['date_entered', 'date_modified'], 'safe'],
@@ -84,8 +86,8 @@ class Products extends \yii\db\ActiveRecord {
             [['slug', 'name'], 'string', 'max' => 256],
             [['unit_price', 'offer_price', 'weight'], 'string', 'max' => 16],
             [['available', 'discount', 'is_featured', 'is_synced', 'status', 'deleted'], 'integer', 'max' => 1],
-//            [['main_image'], 'string', 'max' => 264],
-            [['main_image'], 'file', 'extensions' => 'png, jpg', 'skipOnEmpty' => !$this->isNewRecord],
+            [['main_image', 'printful_mock_up'], 'file', 'extensions' => 'png, jpg', 'skipOnEmpty' => !$this->isNewRecord],
+			[['printful_back_mock'], 'file', 'extensions' => 'png, jpg', 'skipOnEmpty' => true],
             [['id', 'sku'], 'unique'],
         ];
     }
@@ -122,6 +124,8 @@ class Products extends \yii\db\ActiveRecord {
             'external_id' => 'External ID',
             'discount' => 'Discount',
             'main_image' => 'Main Image',
+			'printful_mock_up' => 'Printful Front Image',
+			'printful_back_mock' => 'Printful Outside Label Image',
             'is_featured' => 'Is Featured',
             'status' => 'Status',
             'deleted' => 'Deleted',

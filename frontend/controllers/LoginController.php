@@ -19,6 +19,7 @@ class LoginController extends \yii\web\Controller {
             $model = new LoginForm();
             $info = new Cart();
             $cart = $info->getCart();
+            pre($_POST, true);
             if ($model->load(Yii::$app->request->post()) && $model->login()) {
                 $session = Yii::$app->getSession();
 				$session->set('cart', $cart);

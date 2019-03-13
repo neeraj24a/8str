@@ -148,11 +148,7 @@ class LoginForm extends Model
                 $response = file_get_contents($url);
                 $response = json_decode($response);
 		if($response->ok == 1){
-		    $user = Users::findOne(['username' => $this->username, 'type' => 'general']);
-		    $pass = Yii::$app->security->generatePasswordHash($this->password);
-		    $user->password = $pass;
-		    $user->save(false);
-                    $subscriptions = (array) $response->subscriptions;
+		    $subscriptions = (array) $response->subscriptions;
                     $c_sub = '';
                     $product = '';
 		    if(sizeof($subscriptions) > 0){

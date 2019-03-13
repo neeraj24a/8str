@@ -106,7 +106,7 @@ class CartController extends Controller {
             $shipping['is_default'] = 1;
             $shipping['address_type'] = 'shipping';
             $cart->setShippingAddress($shipping);
-			$pf = new PrintfulApiClient('a77vf4jb-a1cw-pwk3:rna8-hab76vppqhbz');
+			$pf = new PrintfulApiClient('ciac7wnf-7cvl-wa20:io6q-8d0qfxlnvf42');
 			$request = [];
 			$request['recipient']  = ['address1' => $add['ship_address_line_1'],'city' => $add['ship_city'],'country_code' => 'US', 'state_code' => $add['ship_state'], 'zip' => $add['ship_zip']];
 			$cart = new Cart();
@@ -523,7 +523,7 @@ class CartController extends Controller {
 				}
 			}
 		
-			$pf = new PrintfulApiClient('a77vf4jb-a1cw-pwk3:rna8-hab76vppqhbz');
+			$pf = new PrintfulApiClient('ciac7wnf-7cvl-wa20:io6q-8d0qfxlnvf42');
 			$request = [];
 			$request['recipient']  = ['address1' => $ship_add['address_line_1'] .' '. $ship_add['address_line_2'],'city' => $ship_add['city'],'country_code' => 'US', 'state_code' => $ship_add['state'], 'zip' => $ship_add['zip']];
 			$products = $cart->getCart();

@@ -19,18 +19,21 @@ class LoginController extends \yii\web\Controller {
             $model = new LoginForm();
             $info = new Cart();
             $cart = $info->getCart();
-	    if(isset($_POST['LoginForm'])){
-		    $username = $_POST['LoginForm']['username'];
-		    $password = $_POST['LoginForm']['password'];
-		    $url = 'https://www.8thwonderpromos.com/amember/api/check-access/by-login-pass?_key=5XAcMA4i3crPhaoUkQMD&login='.$username.'&pass='.$password;
-		    $response = file_get_contents($url);
-		    $response = json_decode($response);
-		    if($response->ok == 1){
-			    $user = Users::findOne(['username' => $username, 'type' => 'general']);
-			    $pass = Yii::$app->security->generatePasswordHash($password);
-			    $user->password = $pass;
-			    $user->save(false);
-			    if ($model->load(Yii::$app->request->post()) && $model->login()) {
+			if(isset($_POST['LoginForm'])){
+				$username = $_POST['LoginForm']['username'];
+				$password = $_POST['LoginForm']['password'];
+				$url = 'https://www.8thwonderpromos.com/amember/api/check-access/by-login-pass?_key=5XAcMA4i3crPhaoUkQMD&login='.$username.'&pass='.$password;
+				$response = file_get_contents($url);
+				$response = json_decode($response);
+				if($response->ok == 1){
+					$user = Users::findOne(['username' => $username, 'type' => 'general']);
+					$pass = Yii::$app->security->generatePasswordHash($password);
+					$user->password = $pass;
+					$user->save(false);
+				}
+			}
+	
+			if ($model->load(Yii::$app->request->post()) && $model->login()) {
 				$session = Yii::$app->getSession();
 						$session->set('cart', $cart);
 				$return_url = Yii::$app->request->referrer;
@@ -39,10 +42,8 @@ class LoginController extends \yii\web\Controller {
 				} else {
 				    return $this->goBack();
 				}
-			    }
-		    }
-	    }
-            $model->password = '';
+			}
+		    $model->password = '';
             return $this->render('index', [
                         'model' => $model,
             ]);

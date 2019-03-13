@@ -11,6 +11,7 @@ use backend\models\OrderSearch;
 use backend\models\OrderDetails;
 use backend\models\Address;
 use backend\models\Products;
+use backend\models\ProductSyncData;
 use backend\models\PrintfulProductDetails;
 
 use yii\web\Controller;
@@ -20,6 +21,7 @@ use yii\filters\VerbFilter;
 use Printful\Exceptions\PrintfulApiException;
 use Printful\Exceptions\PrintfulException;
 use Printful\PrintfulApiClient;
+
 /**
  * OrdersController implements the CRUD actions for Orders model.
  */
@@ -170,15 +172,9 @@ class OrdersController extends Controller
 					foreach($val as $k => $v){
 						$prod = Products::findOne($d->product);
 						$p = PrintfulProductDetails::find()->where(['and', "printful_product = '".$prod->printful_product."'","color = '".$color."'", "size = '".$k."'"])->one();
-						$url = 'https://www.8thwonderpromos.com';
-						$img = str_replace('../assets', $url.'/assets', $prod->main_image);
-						$item['quantity'] = $v;
-						$item['variant_id'] = $p->printful_product_id;
-						$item['files'] = [
-							[
-								'url' => $img
-							]
-						];
+						$pp = ProductSyncData::find()->where(['and', "product = '".$shop->id."'","variant = '".$p->id."'"])->one();
+						$item['quantity'] = $shop->quantity;
+						$item['external_variant_id'] = $pp->external_id;
 						array_push($items, $item);
 					}
 				}

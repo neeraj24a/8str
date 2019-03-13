@@ -14,6 +14,7 @@ use backend\models\PrintfulProducts;
 use backend\models\PrintfulProductDetails;
 use yii\web\UploadedFile;
 use backend\models\ProductSearch;
+use backend\models\ProductSyncData;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -184,11 +185,20 @@ class ProductsController extends Controller {
         $model = $this->findModel($id);
         $link = Url::base(true);
         $url = str_replace("admin", "", $link);
-        $img = str_replace('../', $url, $model->main_image);
-        // $img = 'https://www.8thwonderpromos.com/test/assets/uploads/products/81c14c11-8577-63c4-2769-5c385b2b7427.jpg';
+		$thumb = str_replace('../', $url, $model->main_image);
+        $img = str_replace('../', $url, $model->printful_mock_up);
+		$files = [];
+		$default = ['url' => $img];
+		array_push($files, $default);
+		if(!empty($model->printful_back_mock)){
+			$bk_img = str_replace('../', $url, $model->printful_back_mock);
+			$back = ['type' => 'label_outside', 'url' => $bk_img];
+			array_push($files, $back);
+		}
+		
         $pf = new PrintfulApiClient('ciac7wnf-7cvl-wa20:io6q-8d0qfxlnvf42');
         $request = [];
-        $request['sync_product']  = ['name' => $model->name,'thumbnail' => $img];
+        $request['sync_product']  = ['name' => $model->name,'thumbnail' => $thumb];
         $variants = [];
         // $sizes = explode(',', $model->size);
         $vv = PrintfulProductDetails::find()->where(['printful_product' => $model->printful_product])
@@ -201,24 +211,43 @@ class ProductsController extends Controller {
                 'retail_price' => $model->unit_price,
                 'variant_id' => $v->printful_product_id,
                 'size' => $v->size,
-                'files' => [
-                    ['url' => $img]
-                ]
+                'files' => $files
             ];
             array_push($variants, $variant);
         }
 		
         $request['sync_variants'] = $variants;
-        // pre($request, true);
         
         try {
-            // Calculate shipping rates for an order
             $response = $pf->post('store/products', $request);
-            $printful_id = $response['id'];
+			$printful_id = $response['id'];
             $external_id = $response['external_id'];
-            $model->is_synced = 1;
-            $model->save(false);
-            return $this->redirect(Yii::$app->request->referrer);
+			try{
+				$resp = $pf->get('store/products/'.$printful_id);
+				$model->printful_id = $printful_id;
+				$model->external_id = $external_id;
+				$model->is_synced = 1;
+				$model->save(false);
+				foreach($resp['sync_variants'] as $var){
+					foreach($vv as $v){
+						if($v->printful_product_id == $var['variant_id']){
+							$mod = new ProductSyncData();
+							$mod->product = $model->id;
+							$mod->variant = $v->id;
+							$mod->printful_id = $var['id'];
+							$mod->external_id = $var['external_id'];
+							$mod->sync_product_id = $var['sync_product_id'];
+							$mod->save(false);
+						}
+					}
+				}
+				return $this->redirect(Yii::$app->request->referrer);
+            } catch (PrintfulApiException $e) { //API response status code was not successful
+				echo 'Printful API Exception: ' . $e->getCode() . ' ' . $e->getMessage();
+			} catch (PrintfulException $e) { //API call failed
+				echo 'Printful Exception: ' . $e->getMessage();
+				var_export($pf->getLastResponseRaw());
+			} 
         } catch (PrintfulApiException $e) { //API response status code was not successful
             echo 'Printful API Exception: ' . $e->getCode() . ' ' . $e->getMessage();
         } catch (PrintfulException $e) { //API call failed
@@ -226,6 +255,83 @@ class ProductsController extends Controller {
             var_export($pf->getLastResponseRaw());
         }
     }
+	
+	public function actionSyncproducts(){
+		$pf = new PrintfulApiClient('ciac7wnf-7cvl-wa20:io6q-8d0qfxlnvf42');
+		try {
+            $response = $pf->get('store/products');
+			Yii::$app->db->createCommand()->truncateTable('product_sync_details')->execute();
+			foreach($response as $res){
+				$model = Products::find()->where(["name" => $res['name']])->one();
+				try{
+					$model->printful_id = $res['id'];
+					$model->external_id = $res['external_id'];
+					$model->is_synced = 1;
+					$model->save(false);
+					$resp = $pf->get('store/products/'.$res['id']);
+					foreach($resp['sync_variants'] as $var){
+						$vv = PrintfulProductDetails::find()->where(['printful_product' => $model->printful_product])
+								->orderBy([
+									'color' => SORT_ASC,
+									'size' => SORT_ASC,
+								])->all();
+						foreach($vv as $v){
+							if($v->printful_product_id == $var['variant_id']){
+								$mod = new ProductSyncData();
+								$mod->product = $model->id;
+								$mod->variant = $v->id;
+								$mod->printful_id = $var['id'];
+								$mod->external_id = $var['external_id'];
+								$mod->sync_product_id = $var['sync_product_id'];
+								$mod->save(false);
+							}
+						}
+					}
+				} catch (PrintfulApiException $e) { //API response status code was not successful
+					echo 'Printful API Exception: ' . $e->getCode() . ' ' . $e->getMessage();
+				} catch (PrintfulException $e) { //API call failed
+					echo 'Printful Exception: ' . $e->getMessage();
+					var_export($pf->getLastResponseRaw());
+				} 
+			}
+			return $this->redirect(Yii::$app->request->referrer);
+			/*
+			$printful_id = $response['id'];
+            $external_id = $response['external_id'];
+			try{
+				$resp = $pf->get('store/products/'.$printful_id);
+				$model->printful_id = $printful_id;
+				$model->external_id = $external_id;
+				$model->is_synced = 1;
+				$model->save(false);
+				foreach($resp['sync_variants'] as $var){
+					foreach($vv as $v){
+						if($v->printful_product_id == $var['variant_id']){
+							$mod = new ProductSyncData();
+							$mod->product = $model->id;
+							$mod->variant = $v->id;
+							$mod->printful_id = $var['id'];
+							$mod->external_id = $var['external_id'];
+							$mod->sync_product_id = $var['sync_product_id'];
+							$mod->save(false);
+						}
+					}
+				}
+				return $this->redirect(Yii::$app->request->referrer);
+            } catch (PrintfulApiException $e) { //API response status code was not successful
+				echo 'Printful API Exception: ' . $e->getCode() . ' ' . $e->getMessage();
+			} catch (PrintfulException $e) { //API call failed
+				echo 'Printful Exception: ' . $e->getMessage();
+				var_export($pf->getLastResponseRaw());
+			} 
+			*/
+        } catch (PrintfulApiException $e) { //API response status code was not successful
+            echo 'Printful API Exception: ' . $e->getCode() . ' ' . $e->getMessage();
+        } catch (PrintfulException $e) { //API call failed
+            echo 'Printful Exception: ' . $e->getMessage();
+            var_export($pf->getLastResponseRaw());
+        }
+	}
 
     /**
      * Finds the Products model based on its primary key value.
@@ -244,9 +350,12 @@ class ProductsController extends Controller {
 
     protected function handleProductSave(Products $model) {
         $prev_img = $model->main_image;
+		$prev_printful_mock_up = $model->printful_mock_up;
+		$prev_printful_back_mock = $model->printful_back_mock;
         if ($model->load(Yii::$app->request->post())) {
             $model->main_image = UploadedFile::getInstance($model, 'main_image');
-
+			$model->printful_mock_up = UploadedFile::getInstance($model, 'printful_mock_up');
+			$model->printful_back_mock = UploadedFile::getInstance($model, 'printful_back_mock');
             if ($model->validate()) {
                 if ($model->main_image) {
                     $filePath = '../assets/uploads/products/' . create_guid() . '.' . $model->main_image->extension;
@@ -255,6 +364,22 @@ class ProductsController extends Controller {
                     }
                 } else {
                     $model->main_image = $prev_img;
+                }
+				if ($model->printful_mock_up) {
+                    $filePath = '../assets/uploads/products/' . create_guid() . '.' . $model->printful_mock_up->extension;
+                    if ($model->printful_mock_up->saveAs($filePath)) {
+                        $model->printful_mock_up = $filePath;
+                    }
+                } else {
+                    $model->printful_mock_up = $prev_printful_mock_up;
+                }
+				if ($model->printful_back_mock) {
+                    $filePath = '../assets/uploads/products/' . create_guid() . '.' . $model->printful_back_mock->extension;
+                    if ($model->printful_back_mock->saveAs($filePath)) {
+                        $model->printful_back_mock = $filePath;
+                    }
+                } else {
+                    $model->printful_back_mock = $prev_printful_back_mock;
                 }
 
                 if ($model->save(false)) {

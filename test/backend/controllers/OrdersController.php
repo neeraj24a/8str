@@ -3,13 +3,24 @@
 namespace backend\controllers;
 
 use Yii;
+use yii\helpers\Url;
+use yii\web\BadRequestHttpException;
+
 use backend\models\Orders;
 use backend\models\OrderSearch;
 use backend\models\OrderDetails;
 use backend\models\Address;
+use backend\models\Products;
+use backend\models\ProductSyncData;
+use backend\models\PrintfulProductDetails;
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
+use Printful\Exceptions\PrintfulApiException;
+use Printful\Exceptions\PrintfulException;
+use Printful\PrintfulApiClient;
 
 /**
  * OrdersController implements the CRUD actions for Orders model.
@@ -142,4 +153,49 @@ class OrdersController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+	
+	public function actionSync($id)
+	{
+		$order = $this->findModel($id);
+        $detail = OrderDetails::findAll(['order' => $id]);
+		$ship_add = Address::findOne(['address_type' => 'shipping','id' => $order->shipping_address]);
+        
+		$pf = new PrintfulApiClient('a77vf4jb-a1cw-pwk3:rna8-hab76vppqhbz');
+		$request = [];
+		$request['recipient']  = ['address1' => $ship_add->address_line_1 .' '. $ship_add->address_line_2,'city' => $ship_add->city,'country_code' => 'US', 'state_code' => $ship_add->state, 'zip' => $ship_add->zip];
+		$items = [];
+		foreach($detail as $d){
+			if($d->quantity_details != NULL){
+				$d->quantity_details = unserialize($d->quantity_details);
+				foreach($d->quantity_details as $key => $val){
+					$color = $key;
+					foreach($val as $k => $v){
+						$prod = Products::findOne($d->product);
+						$p = PrintfulProductDetails::find()->where(['and', "printful_product = '".$prod->printful_product."'","color = '".$color."'", "size = '".$k."'"])->one();
+						$pp = ProductSyncData::find()->where(['and', "product = '".$shop->id."'","variant = '".$p->id."'"])->one();
+						$item['quantity'] = $shop->quantity;
+						$item['external_variant_id'] = $pp->external_id;
+						array_push($items, $item);
+					}
+				}
+			}
+		}
+		
+		$request['items'] = $items;
+		// $request = json_encode($request);
+		try {
+			// Calculate shipping rates for an order
+			$response = $pf->post('orders', $request);
+			$odr = Orders::findOne($id);
+			$odr->printful_synced = 1;
+			$odr->printful_order = $response['id'];
+			$odr->save(false);
+			return $this->redirect(['view', 'id' => $id]);
+		} catch (PrintfulApiException $e) { //API response status code was not successful
+			echo 'Printful API Exception: ' . $e->getCode() . ' ' . $e->getMessage();
+		} catch (PrintfulException $e) { //API call failed
+			echo 'Printful Exception: ' . $e->getMessage();
+			var_export($pf->getLastResponseRaw());
+		}
+	}
 }

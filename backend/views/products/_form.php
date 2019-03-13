@@ -54,6 +54,18 @@ use yii\widgets\ActiveForm;
                     </div>
                 </div>
             </div>
+			<div class="col-lg-12">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <?= $form->field($model, 'printful_mock_up')->fileInput(['class' => 'form-control']) ?>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <?= $form->field($model, 'printful_back_mock')->fileInput(['class' => 'form-control']) ?>
+                    </div>
+                </div>
+            </div>
             <div class="col-lg-12">
                 <div class="col-lg-6">
                     <div class="form-group">

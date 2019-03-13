@@ -9,6 +9,7 @@ use Printful\PrintfulApiClient;
 
 use Yii;
 use backend\models\Products;
+use backend\models\ProductImages;
 use backend\models\PrintfulProducts;
 use backend\models\PrintfulProductDetails;
 use yii\web\UploadedFile;
@@ -89,7 +90,7 @@ class ProductsController extends Controller {
 	
 	public function actionGetproducts($product) {
 		$type = strtoupper($product);
-		$pf = new PrintfulApiClient('a77vf4jb-a1cw-pwk3:rna8-hab76vppqhbz');
+		$pf = new PrintfulApiClient('ciac7wnf-7cvl-wa20:io6q-8d0qfxlnvf42');
 		$response = $pf->get('products');
 		$products = [];
         foreach($response as $product){
@@ -157,6 +158,28 @@ class ProductsController extends Controller {
 
         return $this->redirect(['index']);
     }
+	
+	public function actionAddimages($id) {
+		$model = new ProductImages();
+		$productName = $this->findModel($id)->name;
+		if (Yii::$app->request->isPost) {
+            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
+			$model->product = $id;
+            if ($model->upload()) {
+                // file is uploaded successfully
+                return $this->render('upload', [
+                    'model' => $model,
+					'product' => $id,
+					'productName' => $productName
+				]);
+            }
+        }
+		return $this->render('upload', [
+                    'model' => $model,
+					'product' => $id,
+					'productName' => $productName
+        ]);
+	}
 	
 	public function actionSync($id) {
         $model = $this->findModel($id);

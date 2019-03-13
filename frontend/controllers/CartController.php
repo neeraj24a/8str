@@ -12,6 +12,7 @@ use backend\models\Guests;
 use backend\models\Orders;
 use backend\models\OrderDetails;
 use backend\models\PrintfulProductDetails;
+use backend\models\ProductSyncData;
 
 use frontend\config\Cart;
 use frontend\config\MonologLogFactory;
@@ -537,13 +538,9 @@ class CartController extends Controller {
 					foreach($shop->var_qnty as $key => $val){
 						foreach($val as $k => $v){
 							$p = PrintfulProductDetails::find()->where(['and', "printful_product = '".$shop->printful_product."'","color = '".$key."'", "size = '".$k."'"])->one();
+							$pp = ProductSyncData::find()->where(['and', "product = '".$shop->id."'","variant = '".$p->id."'"])->one();
 							$item['quantity'] = $shop->quantity;
-							$item['variant_id'] = $p->printful_product_id;
-							$item['files'] = [
-								[
-									'url' => $img
-								]
-							];
+							$item['external_variant_id'] = $pp->external_id;
 							array_push($items, $item);
 						}
 					}

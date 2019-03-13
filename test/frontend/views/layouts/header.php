@@ -36,6 +36,12 @@ $this->title = "Cart";
                 SIGN UP
                 </a>
              </li>
+			 <?php else: ?>
+			 <li class="mobile-nav__item border-bottom">
+                <a href="<?php echo Url::toRoute('/orders'); ?>" class="mobile-nav__link">
+                MY ORDERS
+                </a>
+             </li>
              <?php endif; ?>
           </ul>
        </nav>
@@ -79,7 +85,7 @@ $this->title = "Cart";
                             <a href="<?php echo Url::toRoute('/shop'); ?>" class="site-nav__link site-nav__link--main">SHOP</a>
                          </li>
                          <li >
-                            <a href="https://pool.8thwonderpromos.com/contact-us" class="site-nav__link site-nav__link--main">CONTACT US</a>
+                            <a href="https://pool.8thwonderpromos.com/contact" class="site-nav__link site-nav__link--main">CONTACT US</a>
                          </li>
 						 <?php if(Yii::$app->user->isGuest): ?>
 						 <li>
@@ -99,12 +105,24 @@ $this->title = "Cart";
                         <span class="icon__fallback-text">Log in</span>
                     </a>
                     <?php else: ?>
-                    <a href="<?php echo Url::toRoute('/logout'); ?>" class="site-header__account">
+					<ul class="nav navbar-nav">
+						<li class="dropdown">
+						  <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><?= \Yii::$app->user->identity->username ?> <span class="glyphicon glyphicon-user pull-right"></span></a>
+						  <ul class="dropdown-menu">
+							<li><a href="<?php echo Url::toRoute('/orders'); ?>">My Orders <span class="glyphicon glyphicon-cog pull-right"></span></a></li>
+							<li class="divider"></li>
+							<li><a href="/amember/member">Go To Profile <span class="glyphicon glyphicon-stats pull-right"></span></a></li>
+							<li class="divider"></li>
+							<li><a href="<?php echo Url::toRoute('/logout'); ?>">Sign Out <span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
+						  </ul>
+						</li>
+					</ul>
+                    <!--<a href="<?php echo Url::toRoute('/logout'); ?>" class="site-header__account">
                         <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-logout" viewBox="0 0 28.33 37.68">
                             <path d="M14.17 14.9a7.45 7.45 0 1 0-7.5-7.45 7.46 7.46 0 0 0 7.5 7.45zm0-10.91a3.45 3.45 0 1 1-3.5 3.46A3.46 3.46 0 0 1 14.17 4zM14.17 16.47A14.18 14.18 0 0 0 0 30.68c0 1.41.66 4 5.11 5.66a27.17 27.17 0 0 0 9.06 1.34c6.54 0 14.17-1.84 14.17-7a14.18 14.18 0 0 0-14.17-14.21zm0 17.21c-6.3 0-10.17-1.77-10.17-3a10.17 10.17 0 1 1 20.33 0c.01 1.23-3.86 3-10.16 3z"/>
                         </svg>
                         <span class="icon__fallback-text">Log out</span>
-                    </a>
+                    </a>-->
                     <?php endif; ?>
                    <a href="<?php echo Url::toRoute('/cart'); ?>" class="site-header__cart">
                       <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-cart" viewBox="0 0 37 40">

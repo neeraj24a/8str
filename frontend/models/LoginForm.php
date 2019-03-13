@@ -84,11 +84,11 @@ class LoginForm extends Model
                 $url = 'https://www.8thwonderpromos.com/amember/api/check-access/by-login-pass?_key=5XAcMA4i3crPhaoUkQMD&login='.$this->username.'&pass='.$this->password;
                 $response = file_get_contents($url);
                 $response = json_decode($response);
-				if($response->ok == 1){
+		if($response->ok == 1){
                     $subscriptions = (array) $response->subscriptions;
                     $c_sub = '';
                     $product = '';
-					if(sizeof($subscriptions) > 0){
+		    if(sizeof($subscriptions) > 0){
                         foreach($subscriptions as $k => $s){
                             if($c_sub == ''){
                                 $c_sub = $s;
@@ -119,9 +119,9 @@ class LoginForm extends Model
                         } else if($nested['billing-plans'][0]->second_period == '1y'){
                             $session['offer'] = 'yearly';
                         } else {
-							$session['offer'] = 'monthly';
-						}
-					} else {
+			    $session['offer'] = 'monthly';
+			}
+		    } else {
                         $session['offer'] = 'no subscription';
                     }
                     
@@ -147,11 +147,15 @@ class LoginForm extends Model
                 $url = 'https://www.8thwonderpromos.com/amember/api/check-access/by-login-pass?_key=5XAcMA4i3crPhaoUkQMD&login='.$this->username.'&pass='.$this->password;
                 $response = file_get_contents($url);
                 $response = json_decode($response);
-				if($response->ok == 1){
+		if($response->ok == 1){
+		    $user = Users::findOne(['username' => $this->username, 'type' => 'general']);
+		    $pass = Yii::$app->security->generatePasswordHash($this->password);
+		    $user->password = $pass;
+		    $user->save(false);
                     $subscriptions = (array) $response->subscriptions;
                     $c_sub = '';
                     $product = '';
-					if(sizeof($subscriptions) > 0){
+		    if(sizeof($subscriptions) > 0){
                         foreach($subscriptions as $k => $s){
                             if($c_sub == ''){
                                 $c_sub = $s;
@@ -164,8 +168,8 @@ class LoginForm extends Model
                         $pUrl = 'https://www.8thwonderpromos.com/amember/api/products/'.$product.'/?_key=5XAcMA4i3crPhaoUkQMD';
                         $res = file_get_contents($pUrl);
                         $res = json_decode($res);
-						$nested = (array)$res[0]->nested;
-						if($nested['billing-plans'][0]->second_period == '30d'){
+			$nested = (array)$res[0]->nested;
+			if($nested['billing-plans'][0]->second_period == '30d'){
                             $session['offer'] = 'monthly';
                         } else if($nested['billing-plans'][0]->second_period == '1m'){
                             $session['offer'] = 'monthly';
@@ -182,9 +186,9 @@ class LoginForm extends Model
                         } else if($nested['billing-plans'][0]->second_period == '1y'){
                             $session['offer'] = 'yearly';
                         } else {
-							$session['offer'] = 'monthly';
-						}
-					} else {
+			    $session['offer'] = 'monthly';
+			}
+		    } else {
                         $session['offer'] = 'no subscription';
                     }
                 } else {

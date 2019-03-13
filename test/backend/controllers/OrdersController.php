@@ -160,7 +160,7 @@ class OrdersController extends Controller
         $detail = OrderDetails::findAll(['order' => $id]);
 		$ship_add = Address::findOne(['address_type' => 'shipping','id' => $order->shipping_address]);
         
-		$pf = new PrintfulApiClient('a77vf4jb-a1cw-pwk3:rna8-hab76vppqhbz');
+		$pf = new PrintfulApiClient('ciac7wnf-7cvl-wa20:io6q-8d0qfxlnvf42');
 		$request = [];
 		$request['recipient']  = ['address1' => $ship_add->address_line_1 .' '. $ship_add->address_line_2,'city' => $ship_add->city,'country_code' => 'US', 'state_code' => $ship_add->state, 'zip' => $ship_add->zip];
 		$items = [];

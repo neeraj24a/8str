@@ -105,7 +105,7 @@ $this->title = "Cart";
                         <span class="icon__fallback-text">Log in</span>
                     </a>
                     <?php else: ?>
-					<ul class="nav navbar-nav">
+					<ul class="login nav navbar-nav">
 						<li class="dropdown">
 						  <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><?= \Yii::$app->user->identity->username ?> <span class="glyphicon glyphicon-user pull-right"></span></a>
 						  <ul class="dropdown-menu">

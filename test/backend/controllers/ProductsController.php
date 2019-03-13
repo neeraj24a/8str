@@ -196,7 +196,7 @@ class ProductsController extends Controller {
 			array_push($files, $back);
 		}
 		
-        $pf = new PrintfulApiClient('a77vf4jb-a1cw-pwk3:rna8-hab76vppqhbz');
+        $pf = new PrintfulApiClient('ciac7wnf-7cvl-wa20:io6q-8d0qfxlnvf42');
         $request = [];
         $request['sync_product']  = ['name' => $model->name,'thumbnail' => $thumb];
         $variants = [];
@@ -255,6 +255,83 @@ class ProductsController extends Controller {
             var_export($pf->getLastResponseRaw());
         }
     }
+	
+	public function actionSyncproducts(){
+		$pf = new PrintfulApiClient('ciac7wnf-7cvl-wa20:io6q-8d0qfxlnvf42');
+		try {
+            $response = $pf->get('store/products');
+			Yii::$app->db->createCommand()->truncateTable('product_sync_details')->execute();
+			foreach($response as $res){
+				$model = Products::find()->where(["name" => $res['name']])->one();
+				try{
+					$model->printful_id = $res['id'];
+					$model->external_id = $res['external_id'];
+					$model->is_synced = 1;
+					$model->save(false);
+					$resp = $pf->get('store/products/'.$res['id']);
+					foreach($resp['sync_variants'] as $var){
+						$vv = PrintfulProductDetails::find()->where(['printful_product' => $model->printful_product])
+								->orderBy([
+									'color' => SORT_ASC,
+									'size' => SORT_ASC,
+								])->all();
+						foreach($vv as $v){
+							if($v->printful_product_id == $var['variant_id']){
+								$mod = new ProductSyncData();
+								$mod->product = $model->id;
+								$mod->variant = $v->id;
+								$mod->printful_id = $var['id'];
+								$mod->external_id = $var['external_id'];
+								$mod->sync_product_id = $var['sync_product_id'];
+								$mod->save(false);
+							}
+						}
+					}
+				} catch (PrintfulApiException $e) { //API response status code was not successful
+					echo 'Printful API Exception: ' . $e->getCode() . ' ' . $e->getMessage();
+				} catch (PrintfulException $e) { //API call failed
+					echo 'Printful Exception: ' . $e->getMessage();
+					var_export($pf->getLastResponseRaw());
+				} 
+			}
+			return $this->redirect(Yii::$app->request->referrer);
+			/*
+			$printful_id = $response['id'];
+            $external_id = $response['external_id'];
+			try{
+				$resp = $pf->get('store/products/'.$printful_id);
+				$model->printful_id = $printful_id;
+				$model->external_id = $external_id;
+				$model->is_synced = 1;
+				$model->save(false);
+				foreach($resp['sync_variants'] as $var){
+					foreach($vv as $v){
+						if($v->printful_product_id == $var['variant_id']){
+							$mod = new ProductSyncData();
+							$mod->product = $model->id;
+							$mod->variant = $v->id;
+							$mod->printful_id = $var['id'];
+							$mod->external_id = $var['external_id'];
+							$mod->sync_product_id = $var['sync_product_id'];
+							$mod->save(false);
+						}
+					}
+				}
+				return $this->redirect(Yii::$app->request->referrer);
+            } catch (PrintfulApiException $e) { //API response status code was not successful
+				echo 'Printful API Exception: ' . $e->getCode() . ' ' . $e->getMessage();
+			} catch (PrintfulException $e) { //API call failed
+				echo 'Printful Exception: ' . $e->getMessage();
+				var_export($pf->getLastResponseRaw());
+			} 
+			*/
+        } catch (PrintfulApiException $e) { //API response status code was not successful
+            echo 'Printful API Exception: ' . $e->getCode() . ' ' . $e->getMessage();
+        } catch (PrintfulException $e) { //API call failed
+            echo 'Printful Exception: ' . $e->getMessage();
+            var_export($pf->getLastResponseRaw());
+        }
+	}
 
     /**
      * Finds the Products model based on its primary key value.

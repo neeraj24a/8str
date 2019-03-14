@@ -168,7 +168,7 @@ class ProductsController extends Controller {
         return $this->redirect(['index']);
     }
 	
-	public function actionDeleteImage($id) {
+	public function actionDeleteimage($id) {
         backend\models\ProductGallery::findOne($id)->delete();
 		$return_url = Yii::$app->request->referrer;
         return $this->redirect($return_url);
@@ -310,37 +310,7 @@ class ProductsController extends Controller {
 				} 
 			}
 			return $this->redirect(Yii::$app->request->referrer);
-			/*
-			$printful_id = $response['id'];
-            $external_id = $response['external_id'];
-			try{
-				$resp = $pf->get('store/products/'.$printful_id);
-				$model->printful_id = $printful_id;
-				$model->external_id = $external_id;
-				$model->is_synced = 1;
-				$model->save(false);
-				foreach($resp['sync_variants'] as $var){
-					foreach($vv as $v){
-						if($v->printful_product_id == $var['variant_id']){
-							$mod = new ProductSyncData();
-							$mod->product = $model->id;
-							$mod->variant = $v->id;
-							$mod->printful_id = $var['id'];
-							$mod->external_id = $var['external_id'];
-							$mod->sync_product_id = $var['sync_product_id'];
-							$mod->save(false);
-						}
-					}
-				}
-				return $this->redirect(Yii::$app->request->referrer);
-            } catch (PrintfulApiException $e) { //API response status code was not successful
-				echo 'Printful API Exception: ' . $e->getCode() . ' ' . $e->getMessage();
-			} catch (PrintfulException $e) { //API call failed
-				echo 'Printful Exception: ' . $e->getMessage();
-				var_export($pf->getLastResponseRaw());
-			} 
-			*/
-        } catch (PrintfulApiException $e) { //API response status code was not successful
+	} catch (PrintfulApiException $e) { //API response status code was not successful
             echo 'Printful API Exception: ' . $e->getCode() . ' ' . $e->getMessage();
         } catch (PrintfulException $e) { //API call failed
             echo 'Printful Exception: ' . $e->getMessage();

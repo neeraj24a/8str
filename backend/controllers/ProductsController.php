@@ -11,6 +11,7 @@ use Yii;
 use backend\models\Products;
 use backend\models\ProductImages;
 use backend\models\PrintfulProducts;
+use backend\models\GallerySearch;
 use backend\models\PrintfulProductDetails;
 use yii\web\UploadedFile;
 use backend\models\ProductSearch;
@@ -69,8 +70,16 @@ class ProductsController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id) {
+		$searchModel = new GallerySearch();
+		//$searchModel->product = $id;
+		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		
+		$dataProvider->query->andFilterWhere(['product'=>$id]); 
+        
         return $this->render('view', [
                     'model' => $this->findModel($id),
+					'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -157,6 +166,12 @@ class ProductsController extends Controller {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+	
+	public function actionDeleteImage($id) {
+        backend\models\ProductGallery::findOne($id)->delete();
+		$return_url = Yii::$app->request->referrer;
+        return $this->redirect($return_url);
     }
 	
 	public function actionAddimages($id) {

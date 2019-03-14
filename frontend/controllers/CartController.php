@@ -539,7 +539,7 @@ class CartController extends Controller {
 						foreach($val as $k => $v){
 							$p = PrintfulProductDetails::find()->where(['and', "printful_product = '".$shop->printful_product."'","color = '".$key."'", "size = '".$k."'"])->one();
 							$pp = ProductSyncData::find()->where(['and', "product = '".$shop->id."'","variant = '".$p->id."'"])->one();
-							$item['quantity'] = $shop->quantity;
+							$item['quantity'] = $v;
 							$item['external_variant_id'] = $pp->external_id;
 							array_push($items, $item);
 						}
@@ -550,7 +550,7 @@ class CartController extends Controller {
 			$request['items'] = $items;
 			try {
 				// Calculate shipping rates for an order
-				$response = $pf->post('orders', $request);
+				$response = $pf->post('orders?confirm=1', $request);
 				$odr = Orders::findOne($order->id);
 				$odr->printful_synced = 1;
 				$odr->printful_order = $response['id'];

@@ -79,6 +79,7 @@ class Cart {
 			} else {
 				$cart[$type][$product->slug] = $product;
 				$cart[$type][$product->slug]->quantity = $quantity;
+				$cart[$type][$product->slug]->var_qnty[$product->colors][$product->size] = $quantity;
 			}
         }
         $this->session->set('cart', $cart);

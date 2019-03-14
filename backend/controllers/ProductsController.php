@@ -10,6 +10,7 @@ use Printful\PrintfulApiClient;
 use Yii;
 use backend\models\Products;
 use backend\models\ProductImages;
+use backend\models\ProductGallery;
 use backend\models\PrintfulProducts;
 use backend\models\GallerySearch;
 use backend\models\PrintfulProductDetails;
@@ -168,9 +169,9 @@ class ProductsController extends Controller {
         return $this->redirect(['index']);
     }
 	
-	public function actionDeleteimage($id) {
-        backend\models\ProductGallery::findOne($id)->delete();
-		$return_url = Yii::$app->request->referrer;
+    public function actionDeleteimage($id) {
+        ProductGallery::findOne($id)->delete();
+	$return_url = Yii::$app->request->referrer;
         return $this->redirect($return_url);
     }
 	

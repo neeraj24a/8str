@@ -124,7 +124,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     ],
                                     'urlCreator' => function ($action, $model, $key, $index) {
                                         if ($action === 'd') {
-                                            $url = Url::to(['/products/deleteImage', 'id' => $model->id]);
+                                            $url = Url::to(['/products/deleteimage', 'id' => $model->id]);
                                             return $url;
                                         }
                                     }

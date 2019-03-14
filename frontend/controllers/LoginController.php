@@ -27,9 +27,11 @@ class LoginController extends \yii\web\Controller {
 				$response = json_decode($response);
 				if($response->ok == 1){
 					$user = Users::findOne(['username' => $username, 'type' => 'general']);
-					$pass = Yii::$app->security->generatePasswordHash($password);
-					$user->password = $pass;
-					$user->save(false);
+					if($user !== null){
+						$pass = Yii::$app->security->generatePasswordHash($password);
+						$user->password = $pass;
+						$user->save(false);
+					}
 				}
 			}
 	

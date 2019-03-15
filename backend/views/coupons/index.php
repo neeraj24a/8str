@@ -34,10 +34,35 @@ $this->params['breadcrumbs'][] = $this->title;
                             'columns' => [
                                 ['class' => 'yii\grid\SerialColumn'],
                                 'coupon',
-								'discount_type',
-								'discount',
-								'valid_till',
-								'coupon_count',
+				[
+					'attribute' => 'discount_type',
+					'filter' => ['flat' => 'Flat', 'percent' => 'Percent'],
+                                    	'value' => function($model) {
+						$type = 'Percent';
+						if($model->discount_type == 'flat'){
+							$type = 'Flat';
+						}
+						return $type;
+                                    	}
+				]
+				'discount',
+				'valid_till',
+				'coupon_count',
+				[
+					'attribute' => 'status',
+					'filter' => ['1' => 'Active', '0' => 'Inactive'],
+                                    	'value' => function($model) {
+						$url = Url::to(['/coupons/status', 'id' => $model->id]);
+                                        	$status = 'Inactive';
+						if($model->status == 1){
+							$status = 'Active';
+						}
+						return Html::a('', $url, [
+                                                        'title' => Yii::t('app', $status),
+                                                        'class' => 'btn btn-info'
+                                            	]);
+                                    	}
+				]
                                 [
                                     'class' => 'yii\grid\ActionColumn',
                                     'header' => 'Actions',

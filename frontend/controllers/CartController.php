@@ -13,6 +13,7 @@ use backend\models\Orders;
 use backend\models\OrderDetails;
 use backend\models\PrintfulProductDetails;
 use backend\models\ProductSyncData;
+use backend\models\Coupons;
 
 use frontend\config\Cart;
 use frontend\config\MonologLogFactory;
@@ -55,7 +56,8 @@ class CartController extends Controller {
         $offer = $cart->getOffer();
         $total = $cart->getTotal();
         $totalWithOffer = $cart->getTotalWithOffer();
-		return $this->render('index', ['cart' => $cart->getCart(), 'offer' => $offer, 'subscription' => $subscription, 'total' => $total, 'totalWithOffer' => $totalWithOffer, 'quantity' => $cart->getTotalQuantity()]);
+		$coupon = $cart->getCoupon();
+		return $this->render('index', ['cart' => $cart->getCart(), 'coupon' => $coupon, 'offer' => $offer, 'subscription' => $subscription, 'total' => $total, 'totalWithOffer' => $totalWithOffer, 'quantity' => $cart->getTotalQuantity()]);
     }
 
     public function actionCheckout() {
@@ -66,10 +68,11 @@ class CartController extends Controller {
         $offer = $cart->getOffer();
         $total = $cart->getTotal();
         $totalWithOffer = $cart->getTotalWithOffer();
+		$coupon = $cart->getCoupon();
         if ($cart->getCart() == NULL) {
             return $this->redirect(['/cart']);
         }
-        return $this->render('checkout', ['addresses' => $addresses, 'offer' => $offer, 'total' => $total, 'totalWithOffer' => $totalWithOffer, 'model' => $model, 'add_model' => $add_model, 'cart' => $cart->getCart(), 'total' => $cart->getTotal()]);
+        return $this->render('checkout', ['addresses' => $addresses, 'offer' => $offer, 'total' => $total, 'coupon' => $coupon, 'totalWithOffer' => $totalWithOffer, 'model' => $model, 'add_model' => $add_model, 'cart' => $cart->getCart(), 'total' => $cart->getTotal()]);
     }
 
     public function actionProcess() {
@@ -165,6 +168,7 @@ class CartController extends Controller {
         $products = $cart->getCart();
         $offer = $cart->getOffer();
         $total = $cart->getTotal();
+		$coupon = $cart->getCoupon();
 		$totalWithOffer = $cart->getTotalWithOffer();
         $offerAmount = $cart->getOfferAmount();
 		$sub_total = $cart->getSubTotal();
@@ -229,6 +233,19 @@ class CartController extends Controller {
 			->setCurrency('USD')
 			->setQuantity(1)
 			->setPrice('-'.$offerAmount);
+			
+		/*if($coupon != '0.00'){
+			if($coupon['type'] == 'flat'){
+				$c_dis = $coupon['discount'];
+			} else {
+				$c_dis = number_format((($total - number_format($total*$offer/100, 2)) * $coupon['discount'])/100, 2);
+			}
+			$item = new Item();
+			$item->setName('Coupon Discount')
+				->setCurrency('USD')
+				->setQuantity(1)
+				->setPrice('-'.$c_dis);
+		}*/
 		
 		array_push($items, $item);
 		
@@ -287,7 +304,7 @@ class CartController extends Controller {
 			exit(1);
 		}
 		$approvalUrl = $payment->getApprovalLink();
-		return $this->render('payment', ['addresses' => $addresses, 'offer' => $offer, 'totalWithOffer' => $totalWithOffer, 'model' => $model, 'add_model' => $add_model, 'cart' => $cart->getCart(), 'total' => $total, 'billing' => $billing, 'shipping' => $shipping, 'shipping_cost' => $shipping_cost, 'sub_total' => $sub_total, 'approvalUrl' => $approvalUrl, 'guest' => $guest]);
+		return $this->render('payment', ['addresses' => $addresses, 'coupon' => $coupon, 'offer' => $offer, 'totalWithOffer' => $totalWithOffer, 'model' => $model, 'add_model' => $add_model, 'cart' => $cart->getCart(), 'total' => $total, 'billing' => $billing, 'shipping' => $shipping, 'shipping_cost' => $shipping_cost, 'sub_total' => $sub_total, 'approvalUrl' => $approvalUrl, 'guest' => $guest]);
     }
 
     public function actionTransact($success) {
@@ -876,5 +893,35 @@ class CartController extends Controller {
             echo json_encode($response);
         }
     }
+	
+	public function actionApplycoupon(){
+		if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $coupon = $data['coupon'];
+			$res = [];
+			$cp = Coupons::find()->where(['coupon' => $coupon])->one();
+			if($cp === null) {
+				$res['error'] = 'true';
+			} else {
+				if(strtotime($cp->valid_till) >= strtotime(date('y-m-d'))){
+					$res['error'] = 'false';
+					$cart = new Cart();
+					$cart->setCoupon($cp->discount, $cp->discount_type);
+				} else {
+					$res['error'] = 'true';
+				}
+			}
+			echo json_encode($res);
+        }
+	}
+	
+	public function actionRemovecoupon(){
+		if (Yii::$app->request->isAjax) {
+			$cart = new Cart();
+			$cart->removeCoupon();
+			$res['error'] = 'false';
+			echo json_encode($res);
+        }
+	}
 
 }

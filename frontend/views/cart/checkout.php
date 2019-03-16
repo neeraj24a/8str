@@ -597,6 +597,20 @@ $this->title = "Checkout";
                                             <span class="order-summary__emphasis">(-)<?php echo $offer; ?>%</span>
                                         </td>
                                     </tr>
+									<tr class="total-line total-line--taxes">
+                                        <th class="total-line__name">Coupon Discount</th>
+                                        <td class="total-line__price">
+                                            <span class="order-summary__emphasis">(-)$
+											<?php 
+												if($coupon['type'] == 'flat'){
+													echo $coupon['discount'];
+												} else {
+													echo number_format((($total - number_format($total*$offer/100, 2)) * $coupon['discount'])/100, 2);
+												}
+											?>
+											</span>
+                                        </td>
+                                    </tr>
                                 </tbody>
                                 <tfoot class="total-line-table__footer">
                                     <tr class="total-line">

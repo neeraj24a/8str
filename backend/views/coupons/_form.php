@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\jui\DatePicker;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Coupons */
 /* @var $form yii\widgets\ActiveForm */
@@ -17,12 +18,12 @@ use yii\widgets\ActiveForm;
             <div class="col-lg-12">
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <?= $form->field($model, 'coupon')->fileInput(['class' => 'form-control']) ?>
+                        <?= $form->field($model, 'coupon')->textInput(['class' => 'form-control']) ?>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <?= $form->field($model, 'valid_till')->textInput(['class' => 'form-control']) ?>
+                        <?= $form->field($model,'valid_till')->widget(DatePicker::className(),['clientOptions' => ['defaultDate' => '', 'dateFormat' => 'yy-mm-dd']]) ?>
                     </div>
                 </div>
             </div>
@@ -41,7 +42,7 @@ use yii\widgets\ActiveForm;
 			<div class="col-lg-12">
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <?= $form->field($model, 'coupon_count')->fileInput(['class' => 'form-control']) ?>
+                        <?= $form->field($model, 'coupon_count')->textInput(['class' => 'form-control']) ?>
                     </div>
                 </div>
             </div>
@@ -53,3 +54,10 @@ use yii\widgets\ActiveForm;
         <?php ActiveForm::end(); ?>
     </div>
 </div>
+<?php
+$this->registerJs(
+    "$(document).ready(function(){
+		$('#coupons-valid_till').addClass('form-control');
+    });"
+);
+?>

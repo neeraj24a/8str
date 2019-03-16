@@ -115,8 +115,9 @@ class CouponsController extends Controller
         }
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
-    protected function handleBannerSave(Coupons $model) {
-        if ($model->load(Yii::$app->request->post())) {
+    protected function handleCouponSave(Coupons $model) {
+		if ($model->load(Yii::$app->request->post())) {
+			$model->valid_till = date("Y-m-d", strtotime($_POST['Coupons']['valid_till']));
             if ($model->validate()) {
                 if ($model->save(false)) {
                     return $this->redirect(['view', 'id' => $model->id]);

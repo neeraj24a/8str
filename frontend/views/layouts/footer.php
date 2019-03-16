@@ -79,3 +79,4 @@ use yii\helpers\Url;
       </div>
    </footer>
 </div>
+<!--<div class="loader"></div>-->

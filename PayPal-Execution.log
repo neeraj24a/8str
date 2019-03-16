@@ -213,3 +213,15 @@
 [13-03-2019 19:20:08] PayPal\Core\PayPalHttpConnection : INFO: Response Status 	: 201
 [13-03-2019 19:20:08] PayPal\Core\PayPalHttpConnection : INFO: GET https://api.paypal.com/v1/payments/orders/O-6B2866054A2171717
 [13-03-2019 19:20:09] PayPal\Core\PayPalHttpConnection : INFO: Response Status 	: 200
+[15-03-2019 19:13:31] PayPal\Core\PayPalHttpConnection : INFO: POST https://api.paypal.com/v1/oauth2/token
+[15-03-2019 19:13:32] PayPal\Core\PayPalHttpConnection : INFO: Response Status 	: 200
+[15-03-2019 19:13:32] PayPal\Core\PayPalHttpConnection : INFO: GET https://api.paypal.com/v1/payments/payment/PAY-74E72402EC865140VLSF7R6I
+[15-03-2019 19:13:33] PayPal\Core\PayPalHttpConnection : INFO: Response Status 	: 200
+[15-03-2019 19:13:33] PayPal\Core\PayPalHttpConnection : INFO: POST https://api.paypal.com/v1/payments/payment/PAY-74E72402EC865140VLSF7R6I/execute
+[15-03-2019 19:13:35] PayPal\Core\PayPalHttpConnection : INFO: Response Status 	: 200
+[15-03-2019 19:13:35] PayPal\Core\PayPalHttpConnection : INFO: GET https://api.paypal.com/v1/payments/authorization/O-8Y484275MB832034M
+[15-03-2019 19:13:36] PayPal\Core\PayPalHttpConnection : INFO: Response Status 	: 200
+[15-03-2019 19:13:36] PayPal\Core\PayPalHttpConnection : INFO: POST https://api.paypal.com/v1/payments/authorization/O-8Y484275MB832034M/capture
+[15-03-2019 19:13:42] PayPal\Core\PayPalHttpConnection : INFO: Response Status 	: 201
+[15-03-2019 19:13:42] PayPal\Core\PayPalHttpConnection : INFO: GET https://api.paypal.com/v1/payments/orders/O-8Y484275MB832034M
+[15-03-2019 19:13:43] PayPal\Core\PayPalHttpConnection : INFO: Response Status 	: 200

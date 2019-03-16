@@ -48,9 +48,9 @@ class Coupons extends \yii\db\ActiveRecord
             [['coupon', 'discount_type', 'discount', 'valid_till', 'coupon_count'], 'required'],
             [['date_entered', 'date_modified'], 'safe'],
             [['id', 'created_by', 'modified_by'], 'string', 'max' => 36],
-			      [['coupon', 'discount_type', 'discount'], 'string', 'max' => 16],
-            [['coupon_count'], 'integer', 'max' => 16],
-			      [['status', 'deleted'], 'string', 'max' => 1],
+			[['coupon', 'discount_type', 'discount'], 'string', 'max' => 16],
+            [['coupon_count'], 'integer', 'max' => 9999],
+			[['status', 'deleted'], 'string', 'max' => 1],
             [['id'], 'unique'],
         ];
     }

@@ -1,124 +1,120 @@
-a:4:{s:4:"data";s:11081:"s:11070:"<div class="admin-last admin-activity">
+a:4:{s:4:"data";s:10652:"s:10641:"<div class="admin-last admin-activity">
     <h2>Recent Activity</h2>
     <div class="grid-container">
         <table class="grid grid-no-highlight">
                         <tr
-                class="grid-row even admin-activity_event admin-activity_event-signup">
-                <td>
-                                                    <strong>neftali altamirano</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15214" data-tooltip-url="/amember/admin-users/card?id=15214">djneff123</a>)<!--
-    --> registered a new account from 189.149.111.10                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-13T01:04:33-04:00" title="03/13/19, 01:04 AM">&#x1f550; 1 hrs ago</time><small class="admin-activity_event-extra">, 8th Wonder Promos Sign Up Form</small>                                    </td>
-            </tr>
-                        <tr
-                class="grid-row odd admin-activity_event admin-activity_event-payment">
-                <td>
-                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$9.99</span></strong><br />
-                        Payment from         <strong>Jason Smith</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15003" data-tooltip-url="/amember/admin-users/card?id=15003">mpriem</a>)<!--
-    -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/15003#invoice-8442" data-tooltip-url="/amember/admin-payments/invoice-card?id=8442">8442/54Q8V</a>
-                        &ndash; 8th Wonder Promos Monthly Membership (loyalty Promo)                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-13T00:20:32-04:00" title="03/13/19, 12:20 AM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, stripe</small>
-                                    </td>
-            </tr>
-                        <tr
                 class="grid-row even admin-activity_event admin-activity_event-payment">
-                <td>
-                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$9.99</span></strong><br />
-                        Payment from         <strong>alan phillip</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=2335" data-tooltip-url="/amember/admin-users/card?id=2335">djrap1</a>)<!--
-    -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/2335#invoice-8432" data-tooltip-url="/amember/admin-payments/invoice-card?id=8432">8432/C162X</a>
-                        &ndash; 8th Wonder Promos Monthly Membership (loyalty Promo)                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-13T00:20:30-04:00" title="03/13/19, 12:20 AM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, stripe</small>
-                                    </td>
-            </tr>
-                        <tr
-                class="grid-row odd admin-activity_event admin-activity_event-payment">
-                <td>
-                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$9.99</span></strong><br />
-                        Payment from         <strong>Josh Munsinger</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=13479" data-tooltip-url="/amember/admin-users/card?id=13479">joshmosh</a>)<!--
-    -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/13479#invoice-8155" data-tooltip-url="/amember/admin-payments/invoice-card?id=8155">8155/UMRK5</a>
-                        &ndash; 8th Wonder Promos Monthly Membership (loyalty Promo)                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-13T00:20:24-04:00" title="03/13/19, 12:20 AM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, stripe</small>
-                                    </td>
-            </tr>
-                        <tr
-                class="grid-row even admin-activity_event admin-activity_event-payment">
-                <td>
-                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$9.99</span></strong><br />
-                        Payment from         <strong>Jacob Garofano</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=8380" data-tooltip-url="/amember/admin-users/card?id=8380">jakeg1977</a>)<!--
-    -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/8380#invoice-7836" data-tooltip-url="/amember/admin-payments/invoice-card?id=7836">7836/QLLAR</a>
-                        &ndash; 8th Wonder Promos Monthly Membership (loyalty Promo)                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-13T00:20:21-04:00" title="03/13/19, 12:20 AM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, stripe</small>
-                                    </td>
-            </tr>
-                        <tr
-                class="grid-row odd admin-activity_event admin-activity_event-payment">
                 <td>
                                         <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$12.99</span></strong><br />
-                        Payment from         <strong>Kevin D Sykes</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=14722" data-tooltip-url="/amember/admin-users/card?id=14722">djbuttafly17</a>)<!--
+                        Payment from         <strong>Trevor Witthoeft</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=1906" data-tooltip-url="/amember/admin-users/card?id=1906">djtj13</a>)<!--
     -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/14722#invoice-7816" data-tooltip-url="/amember/admin-payments/invoice-card?id=7816">7816/WKH2F</a>
-                        &ndash; 8th Wonder Promos Monthly Membership (December Deal)                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-13T00:20:19-04:00" title="03/13/19, 12:20 AM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, stripe</small>
+                        <a class="link" href="/amember/admin-user-payments/index/user_id/1906#invoice-3185" data-tooltip-url="/amember/admin-payments/invoice-card?id=3185">3185/3FHYQ</a>
+                        &ndash; 8th Wonder Promos Monthly Membership (8thwonder Old Members)                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-16T10:14:30-04:00" title="03/16/19, 10:14 AM">&#x1f550; just now</time><small class="admin-activity_event-extra">, paypal</small>
+                                    </td>
+            </tr>
+                        <tr
+                class="grid-row odd admin-activity_event admin-activity_event-payment">
+                <td>
+                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$9.99</span></strong><br />
+                        Payment from         <strong>James Crews</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15236" data-tooltip-url="/amember/admin-users/card?id=15236">djjaycee</a>)<!--
+    -->,
+                        <a class="link" href="/amember/admin-user-payments/index/user_id/15236#invoice-9123" data-tooltip-url="/amember/admin-payments/invoice-card?id=9123">9123/732RE</a>
+                        &ndash; 8th Wonder Promos Monthly Membership                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-16T10:13:20-04:00" title="03/16/19, 10:13 AM">&#x1f550; 1 min ago</time><small class="admin-activity_event-extra">, paypal</small>
                                     </td>
             </tr>
                         <tr
                 class="grid-row even admin-activity_event admin-activity_event-payment">
                 <td>
                                         <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$12.99</span></strong><br />
-                        Payment from         <strong>Errnan Melero</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=2793" data-tooltip-url="/amember/admin-users/card?id=2793">nansense</a>)<!--
+                        Payment from         <strong>Salvador Velasco</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=7311" data-tooltip-url="/amember/admin-users/card?id=7311">djmixtery</a>)<!--
     -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/2793#invoice-7815" data-tooltip-url="/amember/admin-payments/invoice-card?id=7815">7815/GZNN3</a>
-                        &ndash; 8th Wonder Promos Monthly Membership (December Deal)                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-13T00:20:18-04:00" title="03/13/19, 12:20 AM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, stripe</small>
+                        <a class="link" href="/amember/admin-user-payments/index/user_id/7311#invoice-3188" data-tooltip-url="/amember/admin-payments/invoice-card?id=3188">3188/66F7E</a>
+                        &ndash; 8th Wonder Promos Monthly Membership (8thwonder Old Members)                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-16T10:11:42-04:00" title="03/16/19, 10:11 AM">&#x1f550; 3 min ago</time><small class="admin-activity_event-extra">, paypal</small>
+                                    </td>
+            </tr>
+                        <tr
+                class="grid-row odd admin-activity_event admin-activity_event-signup">
+                <td>
+                                                    <strong>James Crews</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15236" data-tooltip-url="/amember/admin-users/card?id=15236">djjaycee</a>)<!--
+    --> registered a new account from 174.255.195.129                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-16T10:09:27-04:00" title="03/16/19, 10:09 AM">&#x1f550; 5 min ago</time><small class="admin-activity_event-extra">, 8th Wonder Promos Sign Up Form</small>                                    </td>
+            </tr>
+                        <tr
+                class="grid-row even admin-activity_event admin-activity_event-payment">
+                <td>
+                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$12.99</span></strong><br />
+                        Payment from         <strong>Brian Brown</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=3816" data-tooltip-url="/amember/admin-users/card?id=3816">firstclassnj</a>)<!--
+    -->,
+                        <a class="link" href="/amember/admin-user-payments/index/user_id/3816#invoice-3230" data-tooltip-url="/amember/admin-payments/invoice-card?id=3230">3230/66J80</a>
+                        &ndash; 8th Wonder Promos Monthly Membership (8thwonder Old Members)                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-16T10:01:51-04:00" title="03/16/19, 10:01 AM">&#x1f550; 13 min ago</time><small class="admin-activity_event-extra">, paypal</small>
                                     </td>
             </tr>
                         <tr
                 class="grid-row odd admin-activity_event admin-activity_event-payment">
                 <td>
-                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$9.99</span></strong><br />
-                        Payment from         <strong>Marco Garcia</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=6014" data-tooltip-url="/amember/admin-users/card?id=6014">magagar</a>)<!--
+                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$12.99</span></strong><br />
+                        Payment from         <strong>Edwin Daniel</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=6456" data-tooltip-url="/amember/admin-users/card?id=6456">djeddiefingaz</a>)<!--
     -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/6014#invoice-7810" data-tooltip-url="/amember/admin-payments/invoice-card?id=7810">7810/XZ8LM</a>
-                        &ndash; 8th Wonder Promos Monthly Membership (loyalty Promo)                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-13T00:20:17-04:00" title="03/13/19, 12:20 AM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, stripe</small>
+                        <a class="link" href="/amember/admin-user-payments/index/user_id/6456#invoice-3231" data-tooltip-url="/amember/admin-payments/invoice-card?id=3231">3231/BGE47</a>
+                        &ndash; 8th Wonder Promos Monthly Membership (8thwonder Old Members)                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-16T09:50:58-04:00" title="03/16/19, 09:50 AM">&#x1f550; 24 min ago</time><small class="admin-activity_event-extra">, paypal</small>
                                     </td>
             </tr>
                         <tr
                 class="grid-row even admin-activity_event admin-activity_event-payment">
                 <td>
                                         <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$9.99</span></strong><br />
-                        Payment from         <strong>john lau</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=2970" data-tooltip-url="/amember/admin-users/card?id=2970">djmk20</a>)<!--
+                        Payment from         <strong>Will Bailey</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=13059" data-tooltip-url="/amember/admin-users/card?id=13059">djwillby</a>)<!--
     -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/2970#invoice-7748" data-tooltip-url="/amember/admin-payments/invoice-card?id=7748">7748/CC5JK</a>
-                        &ndash; 8th Wonder Promos Monthly Membership (loyalty Promo)                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-13T00:20:13-04:00" title="03/13/19, 12:20 AM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, stripe</small>
+                        <a class="link" href="/amember/admin-user-payments/index/user_id/13059#invoice-4020" data-tooltip-url="/amember/admin-payments/invoice-card?id=4020">4020/WH4VV</a>
+                        &ndash; 8th Wonder Promos Monthly Membership (8thwonder Loyalty Members)                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-16T09:49:43-04:00" title="03/16/19, 09:49 AM">&#x1f550; 25 min ago</time><small class="admin-activity_event-extra">, paypal</small>
                                     </td>
             </tr>
                         <tr
                 class="grid-row odd admin-activity_event admin-activity_event-payment">
                 <td>
-                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$19.99</span></strong><br />
-                        Payment from         <strong>Allen Thiessen</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=664" data-tooltip-url="/amember/admin-users/card?id=664">djtotem</a>)<!--
+                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$129.99</span></strong><br />
+                        Payment from         <strong>Steven Smith</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=8603" data-tooltip-url="/amember/admin-users/card?id=8603">dj st3</a>)<!--
     -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/664#invoice-7036" data-tooltip-url="/amember/admin-payments/invoice-card?id=7036">7036/YVMN7</a>
-                        &ndash; 8th Wonder Promos Monthly Membership (Member)                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-03-13T00:20:08-04:00" title="03/13/19, 12:20 AM">&#x1f550; 2 hrs ago</time><small class="admin-activity_event-extra">, stripe</small>
+                        <a class="link" href="/amember/admin-user-payments/index/user_id/8603#invoice-9122" data-tooltip-url="/amember/admin-payments/invoice-card?id=9122">9122/S2F0C</a>
+                        &ndash; 8th Wonder Promos Annual Membership (December)                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-16T09:35:10-04:00" title="03/16/19, 09:35 AM">&#x1f550; 39 min ago</time><small class="admin-activity_event-extra">, stripe</small>
                                     </td>
+            </tr>
+                        <tr
+                class="grid-row even admin-activity_event admin-activity_event-payment">
+                <td>
+                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$12.99</span></strong><br />
+                        Payment from         <strong>A. Tod Overton</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=1405" data-tooltip-url="/amember/admin-users/card?id=1405">allplaydj</a>)<!--
+    -->,
+                        <a class="link" href="/amember/admin-user-payments/index/user_id/1405#invoice-4747" data-tooltip-url="/amember/admin-payments/invoice-card?id=4747">4747/LH2NL</a>
+                        &ndash; 8th Wonder Promos Monthly Membership (8thwonder Old Members)                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-16T09:34:12-04:00" title="03/16/19, 09:34 AM">&#x1f550; 40 min ago</time><small class="admin-activity_event-extra">, paypal</small>
+                                    </td>
+            </tr>
+                        <tr
+                class="grid-row odd admin-activity_event admin-activity_event-signin">
+                <td>
+                                                    <strong>Steven Smith</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=8603" data-tooltip-url="/amember/admin-users/card?id=8603">dj st3</a>)<!--
+    --> logged in from 174.199.13.23                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-03-16T09:30:27-04:00" title="03/16/19, 09:30 AM">&#x1f550; 44 min ago</time>                                    </td>
             </tr>
                     </table>
     </div>
 </div>
-";";s:8:"lifetime";i:2592000;s:6:"expire";i:1555051195;s:8:"priority";i:8;}
+";";s:8:"lifetime";i:2592000;s:6:"expire";i:1555337704;s:8:"priority";i:8;}

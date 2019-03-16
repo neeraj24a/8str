@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 ?>
 <?php $active = Yii::$app->controller->id; ?>
-<div class="sidebar" data-color="rose" data-background-color="black" data-image="../admin/img/sidebar-1.jpg">
+<div class="sidebar" data-color="rose" data-background-color="black" data-image="<?php echo base_url(); ?>/img/sidebar-1.jpg">
     <!--
         Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
 
@@ -27,7 +27,7 @@ use yii\helpers\Url;
     <div class="sidebar-wrapper">
         <div class="user">
             <div class="photo">
-                <img src="../admin/img/faces/avatar.jpg" />
+                <img src="<?php echo base_url(); ?>/img/faces/avatar.jpg" />
             </div>
             <div class="user-info">
                 <a data-toggle="collapse" href="#collapseExample" class="username">

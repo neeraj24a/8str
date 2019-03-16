@@ -157,12 +157,38 @@ $this->title = "8thwonderpromos Cart";
                             <span class="cart__subtotal-title">Discount</span>
                             <span class="cart__subtotal"><?php echo $offer; ?>%</span>
                         </div>
-                        <div class="cart__shipping">
+						<div class="cart__shipping">
                             <?php echo $offer; ?>% Discount Because You have <?php echo $subscription; ?> Subscription. 
                             <?php if (Yii::$app->user->isGuest): ?>
                             If not logged in, log in for discount.
                             <?php endif; ?>
                         </div>
+						<?php if($coupon == '0.00'): ?>
+						<div id="coupon-form">
+							<div class="form-group">
+								<div class="form-group field-coupons-coupon required bmd-form-group">
+									<label class="control-label bmd-label-static" for="coupon">Coupon Code</label>
+									<input type="text" id="coupon" class="form-control">
+									<button id="apply-coupon" class="btn">Apply</button>
+									<div class="help-block"></div>
+								</div>                    
+							</div>
+                        </div>
+						<?php else: ?>
+						<div id="coupon-applied">
+                            <span class="cart__subtotal-title">Coupon Discount</span>
+                            <span class="cart__subtotal">
+								$<?php 
+									if($coupon['type'] == 'flat'){
+										echo $coupon['discount'];
+									} else {
+										echo number_format((($total - number_format($total*$offer/100, 2)) * $coupon['discount'])/100, 2);
+									}
+								?>
+								<button id="remove-coupon" class="btn">Remove</button>
+							</span>
+                        </div>
+						<?php endif; ?>
                         <div>
                             <span class="cart__subtotal-title">Subtotal</span>
                             <span class="cart__subtotal">$<?php echo $totalWithOffer; ?></span>
@@ -239,5 +265,39 @@ $this->registerJs("
                 });
             });
         });
+		$('#apply-coupon').click(function(){
+			var coupon = $('#coupon').val();
+			var self = $(this);
+			if(coupon.trim() == '' || coupon.trim().length == 0){
+				$('#coupon').addClass('error');
+				self.parent().find('.help-block').html('Please Enter Valid Coupon');
+			} else {
+				$.ajax({
+                    url: base_url + 'cart/applycoupon',
+                    method: 'POST',
+                    data: {'coupon': coupon},
+                    success: function (data) {
+						data = $.parseJSON(data);
+						if(data.error == 'false' || data.error == false){
+							window.location.reload();
+						} else {
+							self.parent().find('.help-block').html('Coupon Not Valid');
+						}
+                    }
+                });
+			}
+		});
+		$('#remove-coupon').click(function(){
+			$.ajax({
+				url: base_url + 'cart/removecoupon',
+				method: 'POST',
+				success: function (data) {
+					data = $.parseJSON(data);
+					if(data.error == 'false' || data.error == false){
+						window.location.reload();
+					}
+				}
+			});
+		});
     ");
 ?>

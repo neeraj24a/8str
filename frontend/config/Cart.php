@@ -200,8 +200,42 @@ class Cart {
             $total = $total - (($offer/100)*$total);
         }
         $total = number_format($total, 2, '.', '');
-        return $total;
+		$coupon = $this->getCoupon();
+		if($coupon != '0.00'){
+			if(isset($coupon['type'])){
+				if($coupon['type'] == 'flat'){
+					$total = $total - $coupon['discount'];
+				} else {
+					$total = number_format($total - number_format(($total * $coupon['discount'])/100, 2), 2);
+				}
+			}
+		}
+		return $total;
     }
+	
+	public function setCoupon($discount, $type){
+		$cart = $this->session->get('cart');
+		if (isset($cart)) {
+			$cart['coupon']['type'] = $type;
+			$cart['coupon']['discount'] = $discount;
+		}
+		$this->session->set('cart', $cart);
+	}
+	
+	public function getCoupon(){
+		$cart = $this->session->get('cart');
+		if (isset($cart['coupon'])) {
+			return $cart['coupon'];
+		} else {
+			return '0.00';
+		}
+	}
+	
+	public function removeCoupon(){
+		$cart = $this->session->get('cart');
+		unset($cart['coupon']);
+		$this->session->set('cart', $cart);
+	}
 
     public function getTotalQuantity() {
 //        $this->session = Yii::$app->session;

@@ -4,7 +4,7 @@ use yii\widgets\DetailView;
 use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model backend\models\Coupons */
-$this->title = 'Banner Details';
+$this->title = 'Coupon Details';
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Coupons'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

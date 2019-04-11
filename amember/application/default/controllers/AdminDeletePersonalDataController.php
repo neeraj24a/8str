@@ -41,8 +41,8 @@ class AdminDeletePersonalDataController extends Am_Mvc_Controller_Grid
 
         $grid->addField(new Am_Grid_Field_Expandable('errors', ___('Processing Errors')))->setGetFunction(function($record)
         {
-            return "<pre>" . $record->errors . "</pre>";
-        });
+            return !empty($record->errors)? "<pre>" . $record->errors . "</pre>" : "&nbsp;";
+        })->setSafeHtml(true);
 
         $grid->addField('processed', ___('Time Processed'))->setRenderFunction(function($rec)
         {
@@ -83,101 +83,10 @@ CUT;
 
 }
 
-class Am_Grid_Action_Process extends Am_Grid_Action_Abstract
+class Am_Grid_Action_Process extends Am_Grid_Action_Anonymize
 {
-
-    use PersonalData;
-
     function isAvailable($record)
     {
         return !$record->completed;
     }
-    function markAsProcessed()
-    {
-        $rec = $this->grid->getRecord();
-        $rec->processed = Am_Di::getInstance()->sqlDateTime;
-        $rec->completed = 1;
-        $rec->admin_id = Am_Di::getInstance()->authAdmin->getUserId();
-        $rec->update();
-        return $this->grid->redirectBack();
-    }
-
-    public
-        function run()
-    {
-        $this->user = Am_Di::getInstance()->userTable->load($this->grid->getRecord()->user_id, false);
-        if ($this->grid->getRequest()->get('confirm'))
-        {
-
-            if ($this->grid->getRequest()->get('confirm_errors'))
-            {
-                $this->anonymizeUser($this->user);
-                return $this->markAsProcessed();
-            }
-            else
-            {
-                $errors = [];
-                switch (Am_Di::getInstance()->config->get('account-removal-method'))
-                {
-                    case 'delete' :
-                        $errors = $this->deleteAction($this->user);
-                        break;
-                    case 'anonymize' :
-                        $errors = $this->anonymizeAction($this->user);
-                        break;
-                }
-
-                if (!empty($errors))
-                {
-                    echo $this->renderConfirmation(___('I confirm,  I fixed above errors. Delete Personal Data Now!'), $errors);
-                }
-                else
-                {
-                    return $this->markAsProcessed();
-                }
-            }
-        }
-        else
-        {
-            echo $this->renderConfirmation();
-        }
-    }
-
-    public
-        function renderConfirmation($btnText = null, $errors = [])
-    {
-        $message = Am_Html::escape($this->getConfirmationText());
-        if (!empty($errors))
-        {
-            $errorsText = "<div><p style='color:red;'>"
-                . ___('aMember was unable to delete Personal Data automatically. Please review and fix below errors then click to continue')
-                . "</p></div>";
-            $errorsText .= "<pre>" . implode("\n", $errors) . "</pre>";
-            $addHtml = sprintf("<input type='hidden' name='%s_confirm_errors' value='yes'/>", $this->grid->getId());
-        }
-        else
-        {
-            $errorsText = $addHtml = '';
-        }
-
-
-        $form = $this->renderConfirmationForm($btnText, $addHtml);
-        $back = $this->renderBackButton(___('No, cancel'));
-        return <<<CUT
-<div class="info">
-<p>{$message}{$errorsText}</p>
-<br />
-<div class="buttons">
-$form $back
-</div>
-</div>
-CUT;
-    }
-
-    function getConfirmationText()
-    {
-        return ___("Do you really want to delete Personal Data for user %s?\n"
-            . "This action can't be reverted!", $this->user->login);
-    }
-
 }

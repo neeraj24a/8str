@@ -3,10 +3,19 @@
 class Am_Paysystem_VerotelFlexpay extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Verotel FlexPay';
     protected $defaultDescription = 'Credit Card Payment';
+
+    protected static $brandUrls = array(
+        'Verotel' => 'https://secure.verotel.com/startorder',
+        'CardBilling' => 'https://secure.billing.creditcard/startorder',
+        'BitsafePay' => 'https://secure.bitsafepay.com/startorder',
+        'Bill' => 'https://secure.bill.creditcard/startorder',
+        'PaintFest' => 'https://secure.paintfestpayments.com/startorder',
+        'GayCharge' => 'https://secure.gaycharge.com/startorder'
+    );
 
     public function getRecurringType()
     {
@@ -21,10 +30,17 @@ class Am_Paysystem_VerotelFlexpay extends Am_Paysystem_Abstract
 
     public function _initSetupForm(Am_Form_Setup $form)
     {
+        $_ = array_keys(self::$brandUrls);
+        $form->addAdvRadio('brand')
+            ->setLabel('Brand')
+            ->loadOptions(array_combine($_, $_))
+            ->addRule('required');
         $form->addText('shop_id')
-            ->setLabel('Shop Id');
-        $form->addSecretText('signature_key', array('class' => 'el-wide'))
-            ->setLabel("Signature Key");
+            ->setLabel('Shop Id')
+            ->addRule('required');
+        $form->addSecretText('signature_key', array('class' => 'am-el-wide'))
+            ->setLabel("Signature Key")
+            ->addRule('required');
     }
 
     public function isConfigured()
@@ -91,7 +107,7 @@ class Am_Paysystem_VerotelFlexpay extends Am_Paysystem_Abstract
 
     function getEndpoint()
     {
-        return 'https://secure.verotel.com/startorder';
+        return self::$brandUrls[$this->getConfig('brand', 'Verotel')];
     }
 
     public function createTransaction(Am_Mvc_Request $request, Am_Mvc_Response $response, array $invokeArgs)

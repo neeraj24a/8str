@@ -9,7 +9,7 @@
 class Am_Paysystem_CoinbaseCommerce extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Coinbase Commerce';
     protected $defaultDescription = 'paid by bitcoins';
@@ -25,7 +25,7 @@ class Am_Paysystem_CoinbaseCommerce extends Am_Paysystem_Abstract
     public function _initSetupForm(Am_Form_Setup $form)
     {
 
-        $form->addPassword('api_key', array('class' => 'el-wide'))
+        $form->addPassword('api_key', array('class' => 'am-el-wide'))
             ->setLabel("API KEY\n" .
                 'Get it from your coinbase account');
     }
@@ -84,6 +84,15 @@ CUT;
     {
         return self::REPORTS_NOT_RECURRING;
     }
+    
+    public function getReadme()
+    {
+        $url = Am_Html::escape($this->getPluginUrl('ipn'));
+        return <<<CUT
+Configure Coinbase to send notifications to <strong>$url</strong>
+CUT;
+    }
+    
 
 }
 

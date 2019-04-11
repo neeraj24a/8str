@@ -9,7 +9,7 @@
 class Am_Paysystem_QuadernoCheckout extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Quaderno Checkout';
     protected $defaultDescription = '';
@@ -37,9 +37,9 @@ class Am_Paysystem_QuadernoCheckout extends Am_Paysystem_Abstract
 
     public function _initSetupForm(Am_Form_Setup $form)
     {
-        $form->addText("public_key", array('class' => 'el-wide'))
+        $form->addText("public_key", array('class' => 'am-el-wide'))
             ->setLabel('Publishable key');
-        $form->addText("private_key", array('class' => 'el-wide'))
+        $form->addText("private_key", array('class' => 'am-el-wide'))
             ->setLabel('Private key');
     }
 

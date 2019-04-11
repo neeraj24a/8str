@@ -1,0 +1,110 @@
+a:4:{s:4:"data";s:6579:"s:6569:"<div class="admin-last admin-lastusers">
+    <h2>Last 5 Customers</h2>
+    <div class="grid-container">
+        <table class="grid grid-no-highlight">
+            <tr>
+                <th class="helper-corner-left">User</th>
+                <th>Status</th>
+                <th class="container-width-narrow-hide">Added</th>
+                <th class="helper-corner-right">Payments</th>
+            </tr>
+                        <tr class="grid-row even">
+                <td>                        <strong>David Madrid Madrid</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15355" data-tooltip-url="/amember/admin-users/card?id=15355">hollywoodmadrid</a>)
+                                        <br />
+                    davidmadridept@gmail.com</td>
+                <td>
+                    <span class="user-status user-status-active">Active</span>                </td>
+                <td class="container-width-narrow-hide"><time datetime="2019-03-30T13:23:46-04:00" title="31 min ago">
+                                            01:23 PM                                        </time></td>
+                <td>
+                                            <a class="link" href="/amember/admin-user-payments/index/user_id/15355">1 - $9.99</a>
+                                    </td>
+            </tr>
+            <tr class="grid-row even">
+                <td colspan="4" class="container-width-narrow-show">
+                    <div class="admin-last_time">
+                        &#x1f550; <time datetime="2019-03-30T13:23:46-04:00" title="31 min ago">03/30/19, 01:23 PM</time>
+                    </div>
+                </td>
+            </tr>
+                        <tr class="grid-row odd">
+                <td>                        <strong>Jeffrey de Palm</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15353" data-tooltip-url="/amember/admin-users/card?id=15353">djnitpicky</a>)
+                                        <br />
+                    djnitpicky@gmail.com</td>
+                <td>
+                    <span class="user-status user-status-pending">Pending</span>                </td>
+                <td class="container-width-narrow-hide"><time datetime="2019-03-30T13:04:08-04:00" title="51 min ago">
+                                            01:04 PM                                        </time></td>
+                <td>
+                                            Never                                    </td>
+            </tr>
+            <tr class="grid-row odd">
+                <td colspan="4" class="container-width-narrow-show">
+                    <div class="admin-last_time">
+                        &#x1f550; <time datetime="2019-03-30T13:04:08-04:00" title="51 min ago">03/30/19, 01:04 PM</time>
+                    </div>
+                </td>
+            </tr>
+                        <tr class="grid-row even">
+                <td>                        <strong>KD Morley</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15352" data-tooltip-url="/amember/admin-users/card?id=15352">djkdsounds</a>)
+                                        <br />
+                    kdmorley@gmail.com</td>
+                <td>
+                    <span class="user-status user-status-pending">Pending</span>                </td>
+                <td class="container-width-narrow-hide"><time datetime="2019-03-30T12:42:20-04:00" title="1 hrs ago">
+                                            12:42 PM                                        </time></td>
+                <td>
+                                            Never                                    </td>
+            </tr>
+            <tr class="grid-row even">
+                <td colspan="4" class="container-width-narrow-show">
+                    <div class="admin-last_time">
+                        &#x1f550; <time datetime="2019-03-30T12:42:20-04:00" title="1 hrs ago">03/30/19, 12:42 PM</time>
+                    </div>
+                </td>
+            </tr>
+                        <tr class="grid-row odd">
+                <td>                        <strong>Fabian Moore</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15351" data-tooltip-url="/amember/admin-users/card?id=15351">supreme1</a>)
+                                        <br />
+                    fmoore940@gmail.com</td>
+                <td>
+                    <span class="user-status user-status-pending">Pending</span>                </td>
+                <td class="container-width-narrow-hide"><time datetime="2019-03-30T12:08:45-04:00" title="1 hrs ago">
+                                            12:08 PM                                        </time></td>
+                <td>
+                                            Never                                    </td>
+            </tr>
+            <tr class="grid-row odd">
+                <td colspan="4" class="container-width-narrow-show">
+                    <div class="admin-last_time">
+                        &#x1f550; <time datetime="2019-03-30T12:08:45-04:00" title="1 hrs ago">03/30/19, 12:08 PM</time>
+                    </div>
+                </td>
+            </tr>
+                        <tr class="grid-row even">
+                <td>                        <strong>George Labrador Dj Tito Salsa</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15350" data-tooltip-url="/amember/admin-users/card?id=15350">djtitosalsa67</a>)
+                                        <br />
+                    djtitosalsa01@gmail.com</td>
+                <td>
+                    <span class="user-status user-status-pending">Pending</span>                </td>
+                <td class="container-width-narrow-hide"><time datetime="2019-03-30T11:02:26-04:00" title="2 hrs ago">
+                                            11:02 AM                                        </time></td>
+                <td>
+                                            Never                                    </td>
+            </tr>
+            <tr class="grid-row even">
+                <td colspan="4" class="container-width-narrow-show">
+                    <div class="admin-last_time">
+                        &#x1f550; <time datetime="2019-03-30T11:02:26-04:00" title="2 hrs ago">03/30/19, 11:02 AM</time>
+                    </div>
+                </td>
+            </tr>
+                    </table>
+    </div>
+</div>
+";";s:8:"lifetime";i:2592000;s:6:"expire";i:1556560524;s:8:"priority";i:8;}

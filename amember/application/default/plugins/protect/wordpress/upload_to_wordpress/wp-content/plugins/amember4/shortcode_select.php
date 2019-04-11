@@ -5,7 +5,7 @@ if(!current_user_can("edit_posts")&&!current_user_can("edit_pages")){
     die("Hacker ??");
 }
 header('Content-Type: text/html; charset=' . get_bloginfo('charset'));
-?> 
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
 <head>
@@ -18,18 +18,13 @@ wp_admin_css( 'wp-admin', true );
 do_action('admin_print_styles');
 do_action('admin_print_scripts');
 do_action('admin_head');
-
-// Include amember styles and scripts; 
-
 ?>
-
 </head>
 <body>
 <h2><?php _e('aMember Shortcodes', 'am4-plugin');?></h2>
-<?php 
+<?php
 $plugin = am4PluginsManager::getPlugin('shortcodes');
 print $plugin->getHelp();
-
 ?>
 </body>
 </html>

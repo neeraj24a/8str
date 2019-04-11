@@ -18,30 +18,30 @@ class PayController extends Am_Mvc_Controller
         $form = new Am_Form();
         if (!$invoice->paysys_id)
         {
-
             $psOptions = array();
-            foreach (Am_Di::getInstance()->paysystemList->getAllPublic() as $ps)
+            foreach ($this->getDi()->paysystemList->getAllPublic() as $ps)
             {
                 $psOptions[$ps->getId()] = $this->renderPaysys($ps);
             }
 
-            $paysys = $form->addAdvRadio('paysys_id')
+            if (count($psOptions) == 1) {
+                reset($psOptions);
+                $form->addHtml()
+                    ->setLabel(___('Payment System'))
+                    ->setHtml(current($psOptions));
+                $form->addHidden('paysys_id')->setValue(key($psOptions));
+            } else {
+                $paysys = $form->addAdvRadio('paysys_id')
                     ->setLabel(___('Payment System'))
                     ->loadOptions($psOptions);
-            $paysys->addRule('required', ___('Please choose a payment system'));
-
-            if (count($psOptions) == 1)
-                $paysys->toggleFrozen(true);
+                $paysys->addRule('required', ___('Please choose a payment system'));
+            }
         }
 
         $form->addSaveButton(___('Pay'));
 
         $this->view->invoice = $invoice;
         $this->view->form = $form;
-
-        $form->setDataSources(array(
-            $this->getRequest()
-        ));
 
         if ($form->isSubmitted() && $form->validate())
         {

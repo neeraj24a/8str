@@ -11,7 +11,7 @@
 class Am_Paysystem_PaypalPlus extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
     const SANDBOX_ENDPOINT = 'https://api.sandbox.paypal.com';
     const LIVE_ENDPOINT = 'https://api.paypal.com';
     const PAYMENT_KEY = 'PAYPAL-PLUS-PAYMENT-ID';
@@ -33,15 +33,16 @@ class Am_Paysystem_PaypalPlus extends Am_Paysystem_Abstract
 
     function _initSetupForm(Am_Form_Setup $form)
     {
-        $form->addText('client_id', array('class' => 'el-wide'))
+        $form->addText('client_id', array('class' => 'am-el-wide'))
             ->setLabel("OAuth client_id");
-        $form->addSecretText('secret', array('class' => 'el-wide'))
+        $form->addSecretText('secret', array('class' => 'am-el-wide'))
             ->setLabel("OAuth Secret");
         $form->addAdvCheckbox('testing')->setLabel('Test mode');
         $form->addText('language')
             ->setLabel(
             ___("Paypal interface language\n
                 en_US - english, de_DE - german, default is german"));
+        $form->addAdvCheckbox('skip_tax')->setLabel(___('Do not send tax values to Paypal'));
     }
 
     function _process(Invoice $invoice, $request, $result)
@@ -51,15 +52,20 @@ class Am_Paysystem_PaypalPlus extends Am_Paysystem_Abstract
 
         foreach ($invoice->getItems() as $item)
         {
-            $item = array(
+            $paypalItem  = array(
                 'name' => $item->item_title,
                 'description' => $item->item_description,
                 'quantity' => intval($item->qty),
-                'price' => floatval(($item->first_total - $item->first_tax)/$item->qty),
-                'tax' => floatval($item->first_tax/$item->qty),
                 'currency' => $invoice->currency
             );
-            $items['items'][] = $item;
+            if($this->getConfig('skip_tax')){
+                $paypalItem['price'] =  number_format(floatval($item->first_total/$item->qty), 2);
+            }else{
+                $paypalItem['price'] =  number_format(floatval(($item->first_total - $item->first_tax)/$item->qty), 2);
+                $paypalItem['tax'] = number_format(floatval($item->first_tax/$item->qty), 2);
+                
+            }
+            $items['items'][] = $paypalItem;
         }
         $data = array(
             'intent' => 'sale',
@@ -68,17 +74,28 @@ class Am_Paysystem_PaypalPlus extends Am_Paysystem_Abstract
                 'cancel_url' => $this->getCancelUrl()
             ),
             'payer' => array(
-                'payment_method' => 'paypal'
+                'payment_method' => 'paypal',
+                'payer_info'    =>  array(
+                    'email' =>  $invoice->getEmail(),
+                    'first_name'    =>$invoice->getFirstName(),
+                    'last_name' =>  $invoice->getLastName(),
+                    'billing_address'   =>  array(
+                        'line1' =>  $invoice->getStreet1(),
+                        'line2' =>  $invoice->getStreet2(),
+                        'city'  =>  $invoice->getCity(),
+                        'country_code'  =>  $invoice->getCountry(),
+                        'postal_code'   =>  $invoice->getZip(),
+                        'state' =>  $invoice->getState(),
+                        //'phone' => $invoice->getPhone()
+                    )
+                )
+                
             ),
             'transactions' => array(
                 array(
                     'amount' => array(
                         'currency' => $invoice->currency,
-                        'total' => floatval($invoice->first_total),
-                        'details' => array(
-                            'subtotal' => floatval($invoice->first_subtotal - $invoice->first_discount),
-                            'tax' => $invoice->first_tax,
-                        )
+                        'total' => number_format(floatval($invoice->first_total), 2)
                     ),
                     'description' => $invoice->getLineDescription(),
                     'invoice_number' => $invoice->public_id,
@@ -86,6 +103,16 @@ class Am_Paysystem_PaypalPlus extends Am_Paysystem_Abstract
                 )
             ),
         );
+        if($phone = $invoice->getPhone())
+        {
+            $data['payer']['payer_info']['billing_address']['phone'] = $phone;
+        }
+        if(!$this->getConfig('skip_tax')){
+            $data['transactions'][0]['amount']['details'] = array(
+                'subtotal' => number_format(floatval($invoice->first_subtotal - $invoice->first_discount), 2),
+                'tax' => $invoice->first_tax,
+                );
+        }
         $payment = $api->createPayment($data, $invoice);
 
         if (empty($payment['id']))
@@ -125,13 +152,32 @@ class Am_Paysystem_PaypalPlus extends Am_Paysystem_Abstract
         return new Am_Paysystem_Transaction_PaypalPlus($this, $request, $response, $invokeArgs);
     }
 
+    function allowPartialRefunds()
+    {
+        return true;
+    }
+    
     function processRefund(\InvoicePayment $payment, \Am_Paysystem_Result $result, $amount)
     {
         $api = $this->getApi();
-        $req = $api->createApiRequest($api->getEndpoint(sprintf('/v1/payments/sale/%s/refund',$payment->getInvoice()->data()->get(self::PAYMENT_KEY))), "POST");
-        $ret = $api->_processRequest($req, new stdClass, $payment->getInvoice());
-        if(@$ret['state'] == 'completed')
-            return true;
+        $req = $api->createApiRequest($api->getEndpoint(sprintf('/v1/payments/sale/%s/refund',$payment->receipt_id)), "POST");
+        try{
+            $data = array(
+                'amount' => array(
+                    'total' => $amount,
+                    'currency' => $payment->getInvoice()->currency
+                ),
+            );            
+            $ret = $api->_processRequest($req, $data, $payment->getInvoice());
+            if(@$ret['state']!='completed') 
+                throw new Am_Exception(___('Refund was not processed'));
+            $trans = new Am_Paysystem_Transaction_Manual($this);
+            $trans->setAmount($amount);
+            $trans->setReceiptId($payment->receipt_id.'-refund');
+            $result->setSuccess($trans);
+        }catch(Am_Exception $ex){
+            $result->setFailed($ex->getMessage());
+        }
     }
 
     function getReadme()
@@ -220,21 +266,28 @@ class Am_PaypalRestAPI
         $log = $invoice->getDi()->invoiceLogRecord;
         $log->setInvoice($invoice);
         $log->title = $req->getMethod() . ': ' . $req->getUrl();
-        $log->add(array('request' => $data), true);
 
         $req->setBody(json_encode($data));
         $req->setHeader('Content-Type', 'application/json');
 
+        $log->add($req);
         $resp = $req->send();
+        $log->add($resp);
         $body = $resp->getBody();
         $ret = json_decode($body, true);
-        $log->add(array('response' => $ret), true);
 
         if (@$ret['message'])
         {
-            throw new Am_Exception_InputError($ret['message']);
+            $error = $ret['message'];
+            if(!empty($ret['details'])){
+                $line=[];
+                foreach($ret['details'] as $row){
+                    $line[] = $row['field'].":".$row['issue'];
+                }
+                $error = $error."(".implode(", ", $line).")";
+            }
+            throw new Am_Exception_InputError($error);
         }
-
 
         return $ret;
     }
@@ -284,6 +337,11 @@ class Am_Paysystem_Transaction_PaypalPlus extends Am_Paysystem_Transaction_Incom
 {
     function getUniqId()
     {
+        foreach(@$this->executeResult['transactions'] as $transaction){
+            foreach($transaction['related_resources'] as $resource){
+                if(!empty($resource['sale'])) return $resource['sale']['id'];
+            }
+        }
         return $this->request->get('paymentId');
     }
 
@@ -307,6 +365,7 @@ class Am_Paysystem_Transaction_PaypalPlus extends Am_Paysystem_Transaction_Incom
             throw new Am_Exception_InternalError('Payment was created for different invoice');
 
         $ret = $this->getPlugin()->getApi()->executePayment($payment_id, $this->request->get('PayerID'), $this->invoice);
+        $this->executeResult = $ret;
         return (@$ret['state'] == 'approved');
     }
 

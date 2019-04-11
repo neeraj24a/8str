@@ -591,8 +591,8 @@ class Am_Grid_Action_Total_Vat extends Am_Grid_Action_Total
             );
         }
 
-        $html = sprintf('<div class="grid-total">%s</div>', implode(',', $totals));
+        $html = sprintf('<div class="am-grid-total">%s</div>', implode(',', $totals));
 
-        $out = preg_replace('|(<div.*?class="grid-container)|', str_replace('$', '\$', $html) . '\1', $out);
+        $out = preg_replace('|(<div.*?class="am-grid-container)|', str_replace('$', '\$', $html) . '\1', $out);
     }
 }

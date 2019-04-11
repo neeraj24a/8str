@@ -1,7 +1,13 @@
 
 body, html {
     font-size: %font_size%px;
-    background: %color%;
+    background: none;
+}
+
+html {
+    background: %bg%;
+    background-size: %bg_size%;
+    background-attachment: %bg_attachment%;
 }
 
 .am-common {
@@ -20,6 +26,12 @@ body, html {
 .am-layout {
     min-height: initial;
     margin: 0;
+    background: none;
+}
+
+.am-header {
+    background: %header_bg%;
+    background-size: %header_bg_size%;
 }
 
 .am-header .am-header-content-wrapper {
@@ -27,21 +39,13 @@ body, html {
     background: none;
 }
 
-.am-header {
-    background: %color%;
-}
-
-.am-layout {
-    background: %color%;
-}
-
 .am-header-line {
     border:none;
-    background: %color%;
+    background: none;
 }
 
 .am-footer .am-footer-content-wrapper {
-    background: %color%;
+    background: none;
     color: inherit;
     height: auto;
 }
@@ -101,8 +105,8 @@ body, html {
 }
 
 .am-page-login .am-body-content-wrapper {
-    background: none;
-    box-shadow: none;
+    background: %login_bg_color%;
+    box-shadow: %login_shadow%;
 }
 
 .am-auth-form form {
@@ -118,18 +122,18 @@ body, html {
     padding: 1em 1em 1.5em;
 }
 
-.am-auth-form div.row div.element,
-.am-auth-form div.row div.element-title {
+.am-auth-form div.am-row div.element,
+.am-auth-form div.am-row div.am-element-title {
     padding-right: 2em;
     padding-left: 2em;
 }
 
 @media all and (min-width:500px) {
 
-    .am-auth-form div.row div.element-title {
+    .am-auth-form div.am-row div.am-element-title {
         padding-right: .5em;
     }
-    .am-auth-form div.row div.element {
+    .am-auth-form div.am-row div.am-element {
         padding-left: .5em;
     }
 }
@@ -147,10 +151,74 @@ body, html {
     color: %color_c%;
 }
 
-.am-fb-login-button-wrapper:before {
+.am-fb-login-button-wrapper.am-fb-login-form-after:before,
+.am-fb-login-button-wrapper.am-fb-login-form-before:after {
     background: %color%;
 }
 
 .am-signup-link {
     color: %color_c%;
+}
+
+.am-login-layout-with-sidebar {
+    max-width: 800px;
+    margin: 2em auto 0;
+}
+
+.am-login-layout-with-sidebar .am-login-form-wrapper,
+.am-login-layout-with-sidebar .am-sendpass-form-wrapper {
+    margin-top: 0;
+}
+
+.am-signup-link {
+    max-width: 450px;
+    margin: 1em auto 0;
+}
+
+@media all and (min-width: 800px) {
+    .am-login-layout-with-sidebar .am-login-layout-with-sidebar_form {
+        float: left;
+        width: 65%;
+    }
+    .am-login-layout-with-sidebar .am-login-layout-with-sidebar_sidebar {
+        display: block;
+        width: 35%;
+        float: right;
+        padding-left: 20px;
+        box-sizing: border-box;
+    }
+    .am-login-layout-with-sidebar .am-auth-form {
+        margin: 0;
+    }
+    .am-login-layout-with-sidebar .am-signup-link {
+        margin: 1em 0 0;
+    }
+}
+.am-login-layout-with-sidebar .am-login-layout-with-sidebar_sidebar {
+    border-radius: 3px;
+    padding: 1em 2em;
+    max-width: 450px;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 5px #00000022;
+    background: #f9f9f9;
+    color: #555;
+}
+.am-login-layout-with-sidebar_clear {
+    clear: both;
+}
+
+@media all and (max-width: 799px) {
+    .am-login-layout-with-sidebar .am-login-layout-with-sidebar_sidebar {
+        margin: 2em auto 0;
+    }
+}
+
+ul.am-tabs li.active,
+ul.am-tabs li.normal:hover {
+    background: %menu_color%;
+}
+
+ul.am-tabs li.active > a,
+ul.am-tabs li.normal > a:hover {
+    border-color: %menu_color%;
 }

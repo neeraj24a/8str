@@ -13,7 +13,7 @@
 class Am_Paysystem_Payeer extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Payeer';
     protected $defaultDescription = 'Pay via Payeer';
@@ -93,7 +93,7 @@ class Am_Paysystem_Payeer extends Am_Paysystem_Abstract
 
     function createThanksTransaction(Am_Mvc_Request $request, Am_Mvc_Response $response, array $invokeArgs)
     {
-        return new Am_Paysystem_Transaction_Payeer_Thanks($plugin, $request, $response, $invokeArgs);
+        return new Am_Paysystem_Transaction_Payeer_Thanks($this, $request, $response, $invokeArgs);
     }
 
     public function getReadme()
@@ -139,11 +139,16 @@ class Am_Paysystem_Transaction_Payeer extends Am_Paysystem_Transaction_Incoming
 
     public function validateSource()
     {
-        $params = $this->request->getRequestOnlyParams();
-        $sig = $params['m_sign'];
-        unset($params['m_sign']);
+        $sig = $this->request->getParam('m_sign');
+        $_ = array();
+        foreach (array('m_operation_id', 'm_operation_ps', 'm_operation_date',
+            'm_operation_pay_date', 'm_shop', 'm_orderid', 'm_amount', 'm_curr',
+            'm_desc', 'm_status') as $token) {
 
-        if ($sig != $this->getPlugin()->calculateSignature($params)) {
+            $_[$token] = $this->request->getParam($token);
+        }
+
+        if ($sig != $this->getPlugin()->calculateSignature($_)) {
             return false;
         }
 

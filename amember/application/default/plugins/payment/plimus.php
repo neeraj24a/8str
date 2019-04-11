@@ -7,7 +7,7 @@
  */
 class Am_Paysystem_Plimus extends Am_Paysystem_Abstract {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
     
     protected $defaultTitle = 'Plimus';
     protected $defaultDescription = 'Credit Card Payment';
@@ -116,7 +116,13 @@ class Am_Paysystem_Transaction_Plimus extends Am_Paysystem_Transaction_Incoming{
         array('62.216.234.196', '62.216.234.222'), 
         array('72.20.107.242', '72.20.107.250'), 
         array('209.128.93.97', '209.128.93.110'), 
-        array('209.128.93.225', '209.128.93.255')
+        array('209.128.93.225', '209.128.93.255'),
+        '62.216.234.216','209.128.93.254','209.128.93.98',
+        '38.99.111.60','38.99.111.160','209.128.93.232',
+        '62.216.234.196','38.99.111.50','38.99.111.150',
+        "141.226.140.100","141.226.141.100","141.226.142.100",
+        "141.226.143.100","141.226.140.200","141.226.141.200",
+        "141.226.142.200","141.226.143.200"
     );
     
     public function autoCreateGetProducts()

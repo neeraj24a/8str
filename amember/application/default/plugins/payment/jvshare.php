@@ -3,7 +3,7 @@
 class Am_Paysystem_Jvshare extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     public $domain = "";
     protected $defaultTitle = "JVshare";
@@ -41,7 +41,7 @@ class Am_Paysystem_Jvshare extends Am_Paysystem_Abstract
 
     public function _initSetupForm(Am_Form_Setup $form)
     {
-        $form->addSecretText("secret", array('class' => 'el-wide'))
+        $form->addSecretText("secret", array('class' => 'am-el-wide'))
             ->setLabel("JVshare Secret Key\n" .
                 "you can add several keys from different accounts if necessary");
     }

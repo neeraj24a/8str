@@ -8,7 +8,7 @@
  *        Web: http://www.cgi-central.net
  *    Details: User's failed payment page
  *    FileName $RCSfile$
- *    Release: 5.4.3 ($Revision$)
+ *    Release: 5.6.0 ($Revision$)
  *
  * Please direct bug reports,suggestions or feedbacks to the cgi-central support
  * http://www.cgi-central.net/support/
@@ -31,7 +31,7 @@ class CancelController extends Am_Mvc_Controller
         $this->view->invoice = null;
         $this->view->id = null;
         $this->view->paysystems = array();
-        $this->invoice = $this->getDi()->invoiceTable->findBySecureId($this->getFiltered('id'), "CANCEL");
+        $this->invoice = $this->getDi()->invoiceTable->findBySecureId(!empty($_REQUEST['id']) ? $_REQUEST['id'] : null, "CANCEL");
         if ($this->invoice) {
             if ($this->invoice->isPaid())
                 throw new Am_Exception_InputError("Invoice #$id is already paid");

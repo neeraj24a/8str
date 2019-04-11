@@ -3,7 +3,7 @@
 class Am_Plugin_SubscriptionLimit extends Am_Plugin
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $_configPrefix = 'misc.';
 
@@ -79,7 +79,7 @@ CUT;
             ->setScript(<<<CUT
 jQuery(function(){
     jQuery('[name$=notify_ls_admin]').change(function(){
-        jQuery('#ls-threshold').closest('.row').toggle(this.checked);
+        jQuery('#ls-threshold').closest('.am-row').toggle(this.checked);
     }).change();
 });
 CUT

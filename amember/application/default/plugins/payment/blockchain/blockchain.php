@@ -9,7 +9,7 @@
 class Am_Paysystem_Blockchain extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     const LIVE_URL = 'https://api.blockchain.info/v2/receive';
     const CURRENCY_URL = 'https://blockchain.info/tobtc';
@@ -32,16 +32,16 @@ class Am_Paysystem_Blockchain extends Am_Paysystem_Abstract
 
     public function _initSetupForm(Am_Form_Setup $form)
     {
-        $form->addText('api_key', array('class' => 'el-wide'))
+        $form->addText('api_key', array('class' => 'am-el-wide'))
             ->setLabel(___("API Key\n"
             . "please apply for an API key at https://api.blockchain.info/v2/apikey/request/"));
-        $form->addText('xpub', array('class' => 'el-wide'))
+        $form->addText('xpub', array('class' => 'am-el-wide'))
             ->setLabel(___("Extended Public Key\n"
             . "You should create a new account inside your wallet exclusively for transactions facilitated by this API. "
             . "When making API calls, use the xPub for this account (located in Settings -> Accounts & Addresses -> Show xPub)."));
     }
 
-    public function _process(Invoice $invoice, Am_Mvc_Request $request, Am_Paysystem_Result $result)
+    public function _process(Invoice $invoice, Am_Mvc_Request_Interface $request, Am_Paysystem_Result $result)
     {
         $log = $this->getDi()->invoiceLogRecord;
         $log->setInvoice($invoice);

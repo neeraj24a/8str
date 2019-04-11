@@ -289,7 +289,7 @@ class AdminUserPaymentsController extends Am_Mvc_Controller
         $tm_due = $form->addDate('tm_due')->setLabel(___('Due Date'));
         $tm_due->setValue($invoice->due_date < sqlDate('now') ? sqlDate('+7 days') : $invoice->due_date);
 
-        $message = $form->addTextarea('message', array('class' => 'el-wide'))
+        $message = $form->addTextarea('message', array('class' => 'am-el-wide'))
             ->setLabel(___("Message\n" .
                 'will be included to email to user'));
 
@@ -338,10 +338,10 @@ class AdminUserPaymentsController extends Am_Mvc_Controller
         $tm_added->setValue($this->getDi()->sqlDateTime);
         $tm_added->addRule('required');
 
-        $form->addText('comment', array('class' => 'el-wide'))
+        $form->addText('comment', array('class' => 'am-el-wide'))
             ->setLabel(___("Comment\nfor your reference"));
 
-        $productEdit = $gr = $form->addGroup(null, array('class' => 'row-required'));
+        $productEdit = $gr = $form->addGroup(null, array('class' => 'am-row-required'));
 
         $gr->setSeparator(' ')
             ->setLabel(___('Products'));
@@ -353,10 +353,18 @@ class AdminUserPaymentsController extends Am_Mvc_Controller
 <style type="text/css">
 <!--
 #bp-terms input,
-#bp-terms a.button {
+#bp-terms a.button,
+#bp-access-dates input,
+#bp-access-dates a.button {
     padding: .2em .5em;
 }
-#bp-terms {
+
+#bp-access-dates input.datepicker {
+    padding-left: 25px;
+}
+
+#bp-terms,
+#bp-access-dates {
     min-height:2em;
     padding:.3em;
     box-sizing: border-box;
@@ -364,6 +372,7 @@ class AdminUserPaymentsController extends Am_Mvc_Controller
     z-index: 101;
     background: #fff;
 }
+
 a#bp-item-close {
     text-decoration: none;
     color: #313131;
@@ -371,15 +380,23 @@ a#bp-item-close {
     line-height: 1.6em;
     margin-left: 1em;
 }
+
 a#bp-item-close:hover {
     color: #ba2727;
 }
+
 a#bp-item-commit {
     margin-left: 1em;
 }
+
 #bp-items .bp-item {
     height: 2em;
 }
+
+#bp-items .bp-item.bp-item-recurring .bp-item-access-dates-edit {
+    display:none;
+}
+
 -->
 </style>
 CUT
@@ -397,7 +414,8 @@ CUT
             $second_period = new Am_Period($plan->second_period);
             $bp_data[$key] = array(
                 'rebill_times' => (int)$plan->rebill_times,
-                'first_period_c' => (int)$first_period->getCount(),
+                'first_period_c' => $first_period->getUnit() == 'fixed' ?
+                        amDate($first_period->getCount()) : $first_period->getCount(),
                 'first_period_u' => $first_period->getUnit(),
                 'second_period_c' => (int)$second_period->getCount(),
                 'second_period_u' => $second_period->getUnit(),
@@ -409,7 +427,7 @@ CUT
                 'data-first_price' => $plan->first_price,
                 'data-second_price' => $plan->second_price,
                 'data-rebill_times' => (int)$plan->rebill_times,
-                'data-variable_qty' => $plan->variable_qty ? 'true' : 'false',
+                'data-variable_qty' => 'true',
                 'data-currency' => $plan->currency
             ));
         }
@@ -418,31 +436,46 @@ CUT
         $label_fp = Am_Html::escape(___('First Price'));
         $label_sp = Am_Html::escape(___('Second Price'));
         $label_s = Am_Html::escape(___('Update'));
+        $label_r = Am_Html::escape(___('Reset'));
+        $label_set = Am_Html::escape(___('Set'));
+        $label_bp_edit = Am_Html::escape(___('Edit Billing Terms'));
+        $label_access_dates = Am_Html::escape(___('access dates'));
 
         $gr->addHtml()->setHtml(<<<CUT
             <div id="bp-items" style="padding-top:1em"></div>
-            <div id="bp-terms" style="display:none">
+            <div id="bp-terms" style="display:none" class="bp-entity-edit-form">
                 <input type="hidden" id="bp-bpid" name="_bpid" />
                 <span id="bp-qty-el">{$label_qty}: <input type="text" size="1" id="bp-qty" name="_qty" /></span>
+                &times;
                 <span id="bp-first_price-el">{$label_fp}: <input type="text" size="5" id="bp-first_price" name="_first_price" /> <span class="bp-currency"></span></span><!--
              --><span id="bp-second_price-el">, {$label_sp}: <input type="text" size="5" id="bp-second_price" name="_second_price" /> <span class="bp-currency"></span></span>
             <a href="javascript:;" class="button" id="bp-item-commit">{$label_s}</a> <a href="javascript:;" id="bp-item-close">&#10005;</a>
+            </div>
+            <div id="bp-access-dates" style="display:none" class="bp-entity-edit-form">
+                <input type="hidden" id="bp-bpid" name="_bpid" />
+                <span id="bp-begin_date-el"><input type="text" size="10" id="bp-begin_date"  class="datepicker" name="_begin_date" /></span>
+                &mdash;
+                <span id="bp-expire_date-el"><input type="text" size="10" id="bp-expire_date" class="datepicker" name="_expire_date" /></span>
+            <a href="javascript:;" class="button" id="bp-item-commit-dates">{$label_set}</a>
+            <a href="javascript:;" class="button" id="bp-item-reset-dates">{$label_r}</a>  <a href="javascript:;" id="bp-item-close">&#10005;</a>
             </div>
             </div>
 CUT
             );
 
         $form->addHidden('bp', array('id' => 'bp'));
+        $form->addHidden('bp_dates', array('id' => 'bp-dates'));
         $titles = json_encode($options);
         $bp_data = json_encode($bp_data);
 
         $form->addScript()
             ->setScript(<<<CUT
 jQuery(function($){
+
+    var bp_data = {$bp_data};
+
     function calculateTerms(bpid, first_price, second_price)
     {
-        var bp_data = {$bp_data};
-
         var first_price = parseFloat(first_price);
         var second_price = parseFloat(second_price);
 
@@ -465,7 +498,7 @@ jQuery(function($){
                 if (rebill_times)
                     ret += " for first " + getPeriodText(first_period_c, first_period_u, true)
                 else
-                    ret += " for " + getPeriodText(first_period_c, first_period_u)
+                    ret += (first_period_u == 'fixed' ? '' : " for ") + getPeriodText(first_period_c, first_period_u)
             if (rebill_times)
             {
                 if (second_period_u == 'lifetime')
@@ -506,22 +539,26 @@ jQuery(function($){
     {
         var titles = {$titles};
         var d = $('#bp').val() ? JSON.parse($('#bp').val()): {};
+        var t = $('#bp-dates').val() ? JSON.parse($('#bp-dates').val()): {};
+        var dates;
 
         $('#bp-items').empty();
         $('#bp-id option').prop('disabled', false);
         for (var i in d) {
+                dates = t.hasOwnProperty(i) ? t[i][0] + '&mdash;' + t[i][1] : '{$label_access_dates}';
                 $('#bp-id option[value=' + i + ']').prop('disabled', true);
-                var div = $('<div class="bp-item" id="bp-item-' + i + '"></div>').append(
-                    '<a href="javascript:;" class="link local bp-item-edit" data-bpid="' + i + '">' +
+                var div = $('<div class="bp-item ' + (bp_data[i]['rebill_times'] > 0 ? 'bp-item-recurring' : '') + '" id="bp-item-' + i + '"></div>').append(
+                    '<a href="javascript:;" class="link local bp-item-edit" data-bpid="' + i + '" title="{$label_bp_edit}">' +
                         d[i][0] + ' &times; <strong>' +
-                        titles[i] + '</strong> (' +
-                        calculateTerms(i, d[i][1], d[i][2]) + ')</a> ' +
+                        titles[i] + '</strong> <span style="opacity:.8">' +
+                        calculateTerms(i, d[i][1], d[i][2]) + '</span></a> ' +
+                        '<a data-bpid="' + i + '" href="javascript:;" class="bp-item-access-dates-edit link local" style="padding-left:.5em; color:black;">' + dates + '</a> ' +
                         '<a data-bpid="' + i + '" href="javascript:;" class="bp-item-del" style="padding-left:.5em; color:#ba2727; text-decoration:none">&#10005;</a>');
                 $('#bp-items').append(div);
         }
         $('#bp-id').val(0).change();
         if (Object.getOwnPropertyNames(d).length > 0) {
-            $('#bp-id').closest('.element').find('.error').remove();
+            $('#bp-id').closest('.am-element').find('.am-error').remove();
         }
         setTimeout(function(){jQuery('#bp-id').select2(jQuery('#bp-id').data('select2-option'));}, 0);
     }
@@ -529,7 +566,8 @@ jQuery(function($){
     jQuery(document).on('click', '.bp-item-del', function(){
         var d = $('#bp').val() ? JSON.parse($('#bp').val()): {};
         delete d[$(this).data('bpid')];
-        $('#bp').val(JSON.stringify(d))
+        $('#bp').val(JSON.stringify(d));
+        $('#bp').change();
 
         bp_refresh();
     });
@@ -540,15 +578,38 @@ jQuery(function($){
 
     jQuery(document).on('click', '#bp-item-close', function(){
         $('#mask').remove();
-        $('#bp-terms').hide();
+        $(this).closest('.bp-entity-edit-form').hide();
         jQuery(window).unbind('resize.bp_edit');
     });
 
     jQuery(document).on('click', '#bp-item-commit', function(){
-        bp_add($('#bp-bpid').val(), $('#bp-qty').val(), $('#bp-first_price').val(), $('#bp-second_price').val());
+        bp_add($('#bp-bpid', $('#bp-terms')).val(), $('#bp-qty').val(), $('#bp-first_price').val(), $('#bp-second_price').val());
         $('#mask').remove();
         $('#bp-terms').hide();
         jQuery(window).unbind('resize.bp_edit');
+    });
+
+    jQuery(document).on('click', '.bp-item-access-dates-edit', function(){
+        bp_access_dates_init($(this).data('bpid'));
+    })
+
+    jQuery(document).on('click', '#bp-item-commit-dates', function(){
+        bp_add_dates($('#bp-bpid', $('#bp-access-dates')).val(), $('#bp-begin_date').val(), $('#bp-expire_date').val());
+        $('#mask').remove();
+        $(this).closest('.bp-entity-edit-form').hide();
+        jQuery(window).unbind('resize.bp_edit');
+    });
+
+    jQuery(document).on('click', '#bp-item-reset-dates', function(){
+        var bpid = $('#bp-bpid', $(this).closest('.bp-entity-edit-form')).val();
+        var d = $('#bp-dates').val() ? JSON.parse($('#bp-dates').val()): {};
+        delete d[bpid];
+        $('#bp-dates').val(JSON.stringify(d));
+        $('#bp-dates').change();
+        $('#mask').remove();
+        $(this).closest('.bp-entity-edit-form').hide();
+        jQuery(window).unbind('resize.bp_edit');
+        bp_refresh();
     });
 
     jQuery('#bp-id').change(function(){
@@ -593,15 +654,70 @@ jQuery(function($){
         $('#bp-terms').show();
     }
 
+    function bp_access_dates_init(bpid)
+    {
+        var d = $('#bp-dates').val() ? JSON.parse($('#bp-dates').val()): {};
+
+        $('#bp-bpid', $('#bp-access-dates')).val(bpid);
+        jQuery('input[name=_begin_date]', jQuery('#bp-access-dates')).val('');
+        jQuery('input[name=_expire_date]', jQuery('#bp-access-dates')).val('');
+        if (d.hasOwnProperty(bpid)) {
+            jQuery('input[name=_begin_date]', jQuery('#bp-access-dates')).
+                datepicker('setDate', d[bpid][0]);
+            jQuery('input[name=_expire_date]', jQuery('#bp-access-dates')).
+                datepicker('setDate', d[bpid][1]);
+        } else {
+            var url = amUrl('/admin-user-payments/calculate-access-dates', 1);
+            jQuery.get(url[0], jQuery.merge(
+                [
+                    {name:'user_id', value:{$this->user_id}},
+                    {name:'bp_id', value:bpid}
+                ], url[1]), function(data, textStatus, jqXHR){
+                    jQuery('input[name=_begin_date]', jQuery('#bp-access-dates')).
+                        datepicker('setDate', new Date(data.begin_date.replace(/-/g,"/")+" 01:00:00"));
+                    jQuery('input[name=_expire_date]', jQuery('#bp-access-dates')).
+                        datepicker('setDate', new Date(data.expire_date.replace(/-/g,"/")+" 01:00:00"));
+                });
+        }
+        offset = jQuery("#bp-item-" + bpid).offset();
+        jQuery('#bp-access-dates').css({
+           left: offset.left,
+           top: offset.top,
+           'min-width': jQuery("#bp-item-" + bpid).width()
+        });
+        jQuery(window).bind('resize.bp_edit', function(){
+            offset = jQuery("#bp-item-" + bpid).offset();
+            jQuery('#bp-access-dates').css({
+               left: offset.left,
+               top: offset.top,
+               'min-width': jQuery("#bp-item-" + bpid).width()
+            });
+        });
+        jQuery("body").append('<div id="mask"></div>');
+        $('#bp-access-dates').show();
+    }
+
     function bp_add(bpid, qty, first, second)
     {
         var d = $('#bp').val() ? JSON.parse($('#bp').val()): {};
         d[bpid] = [qty, first, second];
         $('#bp').val(JSON.stringify(d))
+        $('#bp').change();
 
         bp_refresh();
     }
 
+    function bp_add_dates(bpid, begin, expire)
+    {
+        var d = $('#bp-dates').val() ? JSON.parse($('#bp-dates').val()): {};
+        d[bpid] = [begin, expire];
+        $('#bp-dates').val(JSON.stringify(d))
+        $('#bp-dates').change();
+
+        bp_refresh();
+    }
+
+    $('#bp').change();
     bp_refresh();
 });
 CUT
@@ -642,7 +758,7 @@ CUT
         $tm_due->setValue(sqlDate('+7 days'));
         $tm_due->setId('add-invoice-due');
 
-        $message = $form->addTextarea('message', array('class' => 'el-wide'))->setLabel(___("Message\nwill be included to email to user"));
+        $message = $form->addTextarea('message', array('class' => 'am-el-wide'))->setLabel(___("Message\nwill be included to email to user"));
         $message->setId('add-invoice-message');
 
         $form->addElement('email_link', 'invoice_pay_link')
@@ -652,10 +768,10 @@ CUT
         jQuery(function(){
             jQuery("[name=_action]").change(function(){
                 var val = jQuery("[name=_action]:checked").val();
-                jQuery("#add-invoice-receipt").closest("div.row").toggle(val == "pending-payment")
-                jQuery("#add-invoice-due").closest("div.row").toggle(val == "pending-send")
-                jQuery("#add-invoice-message").closest("div.row").toggle(val == "pending-send")
-                jQuery("[name=invoice_pay_link]").closest("div.row").toggle(val == "pending-send")
+                jQuery("#add-invoice-receipt").closest("div.am-row").toggle(val == "pending-payment")
+                jQuery("#add-invoice-due").closest("div.am-row").toggle(val == "pending-send")
+                jQuery("#add-invoice-message").closest("div.am-row").toggle(val == "pending-send")
+                jQuery("[name=invoice_pay_link]").closest("div.am-row").toggle(val == "pending-send")
             }).change();
 
             jQuery("input#p-coupon").autocomplete({
@@ -686,6 +802,7 @@ CUT
                 }
                 $n = 0;
                 $_ = json_decode($vars['bp'] ?: '{}', true);
+                $dates = json_decode($vars['bp_dates'] ?: '{}', true);
                 if (!count($_)) {
                     $productEdit->setError(___('No items selected for purchase'));
                     break;
@@ -696,9 +813,19 @@ CUT
                     try {
                         $invoice->add($pr, $data[0]);
                         $item = $invoice->getItem($n++);
+                        $item->qty = $data[0] > 0 ? $data[0] : 1;
 
                         $item->first_price = $data[1];
                         $item->data()->set('orig_first_price', $item->first_price);
+
+                        if (isset($dates[$plan_id])) {
+                            $item->data()->set('begin_date', Am_Form_Element_Date::convertReadableToSQL($dates[$plan_id][0]));
+                            $item->data()->set('expire_date', Am_Form_Element_Date::convertReadableToSQL($dates[$plan_id][1]));
+                            $period = new Am_Period($item->first_period);
+                            if ($period->isFixed()) {
+                                $item->first_period = $item->data()->get('expire_date');
+                            }
+                        }
 
                         if ($data[2]) {
                             $item->second_price = $data[2];
@@ -794,7 +921,9 @@ CUT
         $invoice->save();
 
         if($invoice->first_total<=0){
-            $invoice->addAccessPeriod(new Am_Paysystem_Transaction_Free($this->getDi()->plugins_payment->get($vars['paysys_id'])));
+            $tr = new Am_Paysystem_Transaction_Free($this->getDi()->plugins_payment->get($vars['paysys_id']));
+            $tr->setTime(new DateTime($vars['tm_added']));
+            $invoice->addAccessPeriod($tr);
         } else {
             $transaction = new Am_Paysystem_Transaction_Manual($this->getDi()->plugins_payment->get($vars['paysys_id']));
             $transaction->setAmount($invoice->first_total)
@@ -847,7 +976,12 @@ CUT
         $invoice = $this->getDi()->invoiceRecord;
         $invoice->setUser($this->getDi()->userTable->load($this->user_id));
 
-        $product = $this->getDi()->productTable->load($this->getRequest()->getParam('product_id'));
+        if ($this->getRequest()->getParam('product_id')) {
+            $product = $this->getDi()->productTable->load($this->getRequest()->getParam('product_id'));
+        } else {
+            $bp = $this->getDi()->billingPlanTable->load($this->getRequest()->getParam('bp_id'));
+            $product = $bp->getProduct();
+        }
         $invoice->add($product);
 
         $begin_date = $product->calculateStartDate($this->getDi()->sqlDate, $invoice);
@@ -908,13 +1042,13 @@ CUT
         {
             $form = new Am_Form_Admin('user-access-form');
             $form->setAction($url = $this->getUrl(null, 'addaccess', null, 'user_id', $this->user_id));
-            $sel = $form->addSelect('product_id', array('class' => 'el-wide am-combobox'));
+            $sel = $form->addSelect('product_id', array('class' => 'am-el-wide am-combobox'));
             $options = $this->getDi()->productTable->getOptions();
             $sel->addOption(___('Please select an item...'), '');
             foreach ($options as $k => $v)
                 $sel->addOption($v, $k);
             $sel->addRule('required', ___('This field is required'));
-            $form->addText('comment', array('class' => 'el-wide', 'placeholder' => ___('Comment for Your Reference')));
+            $form->addText('comment', array('class' => 'am-el-wide', 'placeholder' => ___('Comment for Your Reference')));
             $form->addDate('begin_date')->addRule('required', ___('This field is required'));
             $form->addDate('expire_date')->addRule('required', ___('This field is required'));
             $form->addAdvCheckbox('does_not_send_autoresponder');
@@ -1308,7 +1442,7 @@ CUT
             $invoice->updateQuick('rebill_date',  $rebill_date->format('Y-m-d'));
             $invoice->data()->set('first_rebill_failure', null)->update();
 
-            $this->getDi()->invoiceLogTable->log($invoice_id, null,
+            $this->getDi()->invoiceLogTable->log($invoice_id, $invoice->paysys_id,
                ___('Rebill Date changed from %s to %s', $old_rebill_date, $invoice->rebill_date));
 
             $this->_response->ajaxResponse(array('ok'=>true, 'msg'=>___('Rebill date has been changed!')));
@@ -1387,7 +1521,7 @@ CUT
         $form = new Am_Form_Admin('replace-product-form');
         $form->setDataSources(array($this->_request));
 
-        $form->addHtml(null, array('class' => 'row-wide row-highlight'))
+        $form->addHtml(null, array('class' => 'am-row-wide am-row-highlight'))
             ->setHtml(___('This action only affect type of access. ' .
                 'It has not any impact on access dates or billing terms'));
         $form->addHidden('id');

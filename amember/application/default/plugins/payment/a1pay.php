@@ -10,7 +10,7 @@
  */
 class Am_Paysystem_A1pay extends Am_Paysystem_Abstract{
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     const FORM_ACTION_URL = 'https://partner.a1pay.ru/a1lite/input/';
 

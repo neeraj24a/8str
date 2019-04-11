@@ -8,7 +8,7 @@
  *        Web: http://www.cgi-central.net
  *    Details: Admin Payments
  *    FileName $RCSfile$
- *    Release: 5.5.0 ($Revision$)
+ *    Release: 5.6.0 ($Revision$)
  *
  * Please direct bug reports,suggestions or feedback to the cgi-central forums.
  * http://www.cgi-central.net/forum/
@@ -19,6 +19,8 @@
 
 abstract class Am_Grid_Filter_Payments_Abstract extends Am_Grid_Filter_Abstract
 {
+    protected $isInvoiceJoin = false;
+
     public function isFiltered()
     {
         foreach ((array) $this->vars['filter'] as $v) {
@@ -43,10 +45,10 @@ abstract class Am_Grid_Filter_Payments_Abstract extends Am_Grid_Filter_Abstract
                     $dateField, __CLASS__, __METHOD__));
         /* @var $q Am_Query */
         if ($filter['dat1']) {
-            $q->addWhere("t.$dateField >= ?", Am_Form_Element_Date::convertReadableToSQL($filter['dat1']) . ' 00:00:00');
+            $q->addWhere("t.$dateField >= ?", Am_Form_Element_Date::convertReadableToSQL($filter['dat1']) . ($dateField == 'rebill_date' ? '' : ' 00:00:00'));
         }
         if ($filter['dat2']) {
-            $q->addWhere("t.$dateField <= ?", Am_Form_Element_Date::convertReadableToSQL($filter['dat2']) . ' 23:59:59');
+            $q->addWhere("t.$dateField <= ?", Am_Form_Element_Date::convertReadableToSQL($filter['dat2']) . ($dateField == 'rebill_date' ? '' : ' 23:59:59'));
         }
         if (@$filter['text']) {
             switch (@$filter['type']) {
@@ -54,9 +56,9 @@ abstract class Am_Grid_Filter_Payments_Abstract extends Am_Grid_Filter_Abstract
                     if ($q->getTableName() == '?_invoice') {
                         $q->leftJoin('?_invoice_payment', 'p');
                         $q->leftJoin('?_invoice_refund', 'rf');
-                        $q->addWhere('(t.invoice_id=? OR t.public_id=? OR p.display_invoice_id=? or rf.display_invoice_id=?)', $filter['text'], $filter['text'], $filter['text'], $filter['text']);
+                        $q->addWhere('(t.invoice_id=? OR t.invoice_id IN (?a) OR t.public_id=? OR p.display_invoice_id=? or rf.display_invoice_id=?)', $filter['text'], explode(',', $filter['text']), $filter['text'], $filter['text'], $filter['text']);
                     } else {
-                        $q->addWhere('(t.invoice_id=? OR t.invoice_public_id=? or t.display_invoice_id=?)', $filter['text'], $filter['text'], $filter['text']);
+                        $q->addWhere('(t.invoice_id=? OR t.invoice_id IN (?a) OR t.invoice_public_id=? or t.display_invoice_id=?)', $filter['text'], explode(',', $filter['text']), $filter['text'], $filter['text']);
                     }
                     break;
                 case 'login':
@@ -79,6 +81,7 @@ abstract class Am_Grid_Filter_Payments_Abstract extends Am_Grid_Filter_Abstract
                     break;
                 case 'coupon':
                     if ($q->getTableName() != '?_invoice') {
+                        $this->isInvoiceJoin = true;
                         $q->leftJoin('?_invoice', 'i', 't.invoice_id=i.invoice_id');
                     }
                     $q->addWhere('coupon_code=?', $filter['text']);
@@ -86,12 +89,20 @@ abstract class Am_Grid_Filter_Payments_Abstract extends Am_Grid_Filter_Abstract
             }
         }
         if (@$filter['product_id']) {
-            $q->leftJoin('?_invoice_item', 'ii', 't.invoice_id=ii.invoice_id')
-                ->addWhere('ii.item_type=?', 'product')
-                ->addWhere('ii.item_id in (?a)', $filter['product_id']);
+            $pids = $this->grid->getDi()->productTable->extractProductIds($filter['product_id']);
+            $pids[] = -1;
+            $q->addWhere(<<<CUT
+                EXISTS (SELECT invoice_item_id
+                    FROM ?_invoice_item ii
+                    WHERE ii.invoice_id=t.invoice_id
+                        AND ii.item_type='product'
+                        AND ii.item_id IN (?a)
+                )
+CUT
+                , $pids);
         }
         if (@$filter['paysys_id']) {
-            $q->addWhere('paysys_id in (?a)', $filter['paysys_id']);
+            $q->addWhere('paysys_id IN (?a)', $filter['paysys_id']);
         }
     }
 
@@ -107,7 +118,7 @@ abstract class Am_Grid_Filter_Payments_Abstract extends Am_Grid_Filter_Abstract
 
         $pOptions = array();
         $pOptions = $pOptions +
-            Am_Di::getInstance()->productTable->getOptions();
+            Am_Di::getInstance()->productTable->getProductOptions();
         $pOptions = Am_Html::renderOptions(
                 $pOptions,
                 @$filter['product_id']
@@ -154,13 +165,12 @@ $paysysOptions
 </select>
    </div>
 <div style='display:table-cell; padding-bottom:0.4em;'>
-
 $dSelect
-<input type="text" placeholder="$start" name="{$prefix}_filter[dat1]" class='datepicker' style="width:80px" value="{$filter['dat1']}" />
-<input type="text" placeholder="$end" name="{$prefix}_filter[dat2]" class='datepicker' style="width:80px" value="{$filter['dat2']}" />
+<input type="text" placeholder="$start" name="{$prefix}_filter[dat1]" autocomplete="off" class="datepicker" style="width:80px" value="{$filter['dat1']}" />
+<input type="text" placeholder="$end" name="{$prefix}_filter[dat2]" autocomplete="off" class="datepicker" style="width:80px" value="{$filter['dat2']}" />
 </div>
-<input type="text" name="{$prefix}_filter[text]" value="{$filter['text']}" style="width:380px" />
-<select name="{$prefix}_filter[type]">
+<input type="text" name="{$prefix}_filter[text]" value="{$filter['text']}" style="width:380px; margin-bottom:.4em" />
+<select name="{$prefix}_filter[type]" style="margin-bottom:.4em">
 $options
 </select>
 CUT;
@@ -170,31 +180,25 @@ CUT;
     {
         return array('dattm' => ___('Payment Date'));
     }
-
-    public function renderStatic()
-    {
-        return <<<CUT
-<script type="text/javascript">
-jQuery(function(){
-    jQuery(document).ajaxComplete(function(){
-        jQuery('input.datepicker').datepicker({
-                defaultDate: window.uiDefaultDate,
-                dateFormat:window.uiDateFormat,
-                changeMonth: true,
-                changeYear: true
-        }).datepicker("refresh");
-    });
-});
-</script>
-CUT;
-    }
 }
 
 class Am_Grid_Filter_Payments extends Am_Grid_Filter_Payments_Abstract
 {
     public function renderInputs()
     {
-        return parent::renderInputs() . '<br />' . $this->renderDontShowRefunded();
+        $prefix = $this->grid->getId();
+        $filter = (array) $this->vars['filter'];
+        $tSelect = sprintf('<select name="%s_filter[ptype]">%s</select>',
+                    $prefix,
+                    Am_Html::renderOptions(array(
+                        '' => '-' . ___('Filter by Type') . '-',
+                        'sale' => ___('Sales'),
+                        'rebill' => ___('Rebills')
+                    ), @$filter['ptype']));
+
+        return parent::renderInputs() . '<br />' .
+            "{$tSelect} " .
+            $this->renderDontShowRefunded();
     }
 
     public function renderDontShowRefunded()
@@ -204,7 +208,7 @@ class Am_Grid_Filter_Payments extends Am_Grid_Filter_Payments_Abstract
                 <input type="checkbox" name="%s_filter[dont_show_refunded]" value="1" %s /> %s</label>',
             $this->grid->getId(), $this->grid->getId(),
             (!empty($this->vars['filter']['dont_show_refunded']) ? 'checked' : ''),
-            Am_Html::escape(___('do not show refunded payments'))
+            Am_Html::escape(___('hide refunded payments'))
         );
     }
 
@@ -213,8 +217,22 @@ class Am_Grid_Filter_Payments extends Am_Grid_Filter_Payments_Abstract
         parent::applyFilter();
         $filter = (array) $this->vars['filter'];
         $q = $this->grid->getDataSource();
-        if (@$filter['dont_show_refunded'])
+        if (!empty($filter['dont_show_refunded'])) {
             $q->addWhere('t.refund_dattm IS NULL');
+        }
+        if (!empty($filter['ptype'])) {
+            if (!$this->isInvoiceJoin) {
+                $q->leftJoin('?_invoice', 'i', 't.invoice_id=i.invoice_id');
+            }
+            switch ($filter['ptype']) {
+                case 'sale':
+                    $q->addWhere('DATE(t.dattm)=DATE(i.tm_started)');
+                    break;
+                case 'rebill':
+                    $q->addWhere('DATE(t.dattm)<>DATE(i.tm_started)');
+                    break;
+            }
+        }
     }
 }
 
@@ -251,21 +269,21 @@ CUT;
                 <input type="checkbox" name="%s_filter[dont_show_pending]" value="1" %s /> %s</label>',
             $this->grid->getId(), $this->grid->getId(),
             (@$this->vars['filter']['dont_show_pending'] == 1 ? 'checked' : ''),
-            Am_Html::escape(___('do not show pending invoices'))
+            Am_Html::escape(___('hide pending invoices'))
         );
         $active = sprintf('<label>
                 <input type="hidden" name="%s_filter[show_only_active]" value="0" />
                 <input type="checkbox" name="%s_filter[show_only_active]" value="1" %s /> %s</label>',
             $this->grid->getId(), $this->grid->getId(),
             (@$this->vars['filter']['show_only_active'] == 1 ? 'checked' : ''),
-            Am_Html::escape(___('show only invoices with active access'))
+            Am_Html::escape(___('hide invoices without active access'))
         );
 
         return <<<CUT
 <div style='display:table-cell; padding-right:0.4em; padding-bottom:0.4em; width:160px; box-sizing:border-box;'>
     $status
 </div>
-<div style='display:table-cell; padding-bottom:0.4em;'>
+<div style='display:table-cell; padding-bottom:0.4em; vertical-align:top'>
     $pending<br />$active
 </div>
 CUT;
@@ -353,7 +371,8 @@ class AdminPaymentsController extends Am_Mvc_Controller_Pages
             ->addField('m.remote_addr', 'm_remote_addr')
             ->addField('m.last_ip', 'last_ip')
             ->addField('DATE(dattm)', 'date')
-            ->addField('t.invoice_public_id', 'public_id');
+            ->addField('t.invoice_public_id', 'public_id')
+            ->addField('t.amount - IFNULL(t.refund_amount, 0)', 'balance');
         //Additional Fields
         foreach ($this->getDi()->userTable->customFields()->getAll() as $field) {
             if (isset($field->from_config) && $field->from_config) {
@@ -433,6 +452,10 @@ class AdminPaymentsController extends Am_Mvc_Controller_Pages
         foreach ($totalFields as $f) {
             $action->addField($f, 'ROUND(%s / t.base_currency_multi, 2)');
         }
+        $f = new Am_Grid_Field('balance', ___('Balance (Paid-Refund)'));
+        $f->setGetFunction(array($this, 'getAmount'));
+        array_push($totalFields, $f);
+        $action->addField($f, 'ROUND((t.amount - IFNULL(t.refund_amount, 0)) / t.base_currency_multi, 2)');
 
         $grid->setEventId('gridPayment');
         return $grid;
@@ -460,7 +483,7 @@ class AdminPaymentsController extends Am_Mvc_Controller_Pages
                 Am_Currency::render($r->amount, $r->currency),
                 Am_Html::escape($type));
         }
-        echo sprintf('<div><table class="grid">%s</table></div>', $out);
+        echo sprintf('<div><table class="am-grid">%s</table></div>', $out);
     }
 
     function getMultiSelect($obj, $controller, $field=null)
@@ -574,8 +597,9 @@ class AdminPaymentsController extends Am_Mvc_Controller_Pages
     function createInvoicesPage($page)
     {
         $query = new Am_Query($this->getDi()->invoiceTable);
-        if ($page == 'not-approved')
+        if ($page == 'not-approved') {
             $query->addWhere('is_confirmed<1');
+        }
         $query->leftJoin('?_user', 'm', 'm.user_id=t.user_id')
             ->addField("(SELECT GROUP_CONCAT(item_title SEPARATOR ', ') FROM ?_invoice_item WHERE invoice_id=t.invoice_id)", 'items')
             ->addField('m.login', 'login')
@@ -592,7 +616,9 @@ class AdminPaymentsController extends Am_Mvc_Controller_Pages
             ->addField('m.name_l')
             ->addField('m.remote_addr', 'm_remote_addr')
             ->addField('m.last_ip', 'last_ip')
-            ->addField('DATE(tm_started)', 'date');
+            ->addField('DATE(tm_started)', 'started_date')
+            ->addField('DATE(tm_added)', 'added_date');
+
         //Additional Fields
         foreach ($this->getDi()->userTable->customFields()->getAll() as $field) {
             if (isset($field->from_config) && $field->from_config) {
@@ -632,8 +658,10 @@ class AdminPaymentsController extends Am_Mvc_Controller_Pages
         $termsField->setGetFunction(array($this, 'getInvoiceTotal'));
 
         $action = new Am_Grid_Action_Export();
-        $action->addField(new Am_Grid_Field('tm_started', ___('Date/Time')))
-            ->addField(new Am_Grid_Field('date', ___('Date')))
+        $action->addField(new Am_Grid_Field('tm_added', ___('Added (Date/Time)')))
+            ->addField(new Am_Grid_Field('added_date', ___('Added (Date)')))
+            ->addField(new Am_Grid_Field('tm_started', ___('Started (Date/Time)')))
+            ->addField(new Am_Grid_Field('started_date', ___('Started (Date)')))
             ->addField(new Am_Grid_Field('rebill_date', ___('Rebill Date')))
             ->addField(new Am_Grid_Field('invoice_id', ___('Invoice (Internal Id)')))
             ->addField(new Am_Grid_Field('public_id', ___('Invoice (Public Id)')))
@@ -708,15 +736,37 @@ class AdminPaymentsController extends Am_Mvc_Controller_Pages
                     } else {
                         $action->addField(new Am_Grid_Field($field->name, $field->title));
                     }
+                } else {
+                    if(in_array($field->type, array('multi_select','checkbox'))){
+                        //we use trailing __blob to distinguish multi select fields from data table
+                        $mfield = new Am_Grid_Field($field->name . '__blob', $field->title . ' (Value)');
+                        $mfield->setGetFunction(array($this,'getMultiSelect'));
+                        $action->addField($mfield);
+
+                        $op = $field->options;
+                        $fn = $field->name . '__blob';
+                        $f = new Am_Grid_Field($field->name . '_label__blob', $field->title . ' (Label)');
+                        $f->setGetFunction(function($obj, $controller, $field=null) use ($op, $fn){
+                            return implode(',', array_map(function($el) use ($op) {
+                                return isset($op[$el]) ? $op[$el] : $el;
+                            }, (array)@unserialize($obj->{$fn})));
+                        });
+                        $action->addField($f);
+                    } else {
+                        //we use trailing __ to distinguish fields from data table
+                        $action->addField(new Am_Grid_Field($field->name . '__', $field->title));
+                    }
                 }
             }
         }
+        $action->setGetDataSourceFunc(array($this, 'getExportDsAll'));
     }
 
     public function getInvoiceRecordTitle(Invoice $invoice = null)
     {
-        return $invoice ? sprintf('%s (%s/%s, %s: %s)',
+        return $invoice ? sprintf('%s (%s/%s, %s, %s: %s)',
                 ___('Invoice'), $invoice->pk(), $invoice->public_id,
+                $invoice->getUser()->getName(),
                 ___('Billing Terms'), new Am_TermsText($invoice)) :
             ___('Invoice');
     }
@@ -725,6 +775,27 @@ class AdminPaymentsController extends Am_Mvc_Controller_Pages
     {
         return $ds->leftJoin('?_invoice_item', 'iititle', 'iititle.invoice_id=t.invoice_id')
             ->addField('iititle.item_title', 'item_title');
+    }
+
+    public function getExportDsAll(Am_Query $ds, $fields) {
+        $i = 0;
+        //join only selected fields
+        foreach ($fields as $field) {
+            $fn = $field->getFieldName();
+            if (substr($fn, -6) == '__blob') { //multi select field from data table
+                $i++;
+                $field_name = substr($fn, 0, strlen($fn)-6);
+                $ds = $ds->leftJoin("?_data", "d$i", "m.user_id = d$i.id AND d$i.table='user' AND d$i.key='$field_name'")
+                    ->addField("d$i.blob", $fn);
+            }
+            if (substr($fn, -2) == '__') { //field from data table
+                $i++;
+                $field_name = substr($fn, 0, strlen($fn)-2);
+                $ds = $ds->leftJoin("?_data", "d$i", "m.user_id = d$i.id AND d$i.table='user' AND d$i.key='$field_name'")
+                    ->addField("d$i.value", $fn);
+            }
+        }
+        return $ds;
     }
 
     public function getInvoiceTotal(Invoice $invoice)

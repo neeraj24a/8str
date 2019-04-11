@@ -8,7 +8,7 @@
  *        Web: http://www.cgi-central.net
  *    Details: Configuration
  *    FileName $RCSfile$
- *    Release: 5.4.3 ($Revision$)
+ *    Release: 5.6.0 ($Revision$)
  *
  * Please direct bug reports,suggestions or feedback to the cgi-central forums.
  * http://www.cgi-central.net/forum/
@@ -74,6 +74,8 @@ class AdminSetupController extends Am_Mvc_Controller
         $this->p = filterId($this->_request->getParam('p'));
         if ($this->p === 'ajax')
             return $this->ajaxAction();
+        if ($this->p === 'recaptcha-validate')
+            return $this->recaptchaValidateAction();
         $this->initSetupForms();
         $this->form = $this->getForm($this->p, false);
         $this->form->prepare();
@@ -112,6 +114,60 @@ class AdminSetupController extends Am_Mvc_Controller
         $this->form->prepare();
         $this->form->setDataSources(array($this->_request));
         $this->form->ajaxAction($this->getRequest());
+    }
+
+    public function recaptchaValidateAction()
+    {
+        $id = $this->getParam('id');
+        $name = $this->getParam('name');
+
+        $form = new Am_Form_Admin("{$id}-recaptcha-validate");
+        $form->setAction($this->getDi()->url('admin-setup/recaptcha-validate', false));
+        $captcha = $form->addGroup(null, array('class' => 'am-row-wide'))
+                ->setLabel(___("Please complete reCapatcha\nit is necessary to validate your reCaptcha config before enable this option, otherwise you can lock himself from admin interface"));
+        $captcha->addHtml()->setHtml('<div style="text-align:center">');
+        $captcha->addRule('callback', ___('Validation is failed. Please check %sreCAPTCHA configuration%s (Public and Secret Keys)', '<a href="' . $this->getDi()->url('admin-setup/recaptcha') . '">', '</a>'), function() use ($form) {
+            foreach ($form->getDataSources() as $ds) {
+                if ($resp = $ds->getValue('g-recaptcha-response'))
+                    break;
+            }
+
+            $status = false;
+            if ($resp)
+                $status = $this->getDi()->recaptcha->validate($resp);
+            return $status;
+        });
+        $captcha->addStatic('captcha')
+            ->setContent($this->getDi()->recaptcha
+            ->render());
+        $captcha->addHtml()->setHtml('</div>');
+
+        $btn = $form->addGroup(null, array('class' => 'am-row-wide'));
+        $btn->addHtml()->setHtml('<div style="text-align:center">');
+        $btn->addSubmit('save', array('value' => ___('Confirm')));
+        $btn->addHtml()->setHtml('</div>');
+
+        $form->addHidden('id', array('value' => $id));
+        $form->addHidden('name', array('value' => $name));
+        $form->addScript()
+            ->setScript(<<<CUT
+jQuery(function(){
+    $('#{$id}-recaptcha-validate').ajaxForm({target: '#{$id}-recaptcha-form'});
+});
+CUT
+            );
+
+        if ($form->isSubmitted() && $form->validate()) {
+            echo <<<CUT
+<script type="text/javascript">
+    jQuery('#{$id}-recaptcha-form').dialog('close');
+    jQuery('[name={$name}]').prop('checked', true).change();
+    jQuery('#{$id}-recaptcha-need-save').show();
+</script>
+CUT;
+        } else {
+            echo $form;
+        }
     }
 
     function renderPages()

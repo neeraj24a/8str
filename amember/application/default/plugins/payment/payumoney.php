@@ -11,7 +11,7 @@ class Am_Paysystem_Payumoney extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
     const PLUGIN_DATE = '$Date$';
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     const URL_LIVE ='https://secure.payu.in/_payment';
     const URL_TEST ='https://test.payu.in/_payment';

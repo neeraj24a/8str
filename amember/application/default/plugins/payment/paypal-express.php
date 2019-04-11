@@ -16,7 +16,7 @@ class Am_Paysystem_PaypalExpress extends Am_Paysystem_Abstract
 
     const SANDBOX_URL = "https://www.sandbox.paypal.com/webscr";
     const LIVE_URL = "https://www.paypal.com/webscr";
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = "PayPal Express";
     protected $defaultDescription = "pay with paypal quickly";
@@ -78,7 +78,7 @@ class Am_Paysystem_PaypalExpress extends Am_Paysystem_Abstract
             return $this->_processClassic($invoice, $request, $result);
     }
         
-    public function _processClassic(Invoice $invoice, Am_Mvc_Request $request, Am_Paysystem_Result $result)
+    public function _processClassic(Invoice $invoice, Am_Mvc_Request_Interface $request, Am_Paysystem_Result $result)
     {
         $log = $this->getDi()->invoiceLogRecord;
         $log->mask($this->getConfig('api_password'), '***API_PASSWORD**');
@@ -131,7 +131,7 @@ class Am_Paysystem_PaypalExpress extends Am_Paysystem_Abstract
 
     }
     
-    public function _processJs(Invoice $invoice, Am_Mvc_Request $request, Am_Paysystem_Result $result)
+    public function _processJs(Invoice $invoice, Am_Mvc_Request_Interface $request, Am_Paysystem_Result $result)
     {
         $log = $this->getDi()->invoiceLogRecord;
         $log->mask($this->getConfig('api_password'), '***API_PASSWORD**');

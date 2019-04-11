@@ -82,7 +82,7 @@ class AdminUserNoteController extends Am_Mvc_Controller_Grid
     {
         $form = new Am_Form_Admin;
 
-        $form->addTextarea('content', array('rows' => 10, 'class' => "no-label el-wide"))
+        $form->addTextarea('content', array('rows' => 10, 'class' => "am-no-label am-el-wide"))
             ->setLabel(___('Message'));
 
         $form->addUpload('attachments', array('multiple' => 1), array('prefix' => 'user_note'))

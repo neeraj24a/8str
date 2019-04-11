@@ -13,7 +13,7 @@ class Am_Paysystem_Payza extends Am_Paysystem_Abstract
 
     const
         PLUGIN_STATUS = self::STATUS_BETA,
-        PLUGIN_REVISION = '5.5.0',
+        PLUGIN_REVISION = '5.6.0',
         API_URL = 'https://api.payza.com/svc/api.svc',
         SUBSCR_ID = 'payza-subscr-id';
 

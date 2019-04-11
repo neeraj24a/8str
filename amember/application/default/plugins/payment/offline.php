@@ -7,7 +7,7 @@
 class Am_Paysystem_Offline extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     public function __construct(Am_Di $di, array $config)
     {
@@ -28,15 +28,23 @@ class Am_Paysystem_Offline extends Am_Paysystem_Abstract
 
     public function _initSetupForm(Am_Form_Setup $form)
     {
-        $form->addTextarea("html", array('class' => 'el-wide', "rows"=>20))->setLabel(
+        $form->addHtmlEditor("html")->setLabel(
                 ___("Payment Instructions for customer\n".
-                "you can enter any HTML here, it will be displayed to\n".
-                "customer when he chooses to pay using this payment system\n".
-                "you can use the following tags:\n".
-                "%s - Receipt HTML\n".
-                "%s - Invoice Title\n".
-                "%s - Invoice Id\n".
-                "%s - Invoice Total", '%receipt_html%', '%invoice_title%', '%invoice.public_id%', '%invoice.first_total%'));
+                "you can enter any HTML here, it will be displayed to ".
+                "customer when he chooses to pay using this payment system ".
+                "you can use the following tags: ".
+                "%s - Receipt HTML, ".
+                "%s - Invoice Title, ".
+                "%s - Invoice Id, ".
+                "%s - Invoice Total", '%receipt_html%', '%invoice_title%', '%invoice.public_id%', '%invoice.first_total%'))
+            ->setMceOptions(array(
+                'placeholder_items' => array(
+                    array('Receipt HTML', '%receipt_html%'),
+                    array('Invoice Title', '%invoice_title%'),
+                    array('Invoice Id', '%invoice.public_id%'),
+                    array('Invoice Total', '%invoice.first_total%')
+                )
+            ));
         $label = Am_Html::escape(___('preview'));
         $url = Am_Html::escape($this->getPluginUrl('preview'));
         $text = ___('Please save your settings before use preview link');

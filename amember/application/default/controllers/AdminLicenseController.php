@@ -4,11 +4,11 @@ class Am_Form_Admin_FixLicense extends Am_Form_Admin
 {
     function init()
     {
-        $this->addText('root_url', array('class' => 'el-wide'))
+        $this->addText('root_url', array('class' => 'am-el-wide'))
             ->setLabel(___("Root URL\nroot script URL, usually %s", '<i>http://www.yoursite.com/amember</i>'))
             ->addRule('callback2', '-error-must-be-returned-', array($this, 'validateRootUrl'));
 
-        $this->addText('root_surl', array('class' => 'el-wide'))
+        $this->addText('root_surl', array('class' => 'am-el-wide'))
             ->setLabel(___("Secure Root URL\nsecure URL, usually %s", '<i>http<b>s</b>://www.yoursite.com/amember</i>'))
             ->addRule('callback2', '-error-must-be-returned-', array($this, 'validateRootUrl'));
 
@@ -25,12 +25,12 @@ jQuery(function($){
     $('[name=root_surl]').change(function(){
         var surl = $(this).val();
         $('[name=force_ssl]').prop('disabled', 'disabled');
-        $('[name=force_ssl]').closest('div.row').addClass('disabled');
+        $('[name=force_ssl]').closest('div.am-row').addClass('disabled');
         if (/^https:/.exec(surl)) {
             $.get($check_url, {root_surl:surl}, function(resp){
                 if (resp) {
                     $('[name=force_ssl]').prop('disabled', null);
-                    $('[name=force_ssl]').closest('div.row').removeClass('disabled');
+                    $('[name=force_ssl]').closest('div.am-row').removeClass('disabled');
                     if ($('[name=force_ssl]:checked').length) {
                         $('[name=root_url]').val($('[name=root_surl]').val());
                     }
@@ -43,9 +43,9 @@ jQuery(function($){
     $('[name=force_ssl]').change(function(){
         if (this.checked) {
             $('[name=root_url]').val($('[name=root_surl]').val());
-            $('[name=root_url]').closest('div.row').hide();
+            $('[name=root_url]').closest('div.am-row').hide();
         } else {
-            $('[name=root_url]').closest('div.row').show();
+            $('[name=root_url]').closest('div.am-row').show();
         }
     }).change();
 })
@@ -55,7 +55,7 @@ CUT
         if ('==TRIAL==' == '==' . 'TRIAL==') {
             $license = Am_Di::getInstance()->config->get('license');
             $this->addTextarea('license', array(
-                    'class' => 'el-wide',
+                    'class' => 'am-el-wide',
                     'rows' => count(explode("\n", $license)) + 1,
                 ))
                 ->setLabel(___("License Key"))

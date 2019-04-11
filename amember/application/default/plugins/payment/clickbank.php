@@ -522,7 +522,9 @@ class Am_Paysystem_Transaction_Clickbank60 extends Am_Paysystem_Transaction_Inco
 
     public function findTime()
     {
-        return new DateTime($this->notification['transactionTime']);
+        $dt = new DateTime($this->notification['transactionTime']);
+        $dt->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        return $dt;
     }
 
     public function getUniqId()
@@ -539,6 +541,7 @@ class Am_Paysystem_Transaction_Clickbank60 extends Am_Paysystem_Transaction_Inco
         }
         return isset($ret['seed']) ? $ret['seed'] : null;
     }
+
     public function validateSource()
     {
         return !is_null($this->notification);

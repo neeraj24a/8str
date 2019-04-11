@@ -343,6 +343,7 @@ class InvoiceCreator_Standard extends InvoiceCreator_Abstract
                     if (!$invoice->isZero()) {
                         $a->invoice_payment_id = $payment->pk();
                     }
+                    $a->invoice_public_id = $invoice->public_id;
                     $a->product_id = $newP;
                     $a->insert();
                }
@@ -378,6 +379,12 @@ class InvoiceCreator_Standard extends InvoiceCreator_Abstract
     }
 }
 
+class InvoiceCreator_Authorize extends InvoiceCreator_Standard{
+    function __construct($paysys_id)
+    {
+        $this->paysys_id = 'authorize-sim';
+    }
+}
 
 class InvoiceCreator_AuthorizeCim extends InvoiceCreator_Standard{
     function __construct($paysys_id)
@@ -410,6 +417,9 @@ class InvoiceCreator_AuthorizeCim extends InvoiceCreator_Standard{
         
     }
 }
+
+class InvoiceCreator_AuthorizeOne extends InvoiceCreator_AuthorizeCim{}
+
 
 class InvoiceCreator_Abnamro extends InvoiceCreator_Standard{
     function __construct($paysys_id)
@@ -945,7 +955,7 @@ class Am_Import_Product3 extends Am_Import_Abstract
             $p->data()->set('am3:id', $r['product_id']);
             foreach ($r as $k => $v)
                 if (preg_match('/currency$/', $k))
-                    $currency = $v;
+                    $currency = strtoupper($v);
             
             if(empty($currency)) $currency = Am_Currency::getDefault();
             
@@ -995,7 +1005,7 @@ class Am_Import_Product3 extends Am_Import_Abstract
             $bp->currency = $currency;
             if (!empty($r['is_recurring']))
             {
-                if (!empty($r['trial1_days']))
+                if (!empty($r['trial1_days']) && $r['trial1_days'] > 0)
                 {
                     $bp->first_price = $r['trial1_price'];
                     $bp->first_period = $r['trial1_days'];

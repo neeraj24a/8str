@@ -11,7 +11,7 @@
 class Am_Paysystem_EwaySp extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'eWay';
     protected $defaultDescription = 'secure card processing';
@@ -49,21 +49,21 @@ class Am_Paysystem_EwaySp extends Am_Paysystem_Abstract
                 'Your eWAY Customer User Name')
             ->addRule('required');
 
-        $form->addText('PageTitle ', array('class' => 'el-wide'))
+        $form->addText('PageTitle ', array('class' => 'am-el-wide'))
             ->setLabel("Page Title\n" .
                 'This is value will be displayed as the title of the browser. ' .
                 'Default: eWAY Hosted Payment Page');
 
-        $form->addText('PageDescription', array('class' => 'el-wide'))
+        $form->addText('PageDescription', array('class' => 'am-el-wide'))
             ->setLabel("Page Description\n" .
                 'This value will be displayed above the Transaction Details. ' .
                 'Default: Blank');
 
-        $form->addText('PageFooter', array('class' => 'el-wide'))
+        $form->addText('PageFooter', array('class' => 'am-el-wide'))
             ->setLabel("Page Footer\n" .
                 'This value will be displayed below the Transaction Details.');
 
-        $form->addText('CompanyLogo', array('class' => 'el-wide'))
+        $form->addText('CompanyLogo', array('class' => 'am-el-wide'))
             ->setLabel("URL company logo\n" .
                 'The url of the image can be hosted on the ' .
                 'merchants website and pass the secure ' .
@@ -73,7 +73,7 @@ class Am_Paysystem_EwaySp extends Am_Paysystem_Abstract
                 'restricted to 960px X 65px. A default secure ' .
                 'image is used if none is supplied.');
 
-        $form->addText('Pagebanner', array('class' => 'el-wide'))
+        $form->addText('Pagebanner', array('class' => 'am-el-wide'))
             ->setLabel("URL page banner\n" .
                 'The url of the image can be hosted on the ' .
                 'merchants website and pass the secure ' .
@@ -98,7 +98,7 @@ class Am_Paysystem_EwaySp extends Am_Paysystem_Abstract
                 'NL' => 'Dutch'
             )))->setLabel('Language');
 
-        $form->addText('CompanyName', array('class' => 'el-wide'))
+        $form->addText('CompanyName', array('class' => 'am-el-wide'))
             ->setLabel("Company name\n" .
                 'This will be displayed as the company the ' .
                 'customer is purchasing from, including this ' .

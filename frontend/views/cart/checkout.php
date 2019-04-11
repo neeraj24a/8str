@@ -597,6 +597,7 @@ $this->title = "Checkout";
                                             <span class="order-summary__emphasis">(-)<?php echo $offer; ?>%</span>
                                         </td>
                                     </tr>
+									<?php if($coupon != '0.00'): ?>
 									<tr class="total-line total-line--taxes">
                                         <th class="total-line__name">Coupon Discount</th>
                                         <td class="total-line__price">
@@ -611,6 +612,7 @@ $this->title = "Checkout";
 											</span>
                                         </td>
                                     </tr>
+									<?php endif; ?>
                                 </tbody>
                                 <tfoot class="total-line-table__footer">
                                     <tr class="total-line">

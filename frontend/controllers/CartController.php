@@ -496,7 +496,7 @@ class CartController extends Controller {
 			$order->customer = $user;
 			$order->order_number = getOrderNum();
 			$order->paypal_order_id = $order_id;
-			$order->order_amount = $totalWithOffer;
+			$order->order_amount = $sub_total;
 			$order->payment_method = $method;
 			$order->transaction_id = $paymentId;
 			$order->order_date = date("Y-m-d H:i:s");
@@ -542,7 +542,7 @@ class CartController extends Controller {
 		
 			$pf = new PrintfulApiClient('ciac7wnf-7cvl-wa20:io6q-8d0qfxlnvf42');
 			$request = [];
-			$request['recipient']  = ['address1' => $ship_add['address_line_1'] .' '. $ship_add['address_line_2'],'city' => $ship_add['city'],'country_code' => 'US', 'state_code' => $ship_add['state'], 'zip' => $ship_add['zip']];
+			$request['recipient']  = ['name' =>$ship_add['first_name'].' '.$ship_add['last_name'],'address1' => $ship_add['address_line_1'] .' '. $ship_add['address_line_2'],'city' => $ship_add['city'],'country_code' => 'US', 'state_code' => $ship_add['state'], 'zip' => $ship_add['zip']];
 			$products = $cart->getCart();
 			$items = [];
 			if(isset($products['shop'])){

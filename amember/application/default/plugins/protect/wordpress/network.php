@@ -7,7 +7,7 @@
 class Am_Protect_WPNetwork extends Am_Protect_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
     protected $parent_plugin;
 
     function __construct(Am_Di $di, array $config, Am_Protect_Wordpress $plugin)
@@ -54,6 +54,18 @@ class Am_Protect_WPNetwork extends Am_Protect_Abstract
             $options[$r['blog_id']] = $r['title'];
         }
         return $options;
+    }
+
+    function getIntegrationSettingDescription(array $config)
+    {
+        if (isset($config['blog_id']) && ($id = $config['blog_id'])) {
+            $blogs = $this->getBlogs();
+            $options = array();
+            foreach ($this->getParentPlugin()->getManagedUserGroups() as $g) {
+                $options[$g->getId()] = $g->getTitle();
+            }
+            return "Blog - " . $blogs[$id] . ', Assign Group [' . $options[$config['gr']] . ']';
+        }
     }
 
     function getIntegrationFormElements(HTML_QuickForm2_Container $container)

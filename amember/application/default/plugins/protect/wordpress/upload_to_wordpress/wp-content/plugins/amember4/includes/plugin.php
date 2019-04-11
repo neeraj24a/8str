@@ -1,6 +1,8 @@
 <?php
-class am4Plugin{
-    function initFilters(){
+class am4Plugin
+{
+    function initFilters()
+    {
         foreach(get_class_methods($this) as $m){
             if(preg_match("/^filter_(.*)/", $m, $r)){
                 $fname = am4_from_camel($r[1]);
@@ -9,7 +11,8 @@ class am4Plugin{
         }
     }
 
-    function initActions(){
+    function initActions()
+    {
         foreach(get_class_methods($this) as $m){
             if(preg_match("/^action_(.*)/", $m, $r)){
                 $hook = am4_from_camel($r[1]);
@@ -19,15 +22,18 @@ class am4Plugin{
         }
     }
 
-    public function init(){
+    public function init()
+    {
         $this->initActions();
         $this->initFilters();
         return $this;
     }
 }
 
-class am4Basic extends am4Plugin {
-    function action_AdminInit(){
+class am4Basic extends am4Plugin
+{
+    function action_AdminInit()
+    {
         wp_register_script("dirbrowser", plugins_url("/js/dirbrowser.js", dirname(__FILE__)));
         wp_register_script('amember-jquery-outerclick',  plugins_url("/views/jquery.outerClick.js", dirname(__FILE__)));
         wp_register_script('amember-jquery-tabby',  plugins_url("/views/jquery.textarea.js", dirname(__FILE__)));
@@ -36,13 +42,15 @@ class am4Basic extends am4Plugin {
         wp_register_style('amember-style', plugins_url("/views/admin_styles.css", dirname(__FILE__)));
     }
 
-    function action_AdminPrintStyles(){
+    function action_AdminPrintStyles()
+    {
         if(strstr(am4_get_current_screen()->id, 'am4-settings')!==false) wp_enqueue_style('jquery-style');
         wp_enqueue_style('amember-style');
         wp_enqueue_style("wp-jquery-ui-dialog");
     }
 
-    function action_AdminPrintScripts(){
+    function action_AdminPrintScripts()
+    {
         wp_enqueue_script("amember-resource-access");
         wp_enqueue_script("dirbrowser");
         wp_enqueue_script('amember-jquery-outerclick');
@@ -50,12 +58,14 @@ class am4Basic extends am4Plugin {
         wp_enqueue_script("jquery-ui-dialog");
     }
 
-    function action_WpLogout(){
+    function action_WpLogout()
+    {
         header("Location: ".am4PluginsManager::getAPI()->getLogoutURL());
         exit;
     }
 
-    function filter_AdminUrl($url, $path){
+    function filter_AdminUrl($url, $path)
+    {
         if((strpos($path, 'profile.php') !== false)
             && !am4PluginsManager::skipProtection()
             && am4PluginsManager::getOption('profile_redirect'))
@@ -63,5 +73,15 @@ class am4Basic extends am4Plugin {
             return am4PluginsManager::getAPI()->getProfileURL();
         }
         return $url;
+    }
+
+    function action_AfterSetupTheme()
+    {
+        if (am4PluginsManager::getOption('remove_admin_bar') &&
+            !current_user_can('administrator') &&
+            !is_admin()) {
+
+            show_admin_bar(false);
+        }
     }
 }

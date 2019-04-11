@@ -9,7 +9,7 @@
  *        Web: http://www.cgi-central.net
  *    Details: Member display page
  *    FileName $RCSfile$
- *    Release: 5.4.3 ($Revision$)
+ *    Release: 5.6.0 ($Revision$)
  *
  * Please direct bug reports,suggestions or feedback to the cgi-central forums.
  * http://www.cgi-central.net/forum/
@@ -50,7 +50,13 @@ class MemberController extends Am_Mvc_Controller
 
     function indexAction()
     {
-        $this->view->display('member/main.phtml');
+        if (($pid = $this->getDi()->config->get('dashboard_page')) &&
+            ($page = $this->getDi()->pageTable->load($pid, false))) {
+
+            echo $page->render($this->view, $this->getDi()->user);
+        } else {
+            $this->view->display('member/main.phtml');
+        }
     }
 
     function getInvoiceAction()

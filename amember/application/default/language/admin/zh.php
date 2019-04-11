@@ -2,7 +2,6 @@
  return array (
   '%d days after expiration' => '过期后%d天',
   '%d days before expiration' => '过期前%d天',
-  '%d user(s) matches your search' => '%d用户匹配您的搜索',
   '%d-th subscription day' => '第%d订阅日',
   'Access Method' => '访问方法',
   'Account Sharing Prevention' => '防止账户共享',
@@ -148,7 +147,6 @@ PLEASE DO NOT CHANGE if emailing from aMember works' => '电子邮件发送方�
   'Enable plugins if necessary' => '如果必要，开启插件',
   'Enter Maintenance Mode' => '进入维修模式',
   'Error Log' => '错误日志',
-  'Error/Debug Log' => '错误/调试 日志',
   'Errors' => '错误',
   'Errors:' => '错误：',
   'Every %s' => '每个%s',
@@ -185,7 +183,6 @@ price of first period of subscription' => '第一价格
   'Global' => '全球',
   'Hostname' => '主机',
   'IMPORTANT NOTE: This will not protect content. If someone know link url, he will be able to open link without a problem. This just control what additional links user will see after login to member\'s area.' => '重要注意：这将不保护内容。如果某人知道链接，他将能打开链接。这只控制用户在登录用户区域后能看见的其他链接。',
-  'IP' => 'IP地址',
   'IP within' => 'IP地址在',
   'If you are moving from one payment processor, you can use this page to switch existing subscription from one payment processor to another. It is possible only if full credit card info is stored on aMember side.' => '如果您从支付方式移动到其他，您可使用此页面在现有的订阅支付方式间切换。只有信用卡完整信息被存储在aMember这边才可能。',
   'Import Users' => '导入用户',
@@ -255,7 +252,6 @@ used as From: address for sending e-mail messages
 to customers. If empty, [Admin E-Mail Address] is used' => '发出的电子邮件地址
 用作从：发送电子邮件消息的地址
 给顾客。如果空白，[管理员电子邮件地址] 被使用',
-  'Overwrite User if Exist User with Same Login' => '如果相同用户登录改写用户',
   'PDF Invoice' => 'PDF格式的发票',
   'Paid' => '已支付',
   'Password Length' => '密码长度',
@@ -357,7 +353,7 @@ once FIRST subscripton is completed' => '发送注册电子邮件
   'Site is temporarily disabled for maintenance' => '网站维护暂时不可用',
   'Size of input field' => '输入栏大小',
   'Skip' => '跳过',
-  'Skip Line if Exist User with Same Login' => '如果相同用户登录跳线',
+  'Skip First Line' => '跳过第一线',
   'Sort' => ' 排序',
   'Source' => '源',
   'Space' => '空间',
@@ -407,7 +403,6 @@ displayed to customers' => '标题
   'Unpack Upgrades' => '拆开升级',
   'Update Error' => '更新错误',
   'Update License Information' => '更新许可证信息',
-  'Update User if Exist User with Same Login' => '如果相同用户登录更新用户',
   'Upgrade' => '升级',
   'Upgrade Database' => '升级数据库',
   'Upgrade Download Problem' => '升级下载问题',
@@ -434,7 +429,7 @@ use % as wildcard mask' => '值
   'Yes, do not e-mail this customer for any reasons' => '是对，不要向客户发送电邮',
   'Yes, locked' => '是的，被锁定',
   'Yes, remove category' => '是，移除目录',
-  'You have currently choosed the following users for e-mail to:' => '您目前已选择下列用户来发送电子邮件：',
+  'You chose to email the following user(s):' => '您目前已选择下列用户来发送电子邮件：',
   'You have generated %d demo products and %d demo customers' => '你生成%d演示产品和%d演示客户',
   'Your Password
 enter your current password

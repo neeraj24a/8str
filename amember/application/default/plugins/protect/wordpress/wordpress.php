@@ -11,13 +11,12 @@
  * @single_login 1
  * @type Content Management Systems (CMS)
  */
-include_once("api.php");
+include_once 'api.php';
 
 class Am_Protect_Wordpress extends Am_Protect_Databased
 {
-
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $_error_reporting_backup = null;
     protected $_timezone_backup = null;
@@ -38,7 +37,7 @@ class Am_Protect_Wordpress extends Am_Protect_Databased
     protected $wpmu = null;
 
     const WPMU_BLOG_ID = 'wpmu_blog_id';
-    const DEFAULT_VERSION =3;
+    const DEFAULT_VERSION = 3;
 
     public function init()
     {
@@ -76,6 +75,7 @@ class Am_Protect_Wordpress extends Am_Protect_Databased
     {
         return true;
     }
+
     public function getLevels()
     {
         $ret = array();
@@ -120,7 +120,7 @@ class Am_Protect_Wordpress extends Am_Protect_Databased
                     ) + $this->getWpLearndashGroups()
                 ))->setLabel('WpLearndash Courses');
         }
-        
+
         if($this->getConfig('coursepress'))
         {
             $group->addSelect('coursepress_group', array(), array(
@@ -182,35 +182,35 @@ class Am_Protect_Wordpress extends Am_Protect_Databased
     {
         parent::afterAddConfigItems($form);
         $configPrefix = sprintf('protect.%s.', $this->getId());
-        $form->addText($configPrefix . 'folder', array('class' => 'el-wide'))
+        $form->addText($configPrefix . 'folder', array('class' => 'am-el-wide'))
             ->setLabel("{$this->getTitle()} Folder\n" .
                  "Folder where you have {$this->getTitle()} installed");
         $form->addAdvCheckbox($configPrefix . 'use_wordpress_theme')
             ->setLabel("Use Wordpress theme\n" .
                 "aMember will use theme that you set in wordpress for header and footer");
 
-        $form->addText($configPrefix . 'auth_key', array('class' => 'el-wide'))
+        $form->addText($configPrefix . 'auth_key', array('class' => 'am-el-wide'))
             ->setLabel("{$this->getTitle()} Auth Key\n" .
           "AUTH_KEY setting from {$this->getTitle()} config");
-        $form->addText($configPrefix . 'secure_auth_key', array('class' => 'el-wide'))
+        $form->addText($configPrefix . 'secure_auth_key', array('class' => 'am-el-wide'))
             ->setLabel("{$this->getTitle()} Secure Auth Key\n" .
           "SECURE_AUTH_KEY setting from {$this->getTitle()} config");
-        $form->addText($configPrefix . 'logged_in_key', array('class' => 'el-wide'))
+        $form->addText($configPrefix . 'logged_in_key', array('class' => 'am-el-wide'))
             ->setLabel("{$this->getTitle()} Logged In Key\n" .
           "LOGGED_IN_KEY setting from {$this->getTitle()} config");
-        $form->addText($configPrefix . 'nonce_key', array('class' => 'el-wide'))
+        $form->addText($configPrefix . 'nonce_key', array('class' => 'am-el-wide'))
             ->setLabel("{$this->getTitle()} Nonce Key\n" .
           "NONCE_KEY setting from {$this->getTitle()} config");
-        $form->addText($configPrefix . 'auth_salt', array('class' => 'el-wide'))
+        $form->addText($configPrefix . 'auth_salt', array('class' => 'am-el-wide'))
             ->setLabel("{$this->getTitle()} Auth Salt\n" .
           "AUTH_SALT setting from {$this->getTitle()} config");
-        $form->addText($configPrefix . 'secure_auth_salt', array('class' => 'el-wide'))
+        $form->addText($configPrefix . 'secure_auth_salt', array('class' => 'am-el-wide'))
             ->setLabel("{$this->getTitle()} Secure Auth Salt\n" .
           "SECURE_AUTH_SALT setting from {$this->getTitle()} config");
-        $form->addText($configPrefix . 'logged_in_salt', array('class' => 'el-wide'))
+        $form->addText($configPrefix . 'logged_in_salt', array('class' => 'am-el-wide'))
             ->setLabel("{$this->getTitle()} Logged In Salt\n" .
           "LOGGED_IN_SALT setting from {$this->getTitle()} config");
-        $form->addText($configPrefix . 'nonce_salt', array('class' => 'el-wide'))
+        $form->addText($configPrefix . 'nonce_salt', array('class' => 'am-el-wide'))
             ->setLabel("{$this->getTitle()} Nonce Salt\n" .
           "NONCE_SALT setting from {$this->getTitle()} config");
 
@@ -229,7 +229,7 @@ class Am_Protect_Wordpress extends Am_Protect_Databased
         {
             $form->addAdvCheckbox($configPrefix . 'wp_courseware')->setLabel("Enable WP Courseware support");
         }
-        
+
         $form->addAdvCheckbox($configPrefix . 'wp_learndash')->setLabel("Enable WP Learndash support");
 
         if($this->haveCoursePress() || $this->getConfig('coursepress'))
@@ -242,8 +242,8 @@ class Am_Protect_Wordpress extends Am_Protect_Databased
             $form->addAdvCheckbox($configPrefix . 'ultimatemember')->setLabel("Enable Ultimate Member Groups support");
             if($this->getConfig('ultimatemember'))
                 $form->addMagicSelect(
-                    $configPrefix . 'um_default_group', 
-                    array(), 
+                    $configPrefix . 'um_default_group',
+                    array(),
                     array(
                         'options' => array_merge(
                             array('' => '-- Please Select --'),
@@ -252,8 +252,8 @@ class Am_Protect_Wordpress extends Am_Protect_Databased
                     ))
                 ->setLabel("Ultimate Member Default Group\n" .
                     'Will be set if there are  no other groups should be assigned to profile');
-                
-                
+
+
         }
         if ($this->haveBuddyPress() || $this->getConfig('buddy_press'))
         {
@@ -269,13 +269,13 @@ class Am_Protect_Wordpress extends Am_Protect_Databased
             $form->addScript()->setScript(<<<CUT
 jQuery(function(){
     jQuery('#buddy-press').change(function(){
-        jQuery("#buddy-press-groups").closest('.row').toggle(this.checked);
+        jQuery("#buddy-press-groups").closest('.am-row').toggle(this.checked);
     }).change();
 });
 CUT
             );
         }
-        
+
         if ($this->haveNetworkSupport() || $this->getConfig('network'))
         {
             $form->addAdvCheckbox($configPrefix . 'network')
@@ -292,8 +292,8 @@ CUT
             $form->addScript()->setScript(<<<CUT
 jQuery(function(){
     jQuery('#network').change(function(){
-        jQuery("#network-create-blog").closest('.row').toggle(this.checked);
-        jQuery("#network-add-to-blogs").closest('.row').toggle(this.checked);
+        jQuery("#network-create-blog").closest('.am-row').toggle(this.checked);
+        jQuery("#network-add-to-blogs").closest('.am-row').toggle(this.checked);
     }).change();
 });
 CUT
@@ -335,7 +335,7 @@ CUT
         }
         return $ret;
     }
-    
+
     function getWpLearndashGroups()
     {
         $ret = array();
@@ -498,9 +498,11 @@ CUT
 
     public function getAvailableUserGroups()
     {
+        $this->getDb();
         $ret = array();
         foreach ($this->getWP()->get_roles() as $rname => $r)
         {
+            if (empty($r['name'])) continue;
             $g = new Am_Protect_Databased_Usergroup(array(
                     'id' => $rname,
                     'title' => $r['name'],
@@ -654,8 +656,6 @@ CUT
 
             if(function_exists('status_header'))
                 status_header(200);  // To prevent 404 header from wordpress;
-
-
         }
     }
 
@@ -780,7 +780,7 @@ CUT
         }
         return array_filter(array_unique($levels));
     }
-    
+
     function calculateWpLearndashGroups(User $user)
     {
         $levels = array();
@@ -861,7 +861,7 @@ CUT;
     {
         try
         {
-            $this->_db->query('select count(*) from ?_wpcw_courses');
+            $this->getDb()->query('select count(*) from ?_wpcw_courses');
         }
         catch (Exception $e)
         {
@@ -874,7 +874,7 @@ CUT;
     {
         try
         {
-            $version = $this->_db->selectCell('select option_value  from ?_options where option_name="coursepress_version"');
+            $version = $this->getDb()->selectCell('select option_value from ?_options where option_name="coursepress_version"');
             if(!$version)
                 return false;
         }
@@ -888,7 +888,7 @@ CUT;
     {
         try
         {
-            $version = $this->_db->selectCell('select option_value  from ?_options where option_name="um_version"');
+            $version = $this->getDb()->selectCell('select option_value from ?_options where option_name="um_version"');
             if(!$version)
                 return false;
         }
@@ -903,7 +903,7 @@ CUT;
     {
         try
         {
-            $this->_db->query('select count(*) from ?_sfmembers');
+            $this->getDb()->query('select count(*) from ?_sfmembers');
         }
         catch (Exception $e)
         {
@@ -916,7 +916,7 @@ CUT;
     {
         try
         {
-            $this->_db->query('select count(*) from ?_bp_groups');
+            $this->getDb()->query('select count(*) from ?_bp_groups');
         }
         catch (Exception $e)
         {
@@ -929,7 +929,7 @@ CUT;
     {
         try
         {
-            $this->_db->query('select count(*) from ?_blogs');
+            $this->getDb()->query('select count(*) from ?_blogs');
         }
         catch (Exception $e)
         {
@@ -938,10 +938,10 @@ CUT;
         return true;
     }
 
-    public function onLoadBricks($event)
+    public function onLoadBricks($e)
     {
         if(!class_exists('Am_Form_Brick_WordpressNickname',false)) {
-            require_once  "bricks.php";
+            require_once "bricks.php";
         }
     }
 }
@@ -1150,7 +1150,7 @@ if (!class_exists('Am_Protect_Wordpress_Table', false))
 
             if ($this->getPlugin()->getConfig('coursepress') && $_u = $this->findAmember($record))
                 $this->updateCoursePressGroups($record, $_u);
-            
+
             if ($this->getPlugin()->getConfig('ultimatemember') && $_u = $this->findAmember($record))
                 $this->updateUltimateMemberGroups($record, $_u);
 
@@ -1158,7 +1158,6 @@ if (!class_exists('Am_Protect_Wordpress_Table', false))
             {
                 $this->updateBuddyPressGroups($record, $_u);
             }
-
 
             return $ret;
         }
@@ -1311,7 +1310,7 @@ if (!class_exists('Am_Protect_Wordpress_Table', false))
             }
             return $courses;
         }
-        
+
         function updateWpCoursewareGroups(Am_Record $record, User $user)
         {
             $oldGroups = $this->getWpCorsewareGroups($record);
@@ -1352,10 +1351,10 @@ if (!class_exists('Am_Protect_Wordpress_Table', false))
                 foreach($added as $course_id => $new_date)
                 {
                     ld_update_course_access($record->ID, $course_id, false);
-                    update_user_meta($record->ID, "course_".$course_id."_access_from", $new_date);
+                    update_user_meta($record->ID, "course_".$course_id."_access_from", amstrtotime($new_date));
                 }
         }
-        
+
         function getCoursePressGroups(Am_Record $record)
         {
             $courses = array();
@@ -1397,12 +1396,11 @@ if (!class_exists('Am_Protect_Wordpress_Table', false))
                 }
             }
         }
-        
-        function updateUltimateMemberGroups($record, $user){
+
+        function updateUltimateMemberGroups($record, $user)
+        {
             $this->getPlugin()->getWP()->update_user_meta($record->pk(), 'role', $gr = $this->getPlugin()->calculateUltimateMemberGroups($user));
             $this->_db->query("delete from ?_options where option_name=?", 'um_cache_userdata_'.$record->pk());
         }
-        
     }
-
 }

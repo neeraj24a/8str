@@ -9,7 +9,7 @@
 class Am_Paysystem_Paygarden extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     const URL = 'https://secure.paygarden.com/pay/site/%s/%s';
     const PAYGARDEN_PRODUCT_ID = 'paygarden-product-id';
@@ -31,7 +31,7 @@ class Am_Paysystem_Paygarden extends Am_Paysystem_Abstract
                 'unique string that identifies your corporate entity')
             ->addRule('required');
 
-        $form->addSecretText('api_key', array('class' => 'el-wide'))
+        $form->addSecretText('api_key', array('class' => 'am-el-wide'))
             ->setLabel("Your API Key\n" .
                 'unique string supplied to you during initial setup')
             ->addRule('required');

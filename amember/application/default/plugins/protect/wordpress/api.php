@@ -1,9 +1,10 @@
 <?php
 
 if(!defined('WORDPRESS_API_INCLUDED')){
-
 define('WORDPRESS_API_INCLUDED', true);
-class WordpressAPI{
+
+class WordpressAPI
+{
     protected $_plugin;
     protected $_options = array();
     protected $_role_key = "";
@@ -17,89 +18,102 @@ class WordpressAPI{
     protected $PLUGINS_COOKIE_PATH;
     protected $ADMIN_COOKIE_PATH;
 
-    function  __construct(Am_Protect_Databased $plugin) {
-        $this->_plugin              = $plugin;
-        $this->_role_key            = $this->_plugin->getConfig('prefix')."user_roles";
-        $this->COOKIEHASH           = ($siteurl = $this->wp_url_filter(defined('WP_SITEURL') ? WP_SITEURL : $this->get_option('siteurl'))) ? md5($siteurl) : '';
-        $this->AUTH_COOKIE          = 'wordpress_'.$this->COOKIEHASH;
-        $this->SECURE_AUTH_COOKIE   = 'wordpress_sec_'.$this->COOKIEHASH;
-        $this->LOGGED_IN_COOKIE     = 'wordpress_logged_in_'.$this->COOKIEHASH;
-        $this->COOKIE_PATH          = preg_replace('|https?://[^/]+|i', '', rtrim($this->get_option('home'), '/') . '/' );
-        $this->SITECOOKIEPATH       = preg_replace('|https?://[^/]+|i', '', rtrim($this->get_option('siteurl'), '/') . '/' );
-        $this->ADMIN_COOKIE_PATH    =   $this->SITECOOKIEPATH.'wp-admin';
-        $this->PLUGINS_COOKIE_PATH  =   $this->SITECOOKIEPATH."wp-content/plugins";
-
+    function  __construct(Am_Protect_Databased $plugin)
+    {
+        $this->_plugin = $plugin;
+        $this->_role_key = $this->_plugin->getConfig('prefix')."user_roles";
+        $this->COOKIEHASH = ($siteurl = $this->wp_url_filter(defined('WP_SITEURL') ? WP_SITEURL : $this->get_option('siteurl'))) ? md5($siteurl) : '';
+        $this->AUTH_COOKIE = 'wordpress_'.$this->COOKIEHASH;
+        $this->SECURE_AUTH_COOKIE = 'wordpress_sec_'.$this->COOKIEHASH;
+        $this->LOGGED_IN_COOKIE = 'wordpress_logged_in_'.$this->COOKIEHASH;
+        $this->COOKIE_PATH = preg_replace('|https?://[^/]+|i', '', rtrim($this->get_option('home'), '/') . '/' );
+        $this->SITECOOKIEPATH = preg_replace('|https?://[^/]+|i', '', rtrim($this->get_option('siteurl'), '/') . '/' );
+        $this->ADMIN_COOKIE_PATH = $this->SITECOOKIEPATH.'wp-admin';
+        $this->PLUGINS_COOKIE_PATH = $this->SITECOOKIEPATH."wp-content/plugins";
     }
-    function getVersion(){
+
+    function getVersion()
+    {
         return $this->getPlugin()->getConfig('version', Am_Protect_Wordpress::DEFAULT_VERSION);
     }
+
     function wp_url_filter($url)
 	{
 		return preg_replace('|\/$|i', "", $url);
 	}
 
-
-    function getPlugin(){
+    function getPlugin()
+    {
         return $this->_plugin;
     }
 
-    function getDb(){
+    function getDb()
+    {
         return $this->getPlugin()->getDb();
     }
 
-    function get_alloptions(){
+    function get_alloptions()
+    {
         throw new Am_Exception("Deprecated!");
     }
 
-    function get_option_cache($name){
-        if(!array_key_exists($name, $this->_options)){
+    function get_option_cache($name)
+    {
+        if (!array_key_exists($name, $this->_options)) {
             $r = $this->getDb()->selectRow("select * from ?_options where autoload = 'yes' and option_name=?", $name);
-            if(!$r) return false;
-            if($this->is_serialized($r['option_value'])){
+            if (!$r) return false;
+            if ($this->is_serialized($r['option_value'])) {
                 $this->_options[$r['option_name']] = unserialize($r['option_value']);
-            }else{
+            } else {
                 $this->_options[$r['option_name']] = $r['option_value'];
             }
         }
         return @$this->_options[$name];
-
     }
-    function get_option($name){
+
+    function get_option($name)
+    {
         return $this->get_option_cache($name);
     }
 
-    function update_option($name, $value){
+    function update_option($name, $value)
+    {
         $name = trim($name);
-        if(!$name) return false;
+        if (!$name) return false;
         $old_value = $this->get_option_cache($name);
-        if($old_value===$value)
+        if ($old_value===$value) {
             return false;
+        }
 
-        if($old_value===false)
+        if ($old_value===false) {
             return $this->add_option($name, $value);
+        }
 
         $this->_options[$name] = $value;
         $value = $this->maybe_serialize($value);
         $this->getDb()->query("update ?_options set option_value=? where option_name=?", $value, $name);
     }
 
-    function maybe_serialize( $data ) {
-	if ( is_array( $data ) || is_object( $data ) )
-		return serialize( $data );
+    function maybe_serialize($data)
+    {
+        if (is_array($data) || is_object($data))
+            return serialize( $data );
 
-	if ( $this->is_serialized( $data ) )
-		return serialize( $data );
+        if ($this->is_serialized($data))
+            return serialize($data);
 
-	return $data;
+        return $data;
     }
 
-    function add_option($name, $value){
+    function add_option($name, $value)
+    {
         $this->_options[$name] = $value;
         $value = $this->maybe_serialize($value);
         $this->getDb()->query("insert into ?_options (option_name, option_value, autoload) values (?,?,?)", $name, $value, 'yes');
     }
 
-    function get_roles(){
+    function get_roles()
+    {
         $roles = $this->get_option($this->_role_key);
         foreach($this->_amember_roles as $r=>$n){
             if(!array_key_exists($r, $roles)){
@@ -109,20 +123,23 @@ class WordpressAPI{
         return $roles;
     }
 
-    function add_role($role, $name, $caps){
+    function add_role($role, $name, $caps)
+    {
         $roles = $this->get_option($this->_role_key);
         $roles[$role] = array('name'=>$name, 'capabilities' =>$caps);
         $this->update_option($this->_role_key, $roles);
     }
 
-    function get_user_meta($user_id, $key){
+    function get_user_meta($user_id, $key)
+    {
         if($user_id <= 0) return false;
         $meta = $this->getDb()->selectRow("select * from ?_usermeta where user_id=? and meta_key=?", $user_id, $key);
         if(!array_key_exists('umeta_id', $meta) || ($meta['umeta_id']<=0)) return false;
         return $this->maybe_unserialize( $meta['meta_value']);
     }
 
-    function update_user_meta($user_id, $meta_key, $meta_value, $prev_value = ''){
+    function update_user_meta($user_id, $meta_key, $meta_value, $prev_value = '')
+    {
         if($user_id <=0) return false ;
         if(!$meta_key) return false;
         $old_value = $this->get_user_meta($user_id, $meta_key);
@@ -133,24 +150,26 @@ class WordpressAPI{
         }
     }
 
-    function maybe_unserialize( $original ) {
-	if ( $this->is_serialized( $original ) )
-		return @unserialize( $original );
-	return $original;
+    function maybe_unserialize($original)
+    {
+        if ($this->is_serialized($original))
+            return @unserialize($original);
+        return $original;
     }
 
-    function is_serialized($str){
+    function is_serialized($str)
+    {
         if($str === 'b:0;') return true;
         $data = @unserialize($str);
         if ($data !== false) {
             return true;
         } else {
             return false;
-
         }
     }
 
-    function wp_set_auth_cookie($user_id, $remember = false, $secure = '', Am_Record $user=null) {
+    function wp_set_auth_cookie($user_id, $remember = false, $secure = '', Am_Record $user=null)
+    {
         if ($remember) {
             $expiration = time() + Am_Di::getInstance()->config->get('protect.php_include.remember_period', 60) * 3600 * 24;
             $expire= $expiration + 12 * 3600;
@@ -174,16 +193,22 @@ class WordpressAPI{
         Am_Cookie::set($cookie_name, $auth_cookie, $expire, $this->PLUGINS_COOKIE_PATH, $cookie_domain, $secure);
         Am_Cookie::set($cookie_name, $auth_cookie, $expire, $this->ADMIN_COOKIE_PATH, $cookie_domain, $secure);
         Am_Cookie::set($this->LOGGED_IN_COOKIE,$logged_in_cookie,$expire,$this->COOKIE_PATH, $cookie_domain);
-        if ( $this->COOKIE_PATH != $this->SITECOOKIEPATH )
+        if ( $this->COOKIE_PATH != $this->SITECOOKIEPATH ) {
             Am_Cookie::set($this->LOGGED_IN_COOKIE,$logged_in_cookie,$expire,$this->SITECOOKIEPATH, $cookie_domain, $secure);
+        }
+        if ($this->getPlugin()->getConfig('use_wordpress_theme')) {
+            Am_Cookie::set($this->LOGGED_IN_COOKIE,$logged_in_cookie,$expire,'/', $cookie_domain, $secure);
+        }
     }
 
-    function wp_hash($data, $scheme = 'auth') {
-	$salt = $this->wp_salt($scheme);
+    function wp_hash($data, $scheme = 'auth')
+    {
+        $salt = $this->wp_salt($scheme);
         return hash_hmac('md5', $data, $salt);
     }
 
-    function wp_salt($scheme){
+    function wp_salt($scheme)
+    {
         switch($scheme){
             case 'auth' :
                 $secret_key = $this->getPlugin()->getConfig('auth_key');
@@ -203,8 +228,8 @@ class WordpressAPI{
         return $secret_key . $salt;
     }
 
-
-    function wp_generate_auth_cookie($user_id, $expiration, $scheme = 'auth', Am_Record $user=null){
+    function wp_generate_auth_cookie($user_id, $expiration, $scheme = 'auth', Am_Record $user=null)
+    {
         $pass_frag = substr($user->user_pass, 8, 4);
 
         switch($this->getVersion()){
@@ -215,20 +240,15 @@ class WordpressAPI{
             	$cookie = $user->user_login . '|' . $expiration . '|' . $token . '|' . $hash;
                 break;
             default:
-
                 $key = $this->wp_hash($user->user_login . $pass_frag . '|' . $expiration, $scheme);
                 $hash = hash_hmac('md5', $user->user_login . '|' . $expiration, $key);
-
                 $cookie = $user->user_login . '|' . $expiration . '|' . $hash;
-
         }
-
-	return $cookie;
+        return $cookie;
     }
 
-
-    function getSessions($user_id){
-
+    function getSessions($user_id)
+    {
         $sessions = $this->get_user_meta($user_id, 'session_tokens');
 
         if(!is_array($sessions))
@@ -239,7 +259,8 @@ class WordpressAPI{
         });
     }
 
-    function createSessionToken($user_id,$expiration){
+    function createSessionToken($user_id, $expiration)
+    {
         $sessions = $this->getSessions($user_id);
         $token = $this->getPlugin()->getDi()->security->randomString(43);
         $verifier  = hash('sha256', $token);
@@ -248,9 +269,8 @@ class WordpressAPI{
         return $token;
     }
 
-
-
-    function wp_clear_auth_cookie(){
+    function wp_clear_auth_cookie()
+    {
         $cookie_domain = @$_SERVER['HTTP_HOST'];
         Am_Cookie::set($this->AUTH_COOKIE, ' ', time() - 31536000, $this->ADMIN_COOKIE_PATH,$cookie_domain);
         Am_Cookie::set($this->SECURE_AUTH_COOKIE, ' ', time() - 31536000, $this->ADMIN_COOKIE_PATH,$cookie_domain);
@@ -258,110 +278,109 @@ class WordpressAPI{
         Am_Cookie::set($this->SECURE_AUTH_COOKIE, ' ', time() - 31536000, $this->PLUGINS_COOKIE_PATH,$cookie_domain);
         Am_Cookie::set($this->LOGGED_IN_COOKIE, ' ', time() - 31536000, $this->COOKIE_PATH,$cookie_domain);
         Am_Cookie::set($this->LOGGED_IN_COOKIE, ' ', time() - 31536000, $this->SITECOOKIEPATH,$cookie_domain);
+        if ($this->getPlugin()->getConfig('use_wordpress_theme')) {
+            Am_Cookie::set($this->LOGGED_IN_COOKIE, ' ', time() - 31536000, '/',$cookie_domain);
+        }
 
-	// Old cookies
+        // Old cookies
         Am_Cookie::set($this->AUTH_COOKIE, ' ', time() - 31536000, $this->COOKIE_PATH,$cookie_domain);
         Am_Cookie::set($this->AUTH_COOKIE, ' ', time() - 31536000, $this->SITECOOKIEPATH,$cookie_domain);
         Am_Cookie::set($this->SECURE_AUTH_COOKIE, ' ', time() - 31536000, $this->COOKIE_PATH,$cookie_domain);
         Am_Cookie::set($this->SECURE_AUTH_COOKIE, ' ', time() - 31536000, $this->SITECOOKIEPATH,$cookie_domain);
-
     }
 
-    function wp_validate_auth_cookie($cookie = '', $scheme = ''){
-	if ( ! $cookie = $this->wp_parse_auth_cookie($cookie, $scheme) )
+    function wp_validate_auth_cookie($cookie = '', $scheme = '')
+    {
+        if (!$cookie = $this->wp_parse_auth_cookie($cookie, $scheme))
             return false;
         if($cookie['expiration']<time())
             return false;
         $user = $this->getDb()->selectRow("select * from ?_users where user_login = ?", $cookie['username']);
-        if(!$user) return false;
-	$pass_frag = substr($user['user_pass'], 8, 4);
+        if (!$user) return false;
+        $pass_frag = substr($user['user_pass'], 8, 4);
 
-    $scheme = $cookie['scheme'];
-    switch($this->getVersion()){
-        case 4:
-        	$key = $this->wp_hash($cookie['username'] . '|'.$pass_frag . '|' . $cookie['expiration'] .'|'.$cookie['token'], $scheme);
-            $hash = hash_hmac('sha256', $cookie['username'] . '|' . $cookie['expiration'].'|'.$cookie['token'], $key);
-            break;
-        default:
-        	$key = $this->wp_hash($cookie['username'] . $pass_frag . '|' . $cookie['expiration'], $scheme);
-            $hash = hash_hmac('md5', $cookie['username'] . '|' . $cookie['expiration'], $key);
-            break;
-    }
+        $scheme = $cookie['scheme'];
+        switch($this->getVersion()){
+            case 4:
+                $key = $this->wp_hash($cookie['username'] . '|'. $pass_frag . '|' . $cookie['expiration'] .'|'.$cookie['token'], $scheme);
+                $hash = hash_hmac('sha256', $cookie['username'] . '|' . $cookie['expiration'].'|'.$cookie['token'], $key);
+                break;
+            default:
+                $key = $this->wp_hash($cookie['username'] . $pass_frag . '|' . $cookie['expiration'], $scheme);
+                $hash = hash_hmac('md5', $cookie['username'] . '|' . $cookie['expiration'], $key);
+                break;
+        }
 
-	if ( $cookie['hmac'] != $hash ) {
-		return false;
-	}
+        if ( $cookie['hmac'] != $hash ) {
+            return false;
+        }
 
         return $user['ID'];
     }
 
-    function wp_parse_auth_cookie($cookie = '', $scheme = '') {
-	if ( empty($cookie) ) {
-		switch ($scheme){
-			case 'auth':
-				$cookie_name = $this->AUTH_COOKIE;
-				break;
-			case 'secure_auth':
-				$cookie_name = $this->SECURE_AUTH_COOKIE;
-				break;
-			case "logged_in":
-				$cookie_name = $this->LOGGED_IN_COOKIE;
-				break;
-			default:
-				if ( $this->is_ssl() ) {
-					$cookie_name = $this->SECURE_AUTH_COOKIE;
-					$scheme = 'secure_auth';
-				} else {
-					$cookie_name = $this->AUTH_COOKIE;
-					$scheme = 'auth';
-				}
-                }
-		if ( empty($_COOKIE[$cookie_name]) )
-			return false;
-		$cookie = $_COOKIE[$cookie_name];
-	}
+    function wp_parse_auth_cookie($cookie = '', $scheme = '')
+    {
+        if (empty($cookie)) {
+            switch ($scheme){
+                case 'auth':
+                    $cookie_name = $this->AUTH_COOKIE;
+                    break;
+                case 'secure_auth':
+                    $cookie_name = $this->SECURE_AUTH_COOKIE;
+                    break;
+                case "logged_in":
+                    $cookie_name = $this->LOGGED_IN_COOKIE;
+                    break;
+                default:
+                    if ($this->is_ssl()) {
+                        $cookie_name = $this->SECURE_AUTH_COOKIE;
+                        $scheme = 'secure_auth';
+                    } else {
+                        $cookie_name = $this->AUTH_COOKIE;
+                        $scheme = 'auth';
+                    }
+            }
+            if (empty($_COOKIE[$cookie_name]))
+                return false;
+            $cookie = $_COOKIE[$cookie_name];
+        }
         $cookie_elements = explode('|', $cookie);
 
         switch($this->getVersion()){
             case 4 :
-            	if ( count( $cookie_elements ) !== 4 ) {
+            	if (count($cookie_elements) !== 4) {
                     return false;
                 }
-
                 list( $username, $expiration, $token, $hmac ) = $cookie_elements;
-
-                return compact( 'username', 'expiration', 'token', 'hmac', 'scheme' );
-
+                return compact('username', 'expiration', 'token', 'hmac', 'scheme');
                 break;
             default:
-                if ( count($cookie_elements) != 3 )
+                if (count($cookie_elements) != 3)
             		return false;
 
             	list($username, $expiration, $hmac) = $cookie_elements;
-
             	return compact('username', 'expiration', 'hmac', 'scheme');
-
                 break;
         }
-
     }
 
-    function is_ssl() {
-	if ( isset($_SERVER['HTTPS']) ) {
-		if ( 'on' == strtolower($_SERVER['HTTPS']) )
-			return true;
-		if ( '1' == $_SERVER['HTTPS'] )
-			return true;
-	} elseif ( isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] ) ) {
-		return true;
-	}
-	return false;
+    function is_ssl()
+    {
+        if (isset($_SERVER['HTTPS'])) {
+            if ('on' == strtolower($_SERVER['HTTPS']))
+                return true;
+            if ('1' == $_SERVER['HTTPS'])
+                return true;
+        } elseif (isset($_SERVER['SERVER_PORT']) && ('443' == $_SERVER['SERVER_PORT'])) {
+            return true;
+        }
+        return false;
     }
 
-    function getLoggedInCookie(){
+    function getLoggedInCookie()
+    {
         return $this->LOGGED_IN_COOKIE;
     }
+}
 
 }
-}
-?>

@@ -1,4 +1,5 @@
 <?php
+
 class AdminClearController extends Am_Mvc_Controller
 {
     protected $form;
@@ -24,19 +25,19 @@ class AdminClearController extends Am_Mvc_Controller
             ),
             'inc_users' => array(
                 'method' => array($this->getDi()->userTable, 'clearPending'),
-                'title'  => 'Incomplete Users',
+                'title'  => 'Pending (Incomplete) Users',
                 'desc'   => 'records of users (excl. affiliates) with no any active subscriptions',
             ),
             'inc_users_aff' => array(
                 'method' => function ($date) use ($di) {
                     $di->userTable->clearPending($date, true);
                 },
-                'title'  => 'Incomplete Users and Affiliates',
+                'title'  => 'Pending (Incomplete) Users and Affiliates',
                 'desc'   => 'records of users (incl. affiliates) with no any active subscriptions',
             ),
             'inc_payments' => array(
                 'method' => array($this->getDi()->invoiceTable, 'clearPending'),
-                'title'  => 'Incomplete Invoices',
+                'title'  => 'Pending (Incomplete) Invoices',
                 'desc'   => 'records of incomplete payments attempts',
             ),
             'exp_users' => array(
@@ -58,12 +59,7 @@ class AdminClearController extends Am_Mvc_Controller
             ),
         );
 
-        $event = new Am_Event(Am_Event::CLEAR_ITEMS);
-        $this->getDi()->hook->call(Am_Event::CLEAR_ITEMS, $event);
-
-        $items = array_merge($items, $event->getReturn());
-
-        return $items;
+        return $this->getDi()->hook->filter($items, Am_Event::CLEAR_ITEMS);
     }
 
     function createForm()
@@ -83,8 +79,9 @@ class AdminClearController extends Am_Mvc_Controller
 
     function getForm()
     {
-        if (!$this->form)
+        if (!$this->form) {
             $this->form = $this->createForm();
+        }
         return $this->form;
     }
 
@@ -92,8 +89,9 @@ class AdminClearController extends Am_Mvc_Controller
     {
         check_demo();
         $form = $this->getForm();
-        if (!$form->validate())
+        if (!$form->validate()) {
             return $this->indexAction();
+        }
 
         $vars = $form->getValue();
 
@@ -109,7 +107,7 @@ class AdminClearController extends Am_Mvc_Controller
         }
 
         $this->view->content = $this->view->title = ___('Records Deleted Sucessfully');
-        $this->view->content .= sprintf(' <a href="%s">%s</a>', $this->getUrl(null, 'index'), ___('Back'));
+        $this->view->content .= sprintf(' <a href="%s">%s</a>', $this->url("admin-clear"), ___('Back'));
         $this->view->display('admin/layout.phtml');
     }
 
@@ -117,8 +115,9 @@ class AdminClearController extends Am_Mvc_Controller
     {
         /* @var Am_Form */
         $form = $this->getForm();
-        if (!$this->_request->dat)
+        if (!$this->_request->dat) {
             $this->_request->setParam('dat', date('Y-m-d', time() - 3600 * 24 * 30));
+        }
         $form->setDataSources(array($this->_request));
         $this->view->title = ___('Delete Old Records');
         $this->view->content = (string)$form;

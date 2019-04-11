@@ -16,7 +16,7 @@
 class Am_Paysystem_Zombaio extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Zombaio';
     protected $defaultDescription = 'Pay by credit card/debit card';
@@ -30,9 +30,9 @@ class Am_Paysystem_Zombaio extends Am_Paysystem_Abstract
 
     public function _initSetupForm(Am_Form_Setup $form)
     {
-        $form->addInteger('site_id', array('class' => 'el-wide'))
+        $form->addInteger('site_id', array('class' => 'am-el-wide'))
             ->setLabel('Your Zombaio Site ID');
-        $form->addInteger('merchant_id', array('class' => 'el-wide'))
+        $form->addInteger('merchant_id', array('class' => 'am-el-wide'))
             ->setLabel("Your Zombaio Merchant ID\n" .
                 'Can be found in ZOA dashboard');
 
@@ -79,7 +79,7 @@ class Am_Paysystem_Zombaio extends Am_Paysystem_Abstract
         return sprintf("https://secure.zombaio.com/API/%s/?%s", $type, http_build_query($params, '', '&'));
     }
 
-    public function _process(Invoice $invoice, Am_Mvc_Request $request, Am_Paysystem_Result $result)
+    public function _process(Invoice $invoice, Am_Mvc_Request_Interface $request, Am_Paysystem_Result $result)
     {
         $action = new Am_Paysystem_Action_Form($this->getActionURL($invoice));
         $action->identifier = $invoice->getLogin();

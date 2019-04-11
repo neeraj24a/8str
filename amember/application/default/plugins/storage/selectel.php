@@ -17,9 +17,9 @@ class Am_Storage_Selectel extends Am_Storage
     {
         $form->setTitle('Selectel');
 
-        $form->addText('access_key', array('class' => 'el-wide'))->setLabel('Your account login')
+        $form->addText('access_key', array('class' => 'am-el-wide'))->setLabel('Your account login')
             ->addRule('required');
-        $form->addSecretText('secret_key', array('class' => 'el-wide'))
+        $form->addSecretText('secret_key', array('class' => 'am-el-wide'))
             ->setLabel("Password for Cloud Storage\n" .
                 '(separate password then for Control Panel)')
             ->addRule('required');

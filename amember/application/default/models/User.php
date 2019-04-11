@@ -121,6 +121,8 @@ class User extends Am_Record_WithData
         }
         $this->getDi()->hook->call(new Am_Event_UserAfterInsert($this));
         $this->_passwordChanged = false;
+        $this->getDi()->db->query("DELETE FROM ?_store WHERE name LIKE ? AND `value`=?",
+            'signup_record-%', $this->email);
         return $ret;
     }
 
@@ -270,10 +272,12 @@ class User extends Am_Record_WithData
 
         $try = $this->getDi()->hook->filter($try, Am_Event::GENERATE_LOGIN, array('user' => $this));
 
+        $min_length = ($this->getDi()->config->get('login_min_length', 6) < 6) ? 6 : $this->getDi()->config->get('login_min_length', 6);
+        $max_length = ($this->getDi()->config->get('login_max_length', 64) > 10) ? 10 : $this->getDi()->config->get('login_max_length', 64);
         foreach ($try as $login) {
-            if (strlen($login) > $this->getDi()->config->get('login_max_length'))
-                $login = substr($login, 0, $this->getDi()->config->get('login_max_length'));
-            if ((strlen($login) >= $this->getDi()->config->get('login_min_length')) &&
+            if (strlen($login) > $max_length)
+                $login = substr($login, 0, $max_length);
+            if ((strlen($login) >= $min_length) &&
                 $this->getDi()->userTable->checkUniqLogin($login) &&
                 !$this->getDi()->banTable->findBan(array('login' => $login))) {
 
@@ -284,13 +288,10 @@ class User extends Am_Record_WithData
 
         // will generate it
         // a bit of configuration
-        $min_length = $this->getDi()->config->get('login_min_length') < 4 ? 4 : $this->getDi()->config->get('login_min_length');
-        $max_length = $this->getDi()->config->get('login_max_length') > 10 ? 10 : $this->getDi()->config->get('login_max_length');
         /// let's go
         do {
             $pass = $this->getDi()->security->randomString(rand($min_length, $max_length), "qwertyuiopasdfghjklzxcvbnm");
-        }
-        while (!$this->getDi()->userTable->checkUniqLogin($pass));
+        } while (!$this->getDi()->userTable->checkUniqLogin($pass));
         $this->login = $pass;
         return $this;
     }
@@ -390,12 +391,18 @@ class User extends Am_Record_WithData
      */
     function sendSignupEmailIfNecessary(InvoicePayment $p = null)
     {
-        if (!$this->getDi()->config->get('send_signup_mail'))
-            return;
         if ($this->data()->get('signup_email_sent'))
             return; // was already sent
         if (!$this->isApproved())
             return; // is not yet approved
+
+        //it is important to set this flag even if send_signup_mail is disabled currently
+        //admin can enable this option later and user will get unexpected signup email
+        if (!$this->getDi()->config->get('send_signup_mail')) {
+            $this->data()->set('signup_email_sent', 1)->update();
+            return;
+        }
+
         $this->sendSignupEmail($p);
     }
 
@@ -946,14 +953,14 @@ class UserTable extends Am_Table_WithData
                 ORDER BY m.user_id DESC LIMIT ?d",
             $dateThreshold ?: DBSIMPLE_SKIP, $num);
     }
-    
+
     function getPersonalDataFieldOptions()
     {
-        $pdFields = [
-            'login' =>  ___('Username'), 
-            'email' =>  ___('E-mail Address'), 
-            'name_f' => ___('First Name'), 
-            'name_l' => ___('Last Name'), 
+        $pdFields = array(
+            'login' =>  ___('Username'),
+            'email' =>  ___('E-mail Address'),
+            'name_f' => ___('First Name'),
+            'name_l' => ___('Last Name'),
             'street'    =>  ___('Address Line 1'),
             'street2'    =>  ___('Address Line 2'),
             'state'    =>  ___('State'),
@@ -967,7 +974,7 @@ class UserTable extends Am_Table_WithData
             'user_agent'    =>  ___('User Agent'),
             'last_ip'    =>  ___('Last Login IP Address'),
             'last_user_agent'    =>  ___('Last Login User Agent'),
-        ];
+        );
         foreach($this->customFields()->getAll() as $field)
         {
             $key = !empty($field->sql)?$field->name:"data.".$field->name;
@@ -975,5 +982,5 @@ class UserTable extends Am_Table_WithData
         }
         return $pdFields;
     }
-    
+
 }

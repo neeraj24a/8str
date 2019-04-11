@@ -1,7 +1,3 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 /*
  * Folder Access editor JS code
  * includes LGPL outerClick library to speedup loading - you can use it for free according to LGPL
@@ -9,11 +5,10 @@
  * @license for this JS file - LGPL
  */
 
-
 ;(function($) {
 $.fn.resourceAccess = function(param) {
 return this.each(function(){
-    var without_period = param.without_period ;
+    var without_period = param.without_period;
     var resourceAccess = {
         mainDiv: this,
         currentEditor: null,
@@ -21,11 +16,11 @@ return this.each(function(){
         startText   : "start",
         stopText    : "expiration",
         foreverText : "forever",
-        
+
         getVarName : function(){
             return $(this.mainDiv).data('varname');
         },
-                
+
         textCallback : function (id, text, cl, start, stop){
             var startText = start ? start : resourceAccess.startText;
             var stopText = (parseInt(stop) == -1 ? resourceAccess.foreverText : (stop ? stop : resourceAccess.stopText));
@@ -33,7 +28,7 @@ return this.each(function(){
             var div = document.createElement('div');
             div.appendChild(document.createTextNode(text));
             var encodedText = div.innerHTML;
-            
+
             var divcont = $("<div class='resourceaccess-item'></div>");
             var closelink = $("<a href='javascript:' class='resourceaccess-x'>[X]</a>").click(this.onXClickedRemoveLine);
             divcont.append(closelink);
@@ -44,11 +39,11 @@ return this.each(function(){
                 var astop = $("<a href='javascript:' class='resourceaccess-stop'>"+stopText+"</a>").click(this.onLinkClickedShowEditor);
                 divcont.append(document.createTextNode(" from "), astart, document.createTextNode(" to "), astop);
             }
-            // Hiddens; 
+            // Hiddens;
             divcont.append("<input type='hidden' class=resourceaccess-hidden name='"+this.getVarName()+"["+cl+"]["+id+"][start]' value='"+start+"'>");
             divcont.append("<input type='hidden' class=resourceaccess-hidden name='"+this.getVarName()+"["+cl+"]["+id+"][stop]' value='"+stop+"'>");
             divcont.append("<input type='hidden' class=resourceaccess-hidden name='"+this.getVarName()+"["+cl+"]["+id+"][title]' value='"+encodedText+"'>");
-            
+
             return divcont;
         },
         onPeriodChange: function() {
@@ -102,14 +97,18 @@ return this.each(function(){
             text.val(val[0]);
             select.val(val[1]);
             select.change(resourceAccess.onPeriodChange).change();
-            
+
             $(editor).hide().after(span);
         },
         onSelectChangeAddOption: function(){
             if (this.selectedIndex<=0) return;
             var selectedOption = this.options[this.selectedIndex];
             if (!selectedOption || !selectedOption.value) return;
-            var cl = $(selectedOption).closest("optgroup").attr("class").replace(/^(a-zA-Z0-9)+/, '$1');
+            var cl = $(selectedOption).
+                    closest("optgroup").
+                    attr("class").
+                    replace('resourceaccess-', '').
+                    replace(/^(a-zA-Z0-9)+/, '$1');
             resourceAccess.addItem(cl, selectedOption.value, selectedOption.text, "", "");
             this.selectedIndex = null;
         },
@@ -147,10 +146,10 @@ return this.each(function(){
         /** return array [count:{'',0-9+}, unit:{'','d', 'm}] */
         getCurrentEditorHidden: function(forStart) {
             var hiddenVal = $(".resourceaccess-hidden[name$='["+(forStart?'start':'stop')+"]']", this.currentEditor.parentDiv).val();
-            
+
             var ret = [
                 isNaN(parseInt(hiddenVal)) ? 0 : (parseInt(hiddenVal) == -1 ? '' : parseInt(hiddenVal)),
-                hiddenVal.replace(/^[0-9]+/, '') 
+                hiddenVal.replace(/^[0-9]+/, '')
             ];
             return ret;
         },
@@ -180,6 +179,3 @@ return this.each(function(){
 });
 }
 })(jQuery);
-
-
-

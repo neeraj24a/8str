@@ -9,7 +9,7 @@
 
 class Am_Paysystem_Allopass extends Am_Paysystem_Abstract{
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     const API_BASE_URL = 'http://api.allopass.com/rest';
     const API_HASH_FUNCTION = 'sha1'; // md5
@@ -57,7 +57,7 @@ class Am_Paysystem_Allopass extends Am_Paysystem_Abstract{
         return $signature;
     }
 
-    public function _process(Invoice $invoice, Am_Mvc_Request $request, Am_Paysystem_Result $result)
+    public function _process(Invoice $invoice, Am_Mvc_Request_Interface $request, Am_Paysystem_Result $result)
     {
         date_default_timezone_set('UTC');
         $params = array(
@@ -120,17 +120,17 @@ class Am_Paysystem_Allopass extends Am_Paysystem_Abstract{
         ksort($params);
         $hash = $this->getHash($params);
         $params['api_sig'] = $hash;
-        $request = new Am_Paysystem_Allopass_Request(self::RESPONSE_FORMAT, self::API_HASH_FUNCTION, $this->getConfig('api_secret_key'));
-        $request->makeRequest(self::API_BASE_URL . '/onetime/button', http_build_query($params, '', '&'));
-        $BuyUrl = $request->getResponse()->buy_url;
+        $req = new Am_Paysystem_Allopass_Request(self::RESPONSE_FORMAT, self::API_HASH_FUNCTION, $this->getConfig('api_secret_key'));
+        $req->makeRequest(self::API_BASE_URL . '/onetime/button', http_build_query($params, '', '&'));
+        $BuyUrl = $req->getResponse()->buy_url;
         /**/
 
-        if ($request->isResponseValidated() && $request->httpStatusCode == '200')
+        if ($req->isResponseValidated() && $req->httpStatusCode == '200')
         {
             $a = new Am_Paysystem_Action_Redirect($BuyUrl);
             $result->setAction($a);
         } else {
-            throw new Am_Exception_Paysystem_TransactionSource('Validation failed. Status code: [' . $request->httpStatusCode . '] Error code: [' . $request->code . '] Message: [' . $request->message . ']');
+            throw new Am_Exception_Paysystem_TransactionSource('Validation failed. Status code: [' . $req->httpStatusCode . '] Error code: [' . $req->code . '] Message: [' . $req->message . ']');
         }
     }
 

@@ -1,11 +1,11 @@
-<?php 
-$isLive = $di->modules->loadGet('helpdesk')->getConfig('live'); 
+<?php
+$isLive = $di->modules->loadGet('helpdesk')->getConfig('live');
 
 $lockUrl = $strategy->assembleUrl(array(
     'page_id' => 'view',
     'action' => 'lock',
     'ticket' => $ticket->ticket_mask,
-), 'inside-pages');
+), 'inside-pages', false);
 $lockUrl = explode('?', $lockUrl, 2);
 if (empty($lockUrl[1])) $lockUrl[1] = '';
 ?>
@@ -25,7 +25,7 @@ if (empty($lockUrl[1])) $lockUrl[1] = '';
     <?php endif; ?>
 </h1>
 <?php if (defined('AM_ADMIN') && AM_ADMIN && $ticket->isLocked($di->authAdmin->getUser())) : ?>
-<ul class="error">
+<ul class="am-error">
     <li><?php __e('User %s is already working on this ticket.', $ticket->lock_admin); ?></li>
 </ul>
 <?php elseif(defined('AM_ADMIN') && AM_ADMIN): ?>
@@ -45,7 +45,7 @@ setInterval(ticket_lock, 1000*60);
         <?php endif; ?>
         <ul class="am-helpdesk-ticket-fields">
         <?php foreach ($customFields as $fn => $field) : ?>
-            <?php if ($out = $this->helpdeskGetTicketField($ticket, $fn)) : ?>
+            <?php if ($out = $this->getTicketField($ticket, $fn)) : ?>
             <li class="am-helpdesk-ticket-fields-item"><?php __e($field->title) ?>: <strong><?php p($out) ?></strong></li>
             <?php endif; ?>
         <?php endforeach; ?>
@@ -206,7 +206,7 @@ CUT
             var replyContent = reply.find('.am-helpdesk-reply-panel-content');
 
             var buffer = '';
-            if (replyContent.html()!='') {
+            if (replyContent.html() !== '') {
                 buffer = replyContent.find('textarea').attr('value');
             }
 
@@ -219,7 +219,7 @@ CUT
                 reply.show();
                 jQuery(this).find('textarea').focus();
             })
-            .append('<img src="<?php p($this->_scriptImg("ajax-loader.gif"))?>" />').show();
+            .append('<img src="<?php p($this->_scriptImg("loading-b.svg"))?>" width="28" height="28" />').show();
 
             return false;
         });
@@ -238,7 +238,7 @@ CUT
         jQuery(document).on('click', ".am-helpdesk-message-action-fold a", function(){
             var $message = jQuery(this).closest('.am-helpdesk-message').find('.am-helpdesk-message-content');
             var $messageWrapper = jQuery(this).closest('.am-helpdesk-message');
-            if ($message.css('display')=='none') {
+            if ($message.css('display') === 'none') {
                 jQuery(this).html('&minus;');
                 $messageWrapper.removeClass('am-helpdesk-message-closed');
                 $message.show();
@@ -281,7 +281,7 @@ CUT
                     width : 700,
                     position : {my: "center", at: "center", of: window}
                 });
-                div.find('.grid-wrap').bind('load', function() {
+                div.find('.am-grid-wrap').bind('load', function() {
                     jQuery(this).find('a.am-helpdesk-insert-snippet').unbind().click(function(){
                         var $target = $this.closest('.am-helpdesk-reply-panel').find('textarea[name=content]');
                         $target.insertAtCaret(jQuery(this).data('snippet-content'));
@@ -302,7 +302,7 @@ CUT
                     width : 700,
                     position : {my: "center", at: "center", of: window}
                 });
-                div.find('.grid-wrap').bind('load', function() {
+                div.find('.am-grid-wrap').bind('load', function() {
                     jQuery(this).find('a.am-helpdesk-insert-faq').unbind().click(function(){
                         var $target = $this.closest('.am-helpdesk-reply-panel').find('textarea[name=content]');
                         $target.insertAtCaret(jQuery(this).data('faq-content'));
@@ -316,7 +316,6 @@ CUT
             jQuery(this).find('input[type=submit], input[type=button]').attr('disabled', 'disabled');
         });
         jQuery(document).on('click','.am-helpdesk-ticket-action-assign a', function(){
-            var $this = jQuery(this);
             var div = jQuery('<div></div>');
             div.load(amUrl('/helpdesk/admin/p/view/displayassign'), {}, function(){
                 div.dialog({
@@ -326,7 +325,7 @@ CUT
                     width : 700,
                     position : {my: "center", at: "center", of: window}
                 });
-                div.find('.grid-wrap').bind('load', function() {
+                div.find('.am-grid-wrap').bind('load', function() {
                     jQuery(this).find('a.am-helpdesk-assign').unbind().click(function(){
                         window.location = <?php
             echo json_encode($strategy->assembleUrl(array(
@@ -340,7 +339,6 @@ CUT
             });
         });
         jQuery(document).on('click','.am-helpdesk-ticket-action-change-category a', function(){
-            var $this = jQuery(this);
             var div = jQuery('<div></div>');
             div.load(amUrl('/helpdesk/admin/p/view/displayeditcategory'), {}, function(){
                 div.dialog({
@@ -350,7 +348,7 @@ CUT
                     width : 700,
                     position : {my: "center", at: "center", of: window}
                 });
-                div.find('.grid-wrap').bind('load', function() {
+                div.find('.am-grid-wrap').bind('load', function() {
                     jQuery(this).find('a.am-helpdesk-edit-category').unbind().click(function(){
                         window.location = <?php
             echo json_encode($strategy->assembleUrl(array(
@@ -364,7 +362,6 @@ CUT
             });
         });
         jQuery(document).on('click','.am-helpdesk-ticket-action-change-watcher a', function(){
-            var $this = jQuery(this);
             var div = jQuery('<div></div>');
             div.load(amUrl('/helpdesk/admin/p/view/editwatcher'), {
                 ticket: '<?php j($ticket->ticket_mask) ?>'

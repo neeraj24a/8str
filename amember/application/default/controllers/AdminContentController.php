@@ -199,7 +199,8 @@ abstract class Am_Grid_Filter_Content extends Am_Grid_Filter_Abstract
 
         if ($options = $this->grid->getDi()->resourceCategoryTable->getOptions()) {
             $filter .= ' ' . $this->renderInputSelect('filter_c',
-            array('' => ___('-- Filter by Category --')) + $options);
+            array('' => ___('-- Filter by Content Category --')) + $options,
+            array('style'=>'max-width:300px'));
         }
 
         return $filter;
@@ -331,7 +332,7 @@ class Am_Grid_Action_EmailPreview extends Am_Grid_Action_Abstract
                 break;
             case EmailTemplate::EXPIRE:
                 $mail->setProduct_title($product->title);
-                $mail->setExpires($vars['expires']);
+                $mail->setExpires(amDate($vars['expires']));
                 break;
             case EmailTemplate::PRODUCTWELCOME:
                 $invoice = Am_Di::getInstance()->invoiceRecord;
@@ -357,9 +358,14 @@ class Am_Grid_Action_EmailPreview extends Am_Grid_Action_Abstract
                 $invoice->toggleFrozen(true);
                 $invoice->invoice_id = 'ID';
                 $invoice->public_id = 'PUBLIC ID';
+                $invoice->tm_started = sqlTime('now');
                 $invoice->setUser($user);
                 $invoice->add($product);
                 $invoice->calculate();
+                if ($invoice->second_total) {
+                    $p = new Am_Period($invoice->first_period);
+                    $invoice->rebill_date = $p->addTo(sqlDate('now'));
+                }
 
                 /* @var $payment InvoicePayment */
                 $payment = Am_Di::getInstance()->invoicePaymentRecord;
@@ -773,12 +779,12 @@ CUT
 
 
         $el->addRule('required', ___('File is required'));
-        $form->addText('title', array('class' => 'el-wide translate'))->setLabel(___('Title'))->addRule('required', 'This field is required');
-        $form->addText('desc', array('class' => 'el-wide translate'))->setLabel(___('Description'));
+        $form->addText('title', array('class' => 'am-el-wide translate'))->setLabel(___('Title'))->addRule('required', 'This field is required');
+        $form->addText('desc', array('class' => 'am-el-wide translate'))->setLabel(___('Description'));
         $form->addAdvCheckbox('hide')->setLabel(___("Hide from Dashboard\n" . "do not display this item link in members dashboard\n This doesn't remove link from category."));
         $form->addElement(new Am_Form_Element_DownloadLimit('download_limit'))->setLabel(___('Limit Downloads Count'));
         $form->addElement(new Am_Form_Element_ResourceAccess)->setName('_access')->setLabel(___('Access Permissions'));
-        $form->addText('no_access_url', array('class' => 'el-wide'))
+        $form->addText('no_access_url', array('class' => 'am-el-wide'))
             ->setLabel(___("No Access URL\ncustomer without required access will be redirected to this url, leave empty if you want to redirect to default 'No access' page"));
 
         $this->addCategoryToForm($form);
@@ -839,12 +845,12 @@ class Am_Grid_Editable_Pages extends Am_Grid_Editable_Content
     {
         $form = new Am_Form_Admin;
 
-        $form->addText('title', array('class' => 'el-wide translate'))
+        $form->addText('title', array('class' => 'am-el-wide translate'))
             ->setLabel(___('Title'))
             ->addRule('required', 'This field is required');
-        $form->addText('desc', array('class' => 'el-wide translate'))
+        $form->addText('desc', array('class' => 'am-el-wide translate'))
             ->setLabel(___('Description'));
-        $form->addText('path', array('class' => 'el-wide'))
+        $form->addText('path', array('class' => 'am-el-wide'))
             ->setId('page-path')
             ->setLabel(___("Path\n" .
                 'will be used to construct user-friendly url, in case of you leave ' .
@@ -863,7 +869,7 @@ CUT
         $form->addScript()
             ->setScript(<<<CUT
 jQuery('#page-path').bind('keyup', function(){
-    jQuery('#page-permalink').closest('.row').toggle(jQuery(this).val() != '');
+    jQuery('#page-permalink').closest('.am-row').toggle(jQuery(this).val() != '');
     jQuery('#page-permalink').html(jQuery('#page-permalink').data('page_url') + encodeURIComponent(jQuery(this).val()).replace(/%20/g, '+'))
 }).trigger('keyup')
 CUT
@@ -893,13 +899,13 @@ CUT
         $form->addScript()
             ->setScript(<<<CUT
 jQuery('#use-layout').change(function(){
-    jQuery('#use-layout-tpl').closest('.row').toggle(this.checked);
+    jQuery('#use-layout-tpl').closest('.am-row').toggle(this.checked);
 }).change()
 CUT
         );
 
         $form->addElement(new Am_Form_Element_ResourceAccess)->setName('_access')->setLabel(___('Access Permissions'));
-        $form->addText('no_access_url', array('class' => 'el-wide'))
+        $form->addText('no_access_url', array('class' => 'am-el-wide'))
             ->setLabel(___("No Access URL\ncustomer without required access will be redirected to this url, leave empty if you want to redirect to default 'No access' page"));
 
         $this->addCategoryToForm($form);
@@ -907,13 +913,13 @@ CUT
         $fs = $form->addAdvFieldset('meta', array('id'=>'meta'))
                 ->setLabel(___('Meta Data'));
 
-        $fs->addText('meta_title', array('class' => 'el-wide'))
+        $fs->addText('meta_title', array('class' => 'am-el-wide'))
             ->setLabel(___('Title'));
 
-        $fs->addText('meta_keywords', array('class' => 'el-wide'))
+        $fs->addText('meta_keywords', array('class' => 'am-el-wide'))
             ->setLabel(___('Keywords'));
 
-        $fs->addText('meta_description', array('class' => 'el-wide'))
+        $fs->addText('meta_description', array('class' => 'am-el-wide'))
             ->setLabel(___('Description'));
 
         $gr = $fs->addGroup()->setLabel(___("Robots\n" .
@@ -1019,9 +1025,9 @@ class Am_Grid_Editable_Links extends Am_Grid_Editable_Content
     {
         $form = new Am_Form_Admin;
 
-        $form->addText('title', array('class' => 'el-wide translate'))->setLabel(___('Title'))->addRule('required');
-        $form->addText('desc', array('class' => 'el-wide translate'))->setLabel(___('Description'));
-        $form->addText('url', array('class' => 'el-wide'))->setLabel(___('URL'))->addRule('required');
+        $form->addText('title', array('class' => 'am-el-wide translate'))->setLabel(___('Title'))->addRule('required');
+        $form->addText('desc', array('class' => 'am-el-wide translate'))->setLabel(___('Description'));
+        $form->addText('url', array('class' => 'am-el-wide'))->setLabel(___('URL'))->addRule('required');
         $form->addAdvCheckbox('hide')->setLabel(___("Hide from Dashboard\n" . "do not display this item link in members area"));
         $form->addElement(new Am_Form_Element_ResourceAccess)->setName('_access')
             ->setLabel(___('Access Permissions'))
@@ -1079,12 +1085,20 @@ class Am_Grid_Editable_Integrations extends Am_Grid_Editable_Content
     public function renderResourceTitle(Am_Record $r)
     {
         try {
-            $pl = Am_Di::getInstance()->plugins_protect->get($r->plugin);
+            $pl = $this->getDi()->plugins_protect->get($r->plugin);
         } catch (Am_Exception_InternalError $e) {
             $pl = null;
         }
         $config = unserialize($r->vars);
-        $s = $pl ? $pl->getIntegrationSettingDescription($config) : Am_Protect_Abstract::static_getIntegrationDescription($config);
+        if($config === false)
+        {
+            $s = '';
+        }
+        else
+        {
+            $s = $pl ? $pl->getIntegrationSettingDescription($config) : Am_Protect_Abstract::static_getIntegrationDescription($config);
+        }
+        
         return $this->renderTd($s);
     }
 
@@ -1196,9 +1210,9 @@ class Am_Grid_Editable_Folders extends Am_Grid_Editable_Content
     {
         $form = new Am_Form_Admin;
 
-        $title = $form->addText('title', array('class' => 'el-wide translate', ))->setLabel(___("Title\ndisplayed to customers"));
+        $title = $form->addText('title', array('class' => 'am-el-wide translate', ))->setLabel(___("Title\ndisplayed to customers"));
         $title->addRule('required');
-        $form->addText('desc', array('class' => 'el-wide translate'))->setLabel(___('Description'));
+        $form->addText('desc', array('class' => 'am-el-wide translate'))->setLabel(___('Description'));
         $form->addAdvCheckbox('hide')->setLabel(___("Hide from Dashboard\n" . "do not display this item link in members area"));
 
         $path = $form->addText('path')->setLabel(___('Path to Folder'))->setAttribute('size', 50)->addClass('dir-browser');
@@ -1245,7 +1259,7 @@ class Am_Grid_Editable_Folders extends Am_Grid_Editable_Content
             });
         });
         ');
-        $form->addText('no_access_url', array('class' => 'el-wide'))
+        $form->addText('no_access_url', array('class' => 'am-el-wide'))
             ->setLabel(___("No Access URL\ncustomer without required access will be redirected to this url, leave empty if you want to redirect to default 'No access' page"));
 
         $gr = $form->addGroup('options')
@@ -1614,11 +1628,11 @@ Expiration message will not be sent if:
         $recipient->addAdvCheckbox('recipient_other', array('id' => 'checkbox-recipient-other'))
             ->setContent(___('Other'));
 
-        $form->addText('recipient_emails', array('class' => 'el-wide', 'id' => 'input-recipient-emails', 'placeholder' => ___('Email Addresses Separated by Comma')))
+        $form->addText('recipient_emails', array('class' => 'am-el-wide', 'id' => 'input-recipient-emails', 'placeholder' => ___('Email Addresses Separated by Comma')))
             ->setLabel(___('Emails'))
             ->addRule('callback2', ___('Please enter valid e-mail addresses'), array($this, 'validateOtherEmails'));
 
-        $form->addText('bcc', array('class' => 'el-wide', 'placeholder' => ___('Email Addresses Separated by Comma')))
+        $form->addText('bcc', array('class' => 'am-el-wide', 'placeholder' => ___('Email Addresses Separated by Comma')))
             ->setLabel(___("BCC\n" .
                 "blind carbon copy allows the sender of a message to conceal the person entered in the Bcc field from the other recipients"))
             ->addRule('callback', ___('Please enter valid e-mail addresses'), array('Am_Validate', 'emails'));
@@ -1701,7 +1715,11 @@ jQuery("#days-type").change(function(){
 CUT
             );
         }
-
+        if ($name == EmailTemplate::PAYMENT) {
+            $form->addMagicSelect('paysys_ids')
+                ->setLabel(___("Payment Systems\nsend email only for these paymet systems, keep empty to send for any"))
+                ->loadOptions($this->getDi()->paysystemList->getOptions());
+        }
         if ($this->getDi()->config->get('send_pdf_invoice') && ($name == EmailTemplate::PAYMENT)) {
            $form->addAdvCheckbox('attach_pdf_invoice', array(), array(
                'content' => ___('Attach PDF Invoice')
@@ -1779,6 +1797,7 @@ CUT
                 break;
         }
         $values['attachments'] = explode(',', @$values['attachments']);
+        $values['paysys_ids'] = explode(',', @$values['paysys_ids']);
         $values['_not_conditions'] = explode(',', @$values['not_conditions']);
 
         if (!empty($values['recipient_emails'])) {
@@ -1825,9 +1844,15 @@ CUT
         $values['_not_conditions'] = array_filter(array_map('filterId', $values['_not_conditions']));
         $values['not_conditions'] = implode(',', $values['_not_conditions']);
 
-        if (!$values['recipient_other'])
+        if (!$values['recipient_other']) {
             $values['recipient_emails'] = null;
+        }
         unset($values['recipient_other']);
+        if (empty($values['paysys_ids'])) {
+            $values['paysys_ids'] = null;
+        } else {
+            $values['paysys_ids'] = implode(',', $values['paysys_ids']);
+        }
     }
 
     public function getProducts(ResourceAbstract $resource)
@@ -1901,7 +1926,7 @@ class Am_Grid_Editable_Video extends Am_Grid_Editable_Content
         $width = 550;
         $height = $type == 'video' ? 330 : 30;
 
-        $url = $this->getDi()->url($type.'/js/id/'.$video->video_id,null,false,2);
+        $url = $this->getDi()->surl($type.'/js/id/'.$video->video_id, false);
 
         $cnt = <<<CUT
 <!-- the following code you may insert into any HTML, PHP page of your website or into WP post -->
@@ -1974,8 +1999,8 @@ CUT
             ->setLabel(___("Closed Captions\n" .
                 "file must be in SRT format, applicable only for video files"));
 
-        $form->addText('title', array('class' => 'el-wide translate'))->setLabel(___('Title'))->addRule('required', 'This field is required');
-        $form->addText('desc', array('class' => 'el-wide translate'))->setLabel(___('Description'));
+        $form->addText('title', array('class' => 'am-el-wide translate'))->setLabel(___('Title'))->addRule('required', 'This field is required');
+        $form->addText('desc', array('class' => 'am-el-wide translate'))->setLabel(___('Description'));
         $form->addAdvCheckbox('hide')->setLabel(___("Hide from Dashboard\n" . "do not display this item link in members area"));
 
         $form->addElement(new Am_Form_Element_PlayerConfig('config'))
@@ -1991,7 +2016,7 @@ CUT
 
         $form->addElement(new Am_Form_Element_ResourceAccess)->setName('_access')
             ->setLabel(___('Access Permissions'));
-        $form->addText('no_access_url', array('class' => 'el-wide'))
+        $form->addText('no_access_url', array('class' => 'am-el-wide'))
             ->setLabel(___("No Access URL\n" .
                 "customer without required access will see link to this url in " .
                 "the player window\nleave empty if you want to redirect to " .
@@ -2002,13 +2027,13 @@ CUT
         $fs = $form->addAdvFieldset('meta', array('id'=>'meta'))
                 ->setLabel(___('Meta Data'));
 
-        $fs->addText('meta_title', array('class' => 'el-wide'))
+        $fs->addText('meta_title', array('class' => 'am-el-wide'))
             ->setLabel(___('Title'));
 
-        $fs->addText('meta_keywords', array('class' => 'el-wide'))
+        $fs->addText('meta_keywords', array('class' => 'am-el-wide'))
             ->setLabel(___('Keywords'));
 
-        $fs->addText('meta_description', array('class' => 'el-wide'))
+        $fs->addText('meta_description', array('class' => 'am-el-wide'))
             ->setLabel(___('Description'));
 
         $gr = $fs->addGroup()->setLabel(___("Robots\n" .

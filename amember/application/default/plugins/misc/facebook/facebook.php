@@ -8,8 +8,11 @@ use Facebook\FacebookRequestException;
 
 class Am_Plugin_Facebook extends Am_Plugin
 {
+    
+    use Am_Mvc_Controller_User_Create;
+    
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
     const FACEBOOK_UID = 'facebook-uid';
     const FACEBOOK_LOGOUT = 'facebook-logout';
     const NOT_LOGGED_IN = 0;
@@ -40,7 +43,6 @@ class Am_Plugin_Facebook extends Am_Plugin
             return true;
 
         try {
-            include_once __DIR__ . "/sdk/autoload.php";
             FacebookSession::setDefaultApplication($this->getConfig(self::FB_APP_ID), $this->getConfig(self::FB_APP_SECRET));
             $this->_api_loaded = true;
         } catch (Exception $ex) {
@@ -79,6 +81,13 @@ class Am_Plugin_Facebook extends Am_Plugin
             ->setLabel(___('Login Button Size'))
             ->loadOptions(array_combine($size, $size));
 
+        $fs->addSelect("login_postion")
+            ->setLabel("Login Button Posstion")
+            ->loadOptions(array(
+                'login/form/after' => ___("Below Login Form"),
+                'login/form/before' => ___("Above Login Form")
+            ));
+
         $fs->addAdvCheckbox('no_signup')
             ->setLabel(___('Do not add to Signup Form'));
         $fs->addAdvCheckbox('no_login')
@@ -104,7 +113,7 @@ class Am_Plugin_Facebook extends Am_Plugin
 jQuery(function($){
     jQuery('#like-settings').change(function(){
         jQuery('#like-settings').nextAll().toggle(this.checked);
-        jQuery('[rel=like-settings]').closest('.row').toggle(this.checked);
+        jQuery('[rel=like-settings]').closest('.am-row').toggle(this.checked);
     }).change();
 })
 CUT
@@ -127,7 +136,7 @@ CUT
         $blocks = $this->getDi()->blocks;
         if (!$this->getConfig('no_login'))
             $blocks->add(
-                'login/form/after', new Am_Block_Base(null, 'fb-login', $this, 'fb-login.phtml'));
+                $this->getConfig('login_postion', 'login/form/after'), new Am_Block_Base(null, 'fb-login', $this, 'fb-login.phtml'));
         if (!$this->getConfig('no_signup'))
             $blocks->add(
                 'signup/form/before',new Am_Block_Base(null, 'fb-signup', $this, 'fb-signup.phtml'));
@@ -219,13 +228,12 @@ OUT;
         $user = $this->getDi()->userTable->findFirstByEmail($this->getFbProfile('email'));
         if (empty($user)) {
             // Create account for user;
-            $user = $this->getDi()->userRecord;
-            $user->email = $this->getFbProfile('email');
-            $user->name_f = $this->getFbProfile('first_name');
-            $user->name_l = $this->getFbProfile('last_name');
-            $user->generateLogin();
-            $user->generatePassword();
-            $user->insert();
+            
+            $user = $this->createUser([
+                'email' => $this->getFbProfile('email'),
+                'name_f' => $this->getFbProfile('first_name') ?: '',
+                'name_l' => $this->getFbProfile('last_name') ?: '',
+            ]);
         }
 
         if(!$user->data()->get(self::FACEBOOK_UID) && ($product_id = $this->getConfig('add_access')))

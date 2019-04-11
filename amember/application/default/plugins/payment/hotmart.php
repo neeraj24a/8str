@@ -11,21 +11,20 @@
 class Am_Paysystem_Hotmart extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
-    
+    const PLUGIN_REVISION = '5.6.0';
+
     const URL = 'http://api.hotmart.com.br/';
-    
+
     protected $defaultTitle = "Hotmart";
     protected $defaultDescription = "";
-    
+
     public function _initSetupForm(Am_Form_Setup $form)
     {
         $form->addSecretText('token', array('size' => 40))
             ->setLabel('Your Access Token')
             ->addRule('required');
-
     }
-    
+
     public function __construct(Am_Di $di, array $config)
     {
 
@@ -59,14 +58,14 @@ class Am_Paysystem_Hotmart extends Am_Paysystem_Abstract
         parent::_afterInitSetupForm($form);
         $form->removeElementByName($this->_configPrefix . $this->getId() . '.auto_create');
     }
-    
+
     public function isConfigured()
     {
         return strlen($this->getConfig('token', ''));
     }
 
     public function _process(Invoice $invoice, Am_Mvc_Request $request, Am_Paysystem_Result $result)
-    {        
+    {
     }
 
     public function createTransaction(Am_Mvc_Request $request, Am_Mvc_Response $response, array $invokeArgs)
@@ -83,6 +82,7 @@ class Am_Paysystem_Hotmart extends Am_Paysystem_Abstract
     {
         return;
     }
+
     public function canAutoCreate()
     {
         return true;
@@ -104,10 +104,11 @@ class Am_Paysystem_Transaction_Hotmart extends Am_Paysystem_Transaction_Incoming
 
     // refund
     const REFUNDED = "refunded";
-    
+
     protected $_autoCreateMap = array(
         'name_f' => 'first_name',
         'name_l' => 'last_name',
+        'phone' => 'phone_number',
         'email' => 'email',
         'city' => 'address_city',
         'zip' => 'address_zip_code',
@@ -134,7 +135,7 @@ class Am_Paysystem_Transaction_Hotmart extends Am_Paysystem_Transaction_Incoming
 
     public function getAmount()
     {
-        return moneyRound($this->request->get('price'));
+        return moneyRound($this->request->get('original_offer_price'));
     }
 
     public function getUniqId()
@@ -176,5 +177,4 @@ class Am_Paysystem_Transaction_Hotmart extends Am_Paysystem_Transaction_Incoming
     {
         return $this->request->get('transaction');
     }
-
 }

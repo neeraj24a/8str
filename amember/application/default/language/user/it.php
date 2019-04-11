@@ -792,7 +792,6 @@ Inserisci anche il prefisso',
   'Edit Brick Labels' => 'Modifica Etichette Campo',
   'Edit Categories' => 'Modifica Categorie',
   'Edit E-Mail Template' => 'Modifica Template Email',
-  'Edit Profile Form' => 'Modifica il Form del Profilo',
   'Edit Your Cart' => 'Modifica la Carta',
   'Electronically Supplied Service
 Enable if ALL your products are electronic services.' => 'Servizi Somministrati Via Web
@@ -1031,7 +1030,6 @@ do not display this item link in members area' => 'Non Mostrare Link
 non visualizzare nell\'Area Riservata',
   'Hide Brick Title' => 'Nascondi Titolo Sezione',
   'Hide Label' => 'Nascondi Etichetta',
-  'Hide Payment Forms and History from SubUsers' => 'nascondi Form di Pagamento e Storici ai SubUser',
   'Hide Select
 if there is only one choice' => 'Hide Select
 if there is only one choice',
@@ -1047,6 +1045,7 @@ Pages Limit and Groups Limit',
 used for placeholders in emails' => 'ID
 used for placeholders in emails',
   'IF' => 'SE',
+  'IP' => 'IP',
   'IP Address' => 'Indirizzo IP',
   'IP Addresses' => 'Indirizzi IP',
   'If product is not available because of require/disallow settings' => 'Se il prodotto non è disponibile per le impostazioni abilita/disabilita',
@@ -1232,6 +1231,7 @@ il login a %s, come ad esempio \'Utente ospite\' ecc...',
   'MILESTONE PLUGIN: Goal \'%s\' completed!' => 'PLUGIN MILESTONE: Goal \'%s\' completato!',
   'Mail Payment Admin' => 'Email Pagamento Admin',
   'Mail Queue' => 'Coda Email',
+  'Maintenance mode is currently enabled. Only logged-in administrators like you can access it. %sDisable%s' => 'La modalità manutenzione è attualmente abilitata. Solo gli Amministratori possono accedervi. %sDisabilita%s',
   'Make Payment' => 'Procedi al Pagamento',
   'Make a Donation' => 'Fai una Donazione',
   'Make donation recurring' => 'Fai una Donazione Ricorrente',
@@ -1424,21 +1424,6 @@ se lasci vuoto aMember userà il codice ID del prodotto',
   'Payment Failed' => 'Il Pagamento non è andato a buon fine',
   'Payment History' => 'Storico Pagamenti',
   'Payment Info' => 'Info Pagamento',
-  'Payment Instructions for customer
-you can enter any HTML here, it will be displayed to
-customer when he chooses to pay using this payment system
-you can use the following tags:
-%s - Receipt HTML
-%s - Invoice Title
-%s - Invoice Id
-%s - Invoice Total' => 'Istruzioni Pagamento per il Cliente
-puoi mettere qualsiasi HTML, verrà mostrto al cliente
-quando sceglie di pagare con questo metodo.
-Puoi utilizzare i seguenti segnaposto:
-%s - Receipt HTML
-%s - Invoice Title
-%s - Invoice Id
-%s - Invoice Total',
   'Payment Instructions for customer
 you can enter any HTML here, it will be displayed to
 customer when they set up a direct debit using this payment system
@@ -1752,7 +1737,6 @@ Puoi usare il segnaposto %year% che verrà cambiato con l\'anno corrente
   'Regional Tax' => 'Tassa Locale',
   'Register' => 'Registrati',
   'Registered' => 'Registrato',
-  'Registration E-Mail to Subusers' => 'Email Registrazione per SubUser',
   'Registration country and your IP address country doesn\'t match. ' => 'Nazione di Registrazione e Nazione del tuo indirizzo IP non coincidono. ',
   'Remaining quantity' => 'Quantità Rimanente',
   'Remote API Permissions' => 'Permessi API Remoti',
@@ -1765,7 +1749,7 @@ action after new invoice completed',
   'Remove My Account' => 'Cancella il mio account',
   'Remove Users
 when user record removed from aMember
-must the related record be removed from %s' => 'Elimina Utenti Wordpress
+must the related record be removed from %s' => 'Elimina Utenti
 quando un utente viene cancellato in aMember
 viene cancellato anche in %s',
   'Remove all user\'s pending invoices' => 'Cancella tutte le ricevute in attesa degli utenti',
@@ -1793,13 +1777,6 @@ By default the service uses the highest level available',
   'Required Referral Number
 to get Bonus Subscription' => 'Required Referral Number
 to get Bonus Subscription',
-  'Reseller can log-in as subuser' => 'Il Rivenditore può autenticarsi come SubUser',
-  'Reseller can manage the following subuser fields' => 'Il Rivenditore può gestire i seguenti campi SubUser',
-  'Reseller cannot delete subuser accounts' => 'Il Rivenditore non può cancellare gli account SubUser',
-  'Reseller cannot edit subusers accounts after insertion' => 'Il Rivenditore non può editare gli account SubUser dopo averli inseriti',
-  'Resellers can delete subusers' => 'Il Rivenditore può cancellare SubUsers',
-  'Resellers can delete subusers only when limit is over' => 'Il Rivenditore può cancellare SubUsers solo se ha raggiunto il limite',
-  'Resellers cannot delete subusers' => 'I Rivenditori non possono cancellare i SubUsers',
   'Resellers-only page' => 'Pagina riservata ai Rivenditori',
   'Resend Postback
 enter list of URLs to resend incoming postback' => 'inoltra Postback
@@ -1852,6 +1829,7 @@ empty - it uses global settings',
   'Search Results' => 'Risultati Ricerca',
   'Search by Voucher Code' => 'Cerca per Voucher Regalo',
   'Second and Subsequent Payments' => 'Secondo Pagamento e Seguenti',
+  'Secret Key' => 'Chiave Segreta',
   'Secret key' => 'Chiave Segreta',
   'Secure Payment' => 'Pagamento Sicuro',
   'Security Code' => 'Codice Sicurezza',
@@ -1922,7 +1900,7 @@ Unique Shop ID in the system',
   'Single Checkbox' => 'Checkbox singola',
   'Single Login Session' => 'Login Univoco',
   'Site Title' => 'Nome Sito',
-  'Skip First Line' => 'Ignora Prima Linea',
+  'Size' => 'Dimensione',
   'Skrill E-Mail' => 'Email Skrill',
   'Snippets' => 'Snippet',
   'Software Download' => 'Download Software',
@@ -1957,6 +1935,7 @@ Unique Shop ID in the system',
   'Subject or Ticket#' => 'Oggetto o Ticket#',
   'Submit Details' => 'Invia Dettagli',
   'Submit New Ticket' => 'Invia Nuovo Ticket',
+  'Subscribe' => 'Iscriviti',
   'Subscribe And Pay' => 'Paga con la Carta',
   'Subscribe Now' => 'Iscriviti Ora',
   'Subscribe all available users' => 'Iscrivi tutti gli utenti attuali',
@@ -1972,7 +1951,6 @@ Unique Shop ID in the system',
   'Subscription limit for each user' => 'Limite Iscrizioni per ogni utente',
   'Subscription/Product Title' => 'Prodotto/Abbonamento',
   'Subtotal' => 'Sub Totale',
-  'Subuser e-mail address can be changed by site admin only' => 'La Email del SubU può essere cambiata solo dall\'amministratore del sito',
   'Subusers' => 'SubUser',
   'Subusers Assigned To (reseller username or id#):' => 'SubUser assegnati a (nome utente rivenditore o id#):',
   'Subusers Assigned To [%s #%d]' => 'SubUser assegnati a [%s #%d]',
@@ -2075,7 +2053,6 @@ The cents part of the amount you pass to DirectOne will determine the response c
   'This payment system could not handle zero-total invoices' => 'Questo sistema di pagamento non può gestire ricevute con totale zero',
   'This plugin can not handle recurring subscriptions with free trial' => 'Questo Sistema di Pagamento non può gestire abbonamenti ricorrenti con prova gratuita',
   'This report works only with radio and select fields. You have not such custom fields yet.' => 'Questo report funziona solo con campi radio e select. Non hai ancora settato questi campi obbligatori.',
-  'Thresehold Date' => 'Data Limite',
   'Threshold Date' => 'Data Soglia',
   'Ticket' => 'Ticket',
   'Ticket Roster' => 'Lista (turni) Ticket',
@@ -2144,7 +2121,6 @@ for recurring subscription aMember notify iDevAffiliate only about initial payme
   'Unsubscribe customer from selected newsletter threads' => 'Disiscrivi Cliente dalle seguenti newsletter',
   'Unsubscribe from all e-mail messages' => 'Cancella l\'iscrizione da tutti i messaggi e-mail',
   'Unsubscribed' => 'Disiscritto',
-  'Unsubscription Confirmation' => 'Conferma Cancellazione Iscrizione',
   'Update' => 'Aggiorna',
   'Update Credit Card' => 'Aggiorna Carta di Credito',
   'Update Credit Card Info' => 'Aggiorna Carta di Credito',
@@ -2179,7 +2155,6 @@ usa un host personalizzato, utente, password
 per la connessione al database %s
 Normalmente puoi lasciare deselezionata questa opzione',
   'Use another card' => 'Usa un\'altra carta',
-  'Use different profile form for subusers' => 'Usa Profilo diverso per i SubUser',
   'Use maximum from available' => 'Usa il massimo del disponibile',
   'Use normal, non customized invoice' => 'Usa Ricevuta normale, non personalizzata',
   'Used' => 'Usato',
@@ -2419,7 +2394,6 @@ eg. username.justclick.ru',
   'aMember Payment Process' => 'Processo Pagamento aMember',
   'aMember Root URL' => 'URL installazione aMember',
   'accepts all major credit cards' => 'accetta le principali Carte di Credito',
-  'add access to selected product even if user choose 0 donation amount' => 'dai accesso al prodotto selezionato anche se l\'utente non ha donato nulla',
   'added between %s and %s' => 'aggiunto tra %s e %s',
   'admin' => 'amministratore',
   'affiliate <-> user relation is expired (%saccording your settings%s <strong>User-Affiliate Relation Lifetime</strong> is %d day(s)), no commissions will be added for new payments' => 'affiliato <-> la relazione con l\'utente è scaduta (%sin base alle impostazioni la%s <strong>Relazione Utente-Affiliato</strong> è %d giorni, non verrà aggiunta nessuna commissione hai nuovi pagamenti',

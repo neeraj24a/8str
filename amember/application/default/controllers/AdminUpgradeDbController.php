@@ -7,7 +7,7 @@
 *        Web: http://www.cgi-central.net
 *    Details: upgrade DB from ../amember.sql
 *    FileName $RCSfile$
-*    Release: 5.5.0 ($Revision$)
+*    Release: 5.6.0 ($Revision$)
 *
 * Please direct bug reports,suggestions or feedback to the cgi-central forums.
 * http://www.cgi-central.net/forum/
@@ -64,6 +64,9 @@ class AdminUpgradeDbController extends Am_Mvc_Controller
         <hr />
         <?php
 
+        if (!Am_Di::getInstance()->db->selectCell("SELECT GET_LOCK(?, 0)", 'amember-upgrade-db')) {
+            throw new Am_Exception_InternalError("Upgrade DB Process is already running");
+        }
 
         /* ******************************************************************************* *
          *                  M A I N
@@ -114,6 +117,8 @@ class AdminUpgradeDbController extends Am_Mvc_Controller
 
         $this->getDi()->hook->call(new Am_Event(Am_Event::DB_UPGRADE, array('version' => $this->db_version)));
         $this->getDi()->store->set('db_version', AM_VERSION);
+        
+        Am_Di::getInstance()->db->query("SELECT RELEASE_LOCK(?)", 'amember-upgrade-db');
 
         $version = AM_VERSION;
         $year = date('Y');
@@ -333,8 +338,8 @@ CUT;
         {
             echo "Enable skip_index_page option...";
             if (ob_get_level()) ob_end_flush();
-            $str = $this->getDi()->db->selectCell("SELECT config FROM ?_config WHERE name = ?", 'default');
-            $config = unserialize($str);
+            $_ = $this->getDi()->db->selectCell("SELECT config FROM ?_config WHERE name = ?", 'default');
+            $config = substr($_, 0, 2) == 'a:' ? unserialize($_) : json_decode($_, true);
             if (!isset($config['skip_index_page'])) {
                 $config['skip_index_page'] = 1;
                 $this->getDi()->db->selectCol("UPDATE ?_config SET config=? WHERE name = ?", serialize($config), 'default');
@@ -916,7 +921,7 @@ CUT
         if($this->getDi()->db->selectCell("SELECT * FROM  ?_agreement"))
             return; 
         
-        $agreements = [];
+        $agreements = array();
         foreach($this->getDi()->savedFormTable->selectObjects("SELECT * FROM ?_saved_form") as $form)
         {
             $update = false; 

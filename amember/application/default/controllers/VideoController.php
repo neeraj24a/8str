@@ -8,7 +8,7 @@
 *        Web: http://www.cgi-central.net
 *    Details: Member display page
 *    FileName $RCSfile$
-*    Release: 5.4.3 ($Revision: 5371 $)
+*    Release: 5.6.0 ($Revision: 5371 $)
 *
 * Please direct bug reports,suggestions or feedback to the cgi-central forums.
 * http://www.cgi-central.net/forum/
@@ -49,7 +49,7 @@ class VideoController extends MediaController
         );
         if (!empty($config['logo_id'])) {
             $logo = $this->getDi()->uploadTable->load($config['logo_id'], false);
-            $logo_url = $logo ? $this->getDi()->url('upload/get/' . preg_replace('/^\./', '', $logo->path),false) : '';
+            $logo_url = $logo ? $this->getDi()->surl('upload/get/' . preg_replace('/^\./', '', $logo->path),false) : '';
             $params['logo'] = array_merge(array(
                 'url' => $logo_url,
                 'fullscreenOnly' => false,
@@ -58,7 +58,7 @@ class VideoController extends MediaController
 
         if ($media->cc_id) {
             $cc = $this->getDi()->uploadTable->load($media->cc_id, false);
-            $cc_url = $this->getDi()->url('upload/get/' . preg_replace('/^\./', '', $cc->path),false);
+            $cc_url = $this->getDi()->surl('upload/get/' . preg_replace('/^\./', '', $cc->path),false);
             $cc_postion = !empty($config['cc_position']) ? $config['cc_position'] : 'top';
 
             //switch position of button depending of subtitles position
@@ -103,7 +103,7 @@ class VideoController extends MediaController
 
         if (!empty($config['logo_id'])) {
             $logo = $this->getDi()->uploadTable->load($config['logo_id'], false);
-            $logo_url = $logo ? $this->getDi()->url('upload/get/' . preg_replace('/^\./', '', $logo->path),false) : '';
+            $logo_url = $logo ? $this->getDi()->surl('upload/get/' . preg_replace('/^\./', '', $logo->path),false) : '';
             $params['logo'] = array(
                 'file' => $logo_url,
                 'postion' => !empty($config['logo_position']) ? $config['logo_position'] : 'top-right'

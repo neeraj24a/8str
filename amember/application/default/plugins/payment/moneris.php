@@ -15,7 +15,7 @@
 class Am_Paysystem_Moneris extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Moneris';
     protected $defaultDescription = 'Credit Card Payment';
@@ -70,6 +70,8 @@ class Am_Paysystem_Moneris extends Am_Paysystem_Abstract
         $a->bill_country = $u->country;
         if ($invoice->second_total > 0) {
             $periods = array('m' => 'month', 'y' => 'year', 'd' => 'day', 'w' => 'week');
+            $multi = array('m' => 30, 'y' => 365, 'd' => 1, 'w' => 7);
+
             $second_period = new Am_Period($invoice->second_period);
             $a->recurUnit = $periods[$second_period->getUnit()];
             $a->recurPeriod = $second_period->getCount();
@@ -77,7 +79,10 @@ class Am_Paysystem_Moneris extends Am_Paysystem_Abstract
             $a->doRecur = 1;
             $a->recurStartDate = date('Y/m/d', strtotime($invoice->calculateRebillDate(1)));
             $a->recurAmount = sprintf('%.2f', $invoice->second_total);
-            $a->recurNum = $invoice->rebill_times;
+            //total billing period should not be longer than 5 years
+            $a->recurNum = $invoice->rebill_times == IProduct::RECURRING_REBILLS ?
+                floor(5 * 365 / ($second_period->getCount() * $multi[$second_period->getUnit()])) :
+                $invoice->rebill_times;
         }
         $result->setAction($a);
     }

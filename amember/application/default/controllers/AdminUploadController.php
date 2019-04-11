@@ -6,7 +6,7 @@
 *        Web: http://www.cgi-central.net
 *    Details: Admin Info / PHP
 *    FileName $RCSfile$
-*    Release: 5.4.3 ($Revision: 4883 $)
+*    Release: 5.6.0 ($Revision: 4883 $)
 *
 * Please direct bug reports,suggestions or feedback to the cgi-central forums.
 * http://www.cgi-central.net/forum/
@@ -79,15 +79,6 @@ class AdminUploadController extends Am_Mvc_Controller
         exit;
     }
 
-    protected function getUploadIds(Am_Upload $upload)
-    {
-        $upload_ids = array();
-        foreach($upload->getUploads() as $upload) {
-            $upload_ids[] = $upload->pk();
-        }
-        return $upload_ids;
-    }
-
     public function reUploadAction()
     {
         $file = $this->getDi()->uploadTable->load($this->getParam('id'));
@@ -139,21 +130,17 @@ class AdminUploadController extends Am_Mvc_Controller
 
         $upload = new Am_Upload($this->getDi());
         $upload->setPrefix($this->getParam('prefix'));
-        $upload->loadFromStored();
-        $ids_before = $this->getUploadIds($upload);
         $upload->processSubmit('upload');
         //find currently uploaded file
-        $x = array_diff($this->getUploadIds($upload), $ids_before);
-        $upload_id = array_pop($x);
-        try {
-            $upload = $this->getDi()->uploadTable->load($upload_id);
+        list($file) = $upload->getUploads();
 
+        try {
             $data = array (
                 'ok' => true,
-                'name' => $upload->getName(),
-                'size_readable' => $upload->getSizeReadable(),
-                'upload_id' => $secure ?  Am_Form_Element_Upload::signValue($upload->pk()) : $upload->pk(),
-                'mime' => $upload->mime
+                'name' => $file->getName(),
+                'size_readable' => $file->getSizeReadable(),
+                'upload_id' => $secure ?  Am_Form_Element_Upload::signValue($file->pk()) : $file->pk(),
+                'mime' => $file->mime
             );
         } catch (Am_Exception $e) {
             $data = array(

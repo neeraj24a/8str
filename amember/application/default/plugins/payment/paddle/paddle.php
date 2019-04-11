@@ -3,7 +3,7 @@
 class Am_Paysystem_Paddle extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Paddle';
     protected $defaultDescription = 'Payment via Paddle gateway';
@@ -46,7 +46,7 @@ class Am_Paysystem_Paddle extends Am_Paysystem_Abstract
             ->setLabel("Vendor ID")
             ->addRule('required');
 
-        $form->addTextarea('public_key', array('class' => 'el-wide', 'rows' => 14))
+        $form->addTextarea('public_key', array('class' => 'am-el-wide', 'rows' => 14))
             ->setLabel("Public Key\n" .
                 "Please include -----BEGIN PUBLIC KEY-----")
             ->addRule('required');

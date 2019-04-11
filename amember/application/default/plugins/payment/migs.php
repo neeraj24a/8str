@@ -10,7 +10,7 @@
 class Am_Paysystem_Migs extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     const URL = "https://migs.mastercard.com.au/vpcpay";
 
@@ -27,7 +27,7 @@ class Am_Paysystem_Migs extends Am_Paysystem_Abstract
         $form->addText('merchant_id')->setLabel('Merchant ID');
         $form->addSecretText('access_code')->setLabel("Access Code\n" .
             'Authenticates the merchant on the Payment Server');
-        $form->addSecretText('secure_hash', array('class' => 'el-wide'))
+        $form->addSecretText('secure_hash', array('class' => 'am-el-wide'))
             ->setLabel("Secure Hash\n" .
             'A secure hash which allows the Virtual Payment Client to authenticate the merchant and check the integrity of the transaction Request');
     }
@@ -101,7 +101,7 @@ class Am_Paysystem_Transaction_Migs extends Am_Paysystem_Transaction_Incoming_Th
         $secureHash = $vars['vpc_SecureHash'];
         unset($vars['vpc_SecureHash']);
         unset($vars['vpc_SecureHashType']);
-        $hash = $this->plugin->getHash($vars);
+        $hash = $this->plugin->getHash(array_map('urldecode', $vars));
         if($hash != $secureHash)
             throw new Am_Exception_Paysystem_TransactionInvalid('Unable to verity transaction. Calculated hash is not valid!');
         return true;

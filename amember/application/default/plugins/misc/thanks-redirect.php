@@ -2,10 +2,19 @@
 
 class Am_Plugin_ThanksRedirect extends Am_Plugin
 {
+
+    function _initSetupForm(Am_Form_Setup $form)
+    {
+        $form->setTitle(___('Thanks Redirect'));
+        $form->addText('url', array('class' => 'am-el-wide'))
+            ->setLabel(___("After Purchase Redirect User to this URL\ninstead of thanks page\n" .
+                'You can use %root_url%, %root_surl%, %invoice.%, %product.% and %user.% variables in url eg: %user.login%, %user.email%, %invoice.public_id% etc.'));
+    }
+
     function onGridProductInitForm(Am_Event_Grid $e)
     {
         $e->getGrid()->getForm()->getAdditionalFieldSet()
-            ->addText('_thanks_redirect_url', array('class' => 'el-wide'))
+            ->addText('_thanks_redirect_url', array('class' => 'am-el-wide'))
             ->setLabel(___("After Purchase Redirect User to this URL\ninstead of thanks page\n" .
                 'You can use %root_url%, %root_surl%, %invoice.%, %product.% and %user.% variables in url eg: %user.login%, %user.email%, %invoice.public_id% etc.'));
     }
@@ -28,7 +37,7 @@ class Am_Plugin_ThanksRedirect extends Am_Plugin
     {
         if(!$e->getInvoice()) return;
 
-        $url = null;
+        $url = $this->getConfig('url');
         foreach ($e->getInvoice()->getProducts() as $pr) {
             if ($url = $pr->data()->get('thanks_redirect_url'))
                 break;

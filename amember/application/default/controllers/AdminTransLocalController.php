@@ -7,7 +7,7 @@
 *        Web: http://www.cgi-central.net
 *    Details: Admin accounts
 *    FileName $RCSfile$
-*    Release: 5.4.3 ($Revision: 4649 $)
+*    Release: 5.6.0 ($Revision: 4649 $)
 *
 * Please direct bug reports,suggestions or feedback to the cgi-central forums.
 * http://www.cgi-central.net/forum/
@@ -46,7 +46,7 @@ class AdminTransLocalController extends AdminTransGlobalController
     protected function getTransStat($text)
     {
         $res = $this->getTrans($text);
-        $total = count($this->getDi()->config->get('lang.enabled'))-1;
+        $total = count($this->getDi()->getLangEnabled())-1;
         $stat = array (
             'total' => ($total < 0 ? 0 : $total),
             'translated' => 0
@@ -66,6 +66,7 @@ class AdminTransLocalController extends AdminTransGlobalController
     public function updateTransAction()
     {
         foreach ($this->getRequest()->getParam('trans') as $lang => $trans) {
+            if (!trim($trans)) continue;
             $toReplace = array();
             $toReplace[$this->getRequest()->getParam('text')] = $trans;
             $this->getDi()->translationTable->replaceTranslation($toReplace, $lang);
@@ -111,12 +112,12 @@ class AdminTransLocalController extends AdminTransGlobalController
         $default = $this->getDi()->config->get('lang.default', 'en');
 
         $form->addStatic('text_default')->setContent(
-                sprintf("<div>%s</div>", $this->escape($text))
+                sprintf("<div>%s</div>", preg_replace("/\r?\n/", "<br />", $this->escape($text)))
         );
 
         foreach ($trans as $lg=>$t) {
             if ($lg != $default) {
-                $form->addTextarea("trans[{$lg}]", array('class' => 'el-wide'))
+                $form->addTextarea("trans[{$lg}]", array('class' => 'am-el-wide'))
                     ->setLabel($lgList[$lg])
                     ->setValue($t);
             }
@@ -132,7 +133,7 @@ class AdminTransLocalController extends AdminTransGlobalController
     {
         $result = array();
 
-        $langs = $this->getDi()->config->get('lang.enabled', array());
+        $langs = $this->getDi()->getLangEnabled(false);
 
         $tDataSource = new TranslationDataSource_DB();
 

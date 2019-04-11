@@ -136,7 +136,7 @@ $.fn.dirBrowser = function(inParam) {
 
         function drawDirList(files, prevDir) {
             $table = $('<table></table>').css({width:'100%', overflow: 'auto'});
-            $table.addClass('grid');
+            $table.addClass('am-grid');
 
             $tr = $('<tr></tr>');
             $th = $('<th></th>');

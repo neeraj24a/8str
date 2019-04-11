@@ -5,10 +5,10 @@ class am4Widgets extends am4Plugin
     function initActions()
     {
         parent::initActions();
-        add_action( 'wp_ajax_am4-show-widget', array($this, 'showWidget'));
-        add_action( 'wp_ajax_nopriv_am4-show-widget', array($this, 'showWidget'));
+        add_action('wp_ajax_am4-show-widget', array($this, 'showWidget'));
+        add_action('wp_ajax_nopriv_am4-show-widget', array($this, 'showWidget'));
         add_action('wp_head', function(){
-            $ajax_url =  admin_url( 'admin-ajax.php' );
+            $ajax_url = str_replace(array('https:', 'http:'), '', admin_url( 'admin-ajax.php' ));
             echo <<<CUT
 <script type="text/javascript">
 jQuery(document).ready(function($){
@@ -253,7 +253,7 @@ class am4Widget_login extends am4Widget
 
     function before_login_widget($instance)
     {
-    // Login form here
+        // Login form here
         $view = new am4View("widget_login_form");
         $view->assign("instance",$instance);
         $view->render();
@@ -262,7 +262,7 @@ class am4Widget_login extends am4Widget
     function after_login_widget($instance)
     {
         global $current_user;
-// Get current user's subscription and show usefull links;
+        // Get current user's subscription and show usefull links;
         $amember_api = am4PluginsManager::getAPI();
         $view = new am4View("widget_after_login");
         $view->assign("instance",$instance);

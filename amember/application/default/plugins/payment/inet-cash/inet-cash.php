@@ -26,7 +26,7 @@ class Am_Paysystem_Action_HtmlTemplate_InetCash extends Am_Paysystem_Action_Html
 class Am_Paysystem_InetCash extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'INET-CASH';
     protected $defaultDescription = 'accepts credit card (VISA & Master Card) & debit payment (only Germany and Austria)';

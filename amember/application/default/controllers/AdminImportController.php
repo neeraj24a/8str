@@ -698,10 +698,10 @@ class AdminImportController extends Am_Mvc_Controller
     protected static function getImportModeOptions()
     {
         return array(
-            self::MODE_SKIP => ___('Skip Line if Exist User with Same Login'),
-            self::MODE_UPDATE => ___('Update User if Exist User with Same Login'),
-            self::MODE_UPDATE_LEAVE_PASSWORD => ___('Update User if Exist User with Same Login (Do Not Overwrite Existing Password)'),
-            self::MODE_OVERWRITE => ___('Overwrite User if Exist User with Same Login')
+            self::MODE_SKIP => ___('Skip Line if Exist User with either Same Login or Same Email'),
+            self::MODE_UPDATE => ___('Update User if Exist User with either Same Login or Same Email'),
+            self::MODE_UPDATE_LEAVE_PASSWORD => ___('Update User if Exist User with either Same Login or Same Email (Do Not Overwrite Existing Password)'),
+            self::MODE_OVERWRITE => ___('Overwrite User if Exist User with either Same Login or Same Email')
         );
     }
 
@@ -819,6 +819,7 @@ class AdminImportController extends Am_Mvc_Controller
         if (!@$this->session->importOptions['add_encrypted_pass']) {
             $this->addImportField(new Import_Field_UserPass('pass', 'Password', true));
         }
+        $this->addImportField(new Import_Field_Name('name', ___('First & Last Name')));
         $this->addImportField(new Import_Field('name_f', ___('First Name')));
         $this->addImportField(new Import_Field('name_l', ___('Last Name')));
         $this->addImportField(new Import_Field_UserLogin('login', ___('Username'), true));
@@ -833,6 +834,7 @@ class AdminImportController extends Am_Mvc_Controller
         $this->addImportField(new Import_Field('remote_addr', ___('User IP address')));
         $this->addImportField(new Import_Field_WithFixed('comment', ___('Comment')));
         $this->addImportField(new Import_Field('unsubscribed', ___('Is Unsubscribed? (0 - No, 1 - Yes)')));
+        $this->addImportField(new Import_Field('is_locked', ___('Is Locked? (0 - No, 1 - Yes, -1 - Disable auto-locking for this customer)')));
         $this->addImportField(new Import_Field('is_affiliate', ___('Is Affiliate? (0 - No, 1 - Yes)')));
         $this->addImportField(new Import_Field('aff_id', ___('Affiliate Id')));
         $this->addImportField(new Import_Field_Data('external_id', 'Member External ID'));
@@ -1091,12 +1093,12 @@ class AdminImportController extends Am_Mvc_Controller
         $form = $this->getAssignFormRendered();
         $linesParsed = $this->dataSource->getFirstLinesParsed(10);
         if (!count($linesParsed)) {
-            return sprintf('<ul class="error"><li>%s</li></ul>',
+            return sprintf('<ul class="am-error"><li>%s</li></ul>',
                 ___('No one line found in the file. It looks like file is empty. You can go back and try another file.'));
         }
 
         $out = sprintf('<form %s>', $form['attributes']);
-        $out .= '<div class="filter-wrap">';
+        $out .= '<div class="am-filter-wrap">';
         $out .= $form['elements']['add_encrypted_pass']['label'] . ': ' . $form['elements']['add_encrypted_pass']['html'];
         if ($this->session->importOptions['add_encrypted_pass']) {
             $out .= '<br />';
@@ -1110,14 +1112,14 @@ class AdminImportController extends Am_Mvc_Controller
         $out .= $form['elements']['delim']['label'] . ': ' . $form['elements']['delim']['html'];
         $out .= '</div>';
         $out .= '<div class="import-table-wrapper">';
-        $out .= '<table class="grid import-preview">';
+        $out .= '<table class="am-grid import-preview">';
         $out .= '<tr><th></th>';
         for ($i = 0; $i < $this->dataSource->getColNum(); $i++) {
             $out .= sprintf('<th>%s</th>', $form['elements']['FIELD' . $i]['html']);
         }
         $out .= '</tr>';
         foreach ($linesParsed as $lineNum => $lineParsed) {
-            $out .= '<tr class="grid-row data"><td width="1%">' . $lineNum . '</td>';
+            $out .= '<tr class="am-grid-row data"><td width="1%">' . $lineNum . '</td>';
 
             foreach ($lineParsed as $colNum => $value) {
                 $out .= sprintf('<td class="%s">%s</td>', 'FIELD' . $colNum, $value);
@@ -1128,7 +1130,7 @@ class AdminImportController extends Am_Mvc_Controller
         $out .= '</table>';
         $out .= '</div>';
         $out .= '<br />';
-        $out .= '<div class="am-form"><div class="row"><div class="element">';
+        $out .= '<div class="am-form"><div class="am-row"><div class="am-element">';
         $out .= sprintf('<input type="button" name="back" value="%s"> ', ___('Back'));
         $out .= $form['elements']['_submit_']['html'];
         $out .= implode('', $form['hidden']);
@@ -1140,7 +1142,7 @@ class AdminImportController extends Am_Mvc_Controller
     protected function renderPreviewTable()
     {
         $out = '<div class="import-table-wrapper">';
-        $out .= '<table class="grid import-preview">';
+        $out .= '<table class="am-grid import-preview">';
         $out .= '<tr><th></th>';
         $importFields = $this->getImportFields();
         foreach ($importFields as $field) {
@@ -1173,7 +1175,7 @@ class AdminImportController extends Am_Mvc_Controller
             unset($linesParsed[0]);
         }
         foreach ($linesParsed as $lineNum => $lineParsed) {
-            $out .= '<tr class="grid-row data"><td>' . $lineNum . '</td>';
+            $out .= '<tr class="am-grid-row data"><td>' . $lineNum . '</td>';
 
             $dummyUser = $this->getDi()->userRecord;
             foreach ($importFields as $field) {
@@ -1344,6 +1346,23 @@ class Import_Field
         return $this->getValue($lineParsed, $partialRecord);
     }
 }
+
+
+class Import_Field_Name extends Import_Field
+{
+    protected function _setValueForRecord($record, $value)
+    {
+        $names = explode(" ", $value);
+        $name_l = array_pop($names);
+        $name_f = implode(" ", $names);
+        
+        $record->name_f = $name_f;
+        $record->name_l = $name_l;
+        
+    }
+    
+}
+
 
 class Import_Field_WithFixed extends Import_Field
 {

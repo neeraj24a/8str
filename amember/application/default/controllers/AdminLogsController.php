@@ -122,6 +122,9 @@ class AdminLogsController extends Am_Mvc_Controller_Pages
 
         if ($admin->hasPermission(Am_Auth_Admin::PERM_LOGS_ADMIN))
             $this->addPage(array($this, 'createAdminLog'), 'adminlog', ___('Admin Log'));
+        if ($admin->hasPermission(Am_Auth_Admin::PERM_LOGS_DEBUG))
+            $this->addPage(array($this,'createErrors'), 'debug', ___('Debug/Information'));
+
     }
 
     public function checkAdminPermissions(Admin $admin)
@@ -131,7 +134,8 @@ class AdminLogsController extends Am_Mvc_Controller_Pages
             Am_Auth_Admin::PERM_LOGS_ACCESS,
             Am_Auth_Admin::PERM_LOGS_INVOICE,
             Am_Auth_Admin::PERM_LOGS_MAIL,
-            Am_Auth_Admin::PERM_LOGS_ADMIN
+            Am_Auth_Admin::PERM_LOGS_ADMIN,
+            Am_Auth_Admin::PERM_LOGS_DEBUG
             ) as $perm) {
             if ($admin->hasPermission($perm)) return true;
         }
@@ -139,12 +143,12 @@ class AdminLogsController extends Am_Mvc_Controller_Pages
         return false;
     }
 
-    public function createErrors()
+    public function createErrors($id, $title, $controller)
     {
-        $q = new Am_Query($this->getDi()->errorLogTable);
+        $q = new Am_Query($id=='errors' ? $this->getDi()->errorLogTable : $this->getDi()->debugLogTable);
         $q->setOrder('log_id', 'desc');
-        $g = new Am_Grid_ReadOnly('_error', ___('Error/Debug Log'), $q, $this->getRequest(), $this->view);
-        $g->setPermissionId(Am_Auth_Admin::PERM_LOGS);
+        $g = new Am_Grid_ReadOnly('_error', $title, $q, $this->getRequest(), $this->view);
+        $g->setPermissionId($id=='errors'?Am_Auth_Admin::PERM_LOGS : Am_Auth_Admin::PERM_LOGS_DEBUG);
         $g->addField(new Am_Grid_Field_Date('time', ___('Date/Time')));
         $g->addField(new Am_Grid_Field_Expandable('url', ___('URL'), true))
             ->setPlaceholder(Am_Grid_Field_Expandable::PLACEHOLDER_SELF_TRUNCATE_BEGIN)
@@ -155,7 +159,7 @@ class AdminLogsController extends Am_Mvc_Controller_Pages
             ->setMaxLength(500)
             ->setAttrs(array('class' => 'break'));
         $f = $g->addField(new Am_Grid_Field_Expandable('trace', ___('Trace')))
-             ->setAjax($this->getDi()->url('admin-logs/get-trace?id={log_id}', null,false));
+             ->setAjax($this->getDi()->url('admin-logs/get-'.($id=='errors'?'error' : 'debug').'-trace?id={log_id}', null,false));
 
         $g->setFilter(new Am_Grid_Filter_LogEntity('time', array(
             'url' => 'LIKE',
@@ -166,10 +170,16 @@ class AdminLogsController extends Am_Mvc_Controller_Pages
         return $g;
     }
 
-    function getTraceAction()
+    function getErrorTraceAction()
     {
         $this->getDi()->authAdmin->getUser()->checkPermission(Am_Auth_Admin::PERM_LOGS);
         $log = $this->getDi()->errorLogTable->load($this->getParam('id'));
+        echo highlight_string($log->trace, true);
+    }
+    function getDebugTraceAction()
+    {
+        $this->getDi()->authAdmin->getUser()->checkPermission(Am_Auth_Admin::PERM_LOGS);
+        $log = $this->getDi()->debugLogTable->load($this->getParam('id'));
         echo highlight_string($log->trace, true);
     }
 
@@ -269,7 +279,7 @@ class AdminLogsController extends Am_Mvc_Controller_Pages
 -->
 </style>
 <script type="text/javascript">
-jQuery('.grid-wrap').on('click', '._encodeddetailshead_', function(){
+jQuery('.am-grid-wrap').on('click', '._encodeddetailshead_', function(){
     jQuery(this).next().toggle();
 })
 </script>
@@ -357,6 +367,7 @@ CUT;
         ), 'Subject/Recipient'));
         $g->actionsClear();
         $g->actionAdd(new Am_Grid_Action_MailRetry('retry'));
+        $g->actionAdd(new Am_Grid_Action_Group_MailRetry);
 
         if ($this->getDi()->authAdmin->getUser()->isSuper()) {
             $g->actionAdd(new Am_Grid_Action_Delete);
@@ -599,16 +610,24 @@ class Am_Grid_Action_MailRetry extends Am_Grid_Action_Abstract
         $this->setTarget('_top');
     }
 
-    public function isAvailable($record)
-    {
-        return !$record->sent;
-    }
-
     public function run()
     {
         echo $this->renderTitle();
         $record = Am_Di::getInstance()->mailQueueTable->load($this->getRecordId());
-        $row = $record->toArray();
+        if ($record->sent) {
+            $r = Am_Di::getInstance()->mailQueueRecord;
+            $rr = $record->toArray();
+            unset($rr['queue_id']);
+            unset($rr['failures']);
+            unset($rr['last_error']);
+            unset($rr['sent']);
+            $r->setForInsert($rr);
+            $r->added = Am_Di::getInstance()->time;
+            $r->save();
+            $row = $r->toArray();
+        } else {
+            $row = $record->toArray();
+        }
 
         $response = array();
         try {
@@ -617,16 +636,49 @@ class Am_Grid_Action_MailRetry extends Am_Grid_Action_Abstract
                 $row['sent'], $row['queue_id']);
 
             $response['status'] = 'OK';
-            $response['msg'] = ___('Email has been send');
+            $response['msg'] = ___('Email has been sent');
 
         } catch (Exception $e) {
             $response['status'] = 'ERROR';
             $response['msg'] = $e->getMessage();
         }
 
-        echo "<b>RESULT: $response[status]</b><br />";
+        echo "<b>RESULT: {$response['status']}</b><br />";
         echo $response['msg'];
         echo "<br /><br />\n";
         echo $this->renderBackUrl();
+    }
+}
+
+class Am_Grid_Action_Group_MailRetry extends Am_Grid_Action_Group_Abstract
+{
+    public function __construct($id = null, $title = null)
+    {
+        $this->title = ___('Resend Email');
+        parent::__construct($id, $title);
+    }
+
+    public function handleRecord($id, $record)
+    {
+        if ($record->sent) {
+            $r = Am_Di::getInstance()->mailQueueRecord;
+            $rr = $record->toArray();
+            unset($rr['queue_id']);
+            unset($rr['failures']);
+            unset($rr['last_error']);
+            unset($rr['sent']);
+            $r->setForInsert($rr);
+            $r->added = Am_Di::getInstance()->time;
+            $r->save();
+            $row = $r->toArray();
+        } else {
+            $row = $record->toArray();
+        }
+
+        try {
+            Am_Mail_Queue::getInstance()->_sendSavedMessage($row);
+            Am_Di::getInstance()->db->query("UPDATE ?_mail_queue SET sent=?d WHERE queue_id=?d",
+                $row['sent'], $row['queue_id']);
+        } catch (Exception $e) {}
     }
 }

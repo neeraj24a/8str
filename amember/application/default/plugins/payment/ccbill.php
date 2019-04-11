@@ -14,7 +14,7 @@
 class Am_Paysystem_Ccbill extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'ccBill';
     protected $defaultDescription = 'Pay by credit card/debit card';
@@ -28,12 +28,12 @@ class Am_Paysystem_Ccbill extends Am_Paysystem_Abstract
     const DATALINK_URL = 'https://datalink.ccbill.com/data/main.cgi';
     const DATALINK_SUBSCR_MANAGEMENT = 'https://datalink.ccbill.com/utils/subscriptionManagement.cgi';
     protected $currency_codes = array(
-        'USD' => 840,
-        'AUD' => 036,
-        'EUR' => 978,
-        'GBP' => 826,
-        'JPY' => 392,
-        'CAD' => 124
+        'USD' => '840',
+        'AUD' => '036',
+        'EUR' => '978',
+        'GBP' => '826',
+        'JPY' => '392',
+        'CAD' => '124'
     );
 
     public function init()
@@ -65,12 +65,12 @@ class Am_Paysystem_Ccbill extends Am_Paysystem_Abstract
         $form->addText('datalink_user')->setLabel("DataLink Username\n" . 'read ccBill plugin readme (11) about');
         $form->addSecretText('datalink_pass')->setLabel("DataLink Password\n" . 'read ccBill plugin readme (11) about');
         $form->addAdvCheckbox('dynamic_pricing')->setLabel('Allow Dynamic Pricing');
-        $form->addSecretText('salt', array('class' => 'el-wide'))
+        $form->addSecretText('salt', array('class' => 'am-el-wide'))
             ->setLabel("Salt\n" .
                 'Contact ccBill client support and receive the salt value, ' .
                 'OR Create your own salt value (up to 32 alphanumeric ' .
                 'characters) and provide it to ccBill client support.');
-        $form->addText('flexform_id', array('class' => 'el-wide'))
+        $form->addText('flexform_id', array('class' => 'am-el-wide'))
             ->setLabel("ccBill FlexForm ID\n"
                 . "if you want to use the same FlexForm ID for all products specify it here.\n"
                 . "Leave empty if you do not use FlexForms functionality \n"
@@ -92,7 +92,7 @@ class Am_Paysystem_Ccbill extends Am_Paysystem_Abstract
         }
     }
 
-    public function _process(Invoice $invoice, Am_Mvc_Request $request, Am_Paysystem_Result $result)
+    public function _process(Invoice $invoice, Am_Mvc_Request_Interface $request, Am_Paysystem_Result $result)
     {
         $user = $invoice->getUser();
 
@@ -193,22 +193,22 @@ class Am_Paysystem_Ccbill extends Am_Paysystem_Abstract
         );
 
         $r = new Am_HttpRequest($requestString = self::DATALINK_SUBSCR_MANAGEMENT . '?' . http_build_query($vars, '', '&'));
+
+        $log = $this->logOther("CANCEL", $r);
+        $log->setInvoice($invoice);
+
         $response = $r->send();
         if (!$response)
         {
-            $this->getDi()->errorLogTable->log('ccBill Subscription Management error: Unable to contact datalink server');
             throw new Am_Exception_InternalError('ccBill Subscription Management error: Unable to contact datalink server');
         }
-
+        $log->add($response);
         $resp = $response->getBody();
 
-        // Log datalink requests;
-        $this->getDi()->errorLogTable->log(sprintf("ccBill SMS debug:\n%s\n%s", $requestString, $resp));
         $xml = simplexml_load_string($resp);
         if((string)$xml != "1")
             throw new Am_Exception_InternalError('ccBill Subscription Management error: Incorrect response received while attempting to cancel subscription!');
         $result->setSuccess();
-
     }
 
     function doUpgrade(Invoice $invoice, InvoiceItem $item, Invoice $newInvoice, ProductUpgrade $upgrade)
@@ -350,7 +350,7 @@ class Am_Paysystem_Ccbill extends Am_Paysystem_Abstract
     function getReadme()
     {
         $ipn = $this->getDi()->url('payment/ccbill/ipn', null, false, true);
-        $thanks = $this->getDi()->url('payment/ccbill/thanks', null, false, true).'&customVar1=%%customVar1%%&id=%%invoice%%';
+        $thanks = $this->getDi()->url('payment/ccbill/thanks', null, false, true).'?customVar1=%%customVar1%%&id=%%invoice%%';
         return <<<EOT
 
 <b>ccBill plugin setup</b>

@@ -40,7 +40,7 @@ class InvoiceItem extends Am_Record_WithData
 {
     /** @var IProduct */
     protected $_product;
-    
+
     /** @var array decoded options from "options" field */
     protected $_options = array();
     protected $_optionPrices = array();
@@ -74,9 +74,10 @@ class InvoiceItem extends Am_Record_WithData
      * Set fields from a product record
      * @return InvoiceItem provides fluent interface
      */
-    public function copyProductSettings(IProduct $p, array $options = array()) {
+    public function copyProductSettings(IProduct $p, array $options = array())
+    {
         $this->setOptionsFromArray($options);
-        
+
         foreach (self::$_productInvoiceFields as $kp => $ki) {
             $this->$ki = call_user_func(array($p, 'get'.ucfirst($kp)));
             if (strpos($kp, 'is')===0)
@@ -88,7 +89,7 @@ class InvoiceItem extends Am_Record_WithData
         }
 
         $this->setBillingPlanData($p->getBillingPlanData());
-        
+
         if (method_exists($p, 'applyOptionsToPrices'))
         {
             $p->applyOptionsToPrices($this->_options);
@@ -107,11 +108,13 @@ class InvoiceItem extends Am_Record_WithData
 
         return $this;
     }
+
     /**
      * Add given number to qty
      * if !is_countable, always set to 1
      */
-    function add($qty) {
+    function add($qty)
+    {
         $qty = intval($qty);
         if ($qty < 0)
             throw new Am_Exception_InvalidRequest("_qty_is_negative_in_InvoiceItem_add #". (int)$qty);
@@ -120,7 +123,7 @@ class InvoiceItem extends Am_Record_WithData
             $this->qty = 0;
         $this->qty = $item->addQty($qty, $this->qty);
     }
-    
+
     /**
      * Changing options in runtime does not affect prices
      * @param array $options
@@ -142,11 +145,13 @@ class InvoiceItem extends Am_Record_WithData
         $this->options = json_encode($this->_options, true);
         return $this;
     }
+
     /**
      * try to load related product
      * @return IProduct|null
      */
-    public function tryLoadProduct(){
+    public function tryLoadProduct()
+    {
         if (empty($this->_product) && ($this->item_id>0))
         {
             $this->_product = $this->getTable()->loadItem($this->item_type, $this->item_id, false,
@@ -158,7 +163,8 @@ class InvoiceItem extends Am_Record_WithData
     /**
      * Do arifmetic operations to calculate subtotal and total
      */
-    public function _calculateTotal(){
+    public function _calculateTotal()
+    {
         $this->first_total = moneyRound($this->first_price * $this->qty)
                          - $this->first_discount
                          + $this->first_shipping
@@ -173,9 +179,11 @@ class InvoiceItem extends Am_Record_WithData
      * Add access period for current product based on information from incoming paysystem transaction
      * @throws Am_Exception_Db_NotUnique
      */
-    public function addAccessPeriod($isFirstPayment, Invoice $invoice, Am_Paysystem_Transaction_Interface $transaction, $beginDate, $invoicePaymentId){
-        if ($this->item_type != 'product')
+    public function addAccessPeriod($isFirstPayment, Invoice $invoice, Am_Paysystem_Transaction_Interface $transaction, $beginDate, $invoicePaymentId)
+    {
+        if ($this->item_type != 'product' || $this->data()->get('no-access'))
             return; // if that is not a product then no access
+
         $a = $this->getDi()->accessRecord;
         $a->setDisableHooks(true);
         $a->begin_date = $beginDate;
@@ -188,6 +196,10 @@ class InvoiceItem extends Am_Record_WithData
         } else {
             $a->expire_date = $p->addTo($a->begin_date);
         }
+        if ($this->data()->get('begin_date')) {
+            $a->begin_date = $this->data()->get('begin_date');
+            $a->expire_date = $this->data()->get('expire_date');
+        }
         $a->product_id = $this->item_id;
         $a->user_id = $invoice->user_id;
         $a->transaction_id = $transaction->getUniqId();
@@ -196,14 +208,17 @@ class InvoiceItem extends Am_Record_WithData
         $a->qty = $this->qty;
         $a->insert();
     }
+
     function getFirstSubtotal()
     {
         return moneyRound($this->first_price * $this->qty);
     }
+
     function getFirstTotal()
     {
         return $this->getFirstSubtotal() - $this->first_discount;
     }
+
     function getSecondSubtotal()
     {
         return moneyRound($this->second_price * $this->qty);
@@ -212,10 +227,12 @@ class InvoiceItem extends Am_Record_WithData
     {
         return $this->getSecondSubtotal() - $this->second_discount;
     }
+
     function setBillingPlanData(array $data)
     {
         $this->billing_plan_data = serialize((array)$data);
     }
+
     /**
      * @return array|mixed entire array or requested $key value
      */
@@ -226,6 +243,7 @@ class InvoiceItem extends Am_Record_WithData
         if ($key === null) return $arr;
         return empty($arr[$key]) ? null : $arr[$key];
     }
+
     /**
      * Replace product in already existing invoice
      * throw exception in case of error
@@ -252,7 +270,7 @@ class InvoiceItem extends Am_Record_WithData
         }
         $this->getDi()->invoiceTable->load($this->invoice_id)->getUser()->checkSubscriptions();
     }
-    
+
     /**
      * Return options for $instance from qty of items. If options are
      * not set for given $instance, options for $instance=0 returned;
@@ -270,7 +288,7 @@ class InvoiceItem extends Am_Record_WithData
         else
             return array();
     }
-    
+
     public function insert($reload = true)
     {
         if (!empty($this->_options))
@@ -296,14 +314,15 @@ class InvoiceItem extends Am_Record_WithData
             $this->getAdapter()->query(
                 "INSERT INTO ?_invoice_item_option "
                 . "(invoice_item_id, invoice_id,user_id,item_id,name,value,first_price,second_price) "
-                . "VALUES " 
+                . "VALUES "
                 . implode(',', $ins)
             );
         return $ret;
     }
 }
 
-class InvoiceItemTable extends Am_Table_WithData {
+class InvoiceItemTable extends Am_Table_WithData
+{
     protected $_key = 'invoice_item_id';
     protected $_table = '?_invoice_item';
     protected $_recordClass = 'InvoiceItem';
@@ -316,10 +335,12 @@ class InvoiceItemTable extends Am_Table_WithData {
     {
         return $this->itemTypes;
     }
+
     function registerItemLoader($item_type, $class)
     {
         $this->itemTypes[$item_type] = $class;
     }
+
     /**
      * Load reference to class
      */
@@ -336,5 +357,4 @@ class InvoiceItemTable extends Am_Table_WithData {
         }
         return $ret;
     }
-    
 }

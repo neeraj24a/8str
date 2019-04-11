@@ -3,7 +3,7 @@
 class AdminController extends Am_Mvc_Controller_AdminDashboard
 {
     protected $template = 'admin/index.phtml';
-    
+
     function getDefaultWidgets()
     {
         return array(
@@ -18,10 +18,11 @@ class AdminController extends Am_Mvc_Controller_AdminDashboard
             new Am_AdminDashboardWidget('recurring-revenue', ___('Monthly Recurring Revenue'), array($this, 'renderWidgetRecurringRevenue'), Am_AdminDashboardWidget::TARGET_ANY, null, Am_Auth_Admin::PERM_REPORT),
             new Am_AdminDashboardWidget('revenue-goal', ___('Revenue Goal'), array($this, 'renderWidgetRevenueGoal'), Am_AdminDashboardWidget::TARGET_ANY, array($this, 'createWidgetRevenueGoalConfigForm'), Am_Auth_Admin::PERM_REPORT),
             new Am_AdminDashboardWidget('invoices', ___('Last Invoices List'), array($this, 'renderWidgetInvoices'), Am_AdminDashboardWidget::TARGET_ANY, array($this, 'createWidgetInvoicesConfigForm'), Am_Auth_Admin::PERM_REPORT),
-            new Am_AdminDashboardWidget('quick-start', ___('Quick Start'), array($this, 'renderWidgetQucikStart'), array(Am_AdminDashboardWidget::TARGET_TOP))
+            new Am_AdminDashboardWidget('quick-start', ___('Quick Start'), array($this, 'renderWidgetQucikStart'), array(Am_AdminDashboardWidget::TARGET_TOP)),
+            new Am_AdminDashboardWidget('email', ___('Last Emails List'), array($this, 'renderWidgetEmail'), Am_AdminDashboardWidget::TARGET_ANY, array($this, 'createWidgetEmailConfigForm'), Am_Auth_Admin::PERM_LOGS_MAIL),
         );
     }
-    
+
     function getPrefDefault()
     {
         return array(
@@ -31,17 +32,17 @@ class AdminController extends Am_Mvc_Controller_AdminDashboard
             'aside' => array('sales', 'activity', 'report-users', 'user-note')
         );
     }
-    
-    function getConfigPrefix() 
+
+    function getConfigPrefix()
     {
         return '';
     }
-    
+
     function getControllerPath()
     {
         return 'admin';
     }
-    
+
     function getMyWidgets()
     {
         $widgets = parent::getMyWidgets();
@@ -49,14 +50,14 @@ class AdminController extends Am_Mvc_Controller_AdminDashboard
             new Am_AdminDashboardWidget('warnings', ___('Warnings'), array($this, 'renderWidgetWarnings'), array('top')));
         return $widgets;
     }
-    
+
     public function preDispatch()
     {
         $db_version = $this->getDi()->store->get('db_version');
         if (empty($db_version)) {
             $this->getDi()->store->set('db_version', AM_VERSION);
         } elseif ($db_version != AM_VERSION) {
-            $this->_response->redirectLocation($this->getDi()->url('admin-upgrade-db',null,false));
+            $this->_response->redirectLocation($this->getDi()->url('admin-upgrade-db', false));
         }
         parent::preDispatch();
     }

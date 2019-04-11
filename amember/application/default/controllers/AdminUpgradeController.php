@@ -241,7 +241,7 @@ class AdminUpgradeController extends Am_Mvc_Controller
     public function stepConfirmUpgrades()
     {
         $form = new Am_Form_Admin('confirm-upgrade');
-        $upgrades = $form->addGroup('upgrades', array('class' => 'no-label'));
+        $upgrades = $form->addGroup('upgrades', array('class' => 'am-no-label'));
         $options = array();
         $static = '';
         $upgrades->addStatic()->setContent('<h2>'.___('Available Upgrades').'</h2>');
@@ -268,7 +268,7 @@ class AdminUpgradeController extends Am_Mvc_Controller
             $upgrades->addStatic()->setContent($static);
         }
 
-        $form->addCheckbox('_confirm', array('class' => 'no-label'))
+        $form->addCheckbox('_confirm', array('class' => 'am-no-label'))
             ->setContent(___('I understand that upgrade may overwrite customized PHP files and templates, I have already made a backup of aMember Pro folder and database'))
             ->addRule('required');
 
@@ -764,7 +764,7 @@ class AdminUpgradeController extends Am_Mvc_Controller
             foreach ($pm->getEnabled() as $v)
                 $req->addPostParameter('plugins['.$type.']['.$v.']', $pm->loadGet($v)->getVersion());
         $req->addPostParameter('extensions', implode(',', get_loaded_extensions()));
-        foreach ($this->getDi()->config->get('lang.enabled', array()) as $l)
+        foreach ($this->getDi()->getLangEnabled(false) as $l)
             $req->addPostParameter('lang[]', $l);
         $req->addPostParameter('php-version', PHP_VERSION);
         $req->addPostParameter('mysql-version', $this->getDi()->db->selectCell("SELECT VERSION()"));
@@ -846,7 +846,7 @@ class AdminUpgradeController extends Am_Mvc_Controller
         $form->addScript()->setScript(<<<CUT
 jQuery(function(){
     jQuery('#method-0').change(function(){
-        jQuery('#ssh_public_key-0,#ssh_private_key-0').closest('.row').toggle( jQuery(this).val() == 'ssh' );
+        jQuery('#ssh_public_key-0,#ssh_private_key-0').closest('.am-row').toggle( jQuery(this).val() == 'ssh' );
     }).change();
 });
 CUT

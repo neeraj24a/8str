@@ -1,0 +1,32 @@
+{
+    "name": "amazon/instantaccess-sdk-php",
+    "version": "1.1.0",
+    "homepage": "http://developer.amazon.com/",
+    "description":"Amazon Instant Access SDK for PHP",
+    "keywords":["amazon","sdk"],
+    "type":"library",
+    "license":"Apache-2.0",
+    "authors":[
+        {
+            "name":"Amazon Digital Services, Inc.",
+            "homepage":"http://developer.amazon.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.37",
+        "psr/log": "1.0.*"
+    },
+    "suggest": {
+        "monolog/monolog": "Adds support for logging"
+    },
+    "require-dev": {
+        "symfony/class-loader": "3.0.*",
+        "monolog/monolog": "1.6.*",
+        "phpunit/phpunit": "4.8.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    }
+}

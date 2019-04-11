@@ -12,7 +12,7 @@
 class Am_Paysystem_Twocheckout extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     const URL = "https://www.2checkout.com/checkout/purchase";
     const SANDBOX_URL = "https://sandbox.2checkout.com/checkout/purchase";
@@ -43,7 +43,7 @@ class Am_Paysystem_Twocheckout extends Am_Paysystem_Abstract
         $form->addInteger('seller_id', array('size'=>20))
             ->setLabel('2CO Account#');
         $form->setDefault('secret', $this->getDi()->security->randomString(10));
-        $form->addSecretText('secret', array('class'=>'el-wide'))
+        $form->addSecretText('secret', array('class'=>'am-el-wide'))
             ->setLabel("2CO Secret Word\n" .
                 'set it to the same value as configured in 2CO');
         $form->addText('api_username')
@@ -86,10 +86,15 @@ class Am_Paysystem_Twocheckout extends Am_Paysystem_Abstract
         if ($ret = parent::isNotAcceptableForInvoice($invoice))
             return $ret;
         foreach ($invoice->getItems() as $item) {
-            if (!(float)$item->first_total && (float)$item->second_total)
+            if (!(float)$item->first_total && (float)$item->second_total) {
                 return array("2Checkout does not support products with free trial");
-            if ($item->rebill_times && $item->second_period != $item->first_period)
+            }
+            if ($item->rebill_times &&
+                $item->second_period != $item->first_period &&
+                $item->second_period != Am_Period::MAX_SQL_DATE){
+
                 return array(___("2Checkout is unable to handle billing for product [{$item->item_title}] - second_period must be equal to first_period"));
+            }
         }
     }
 

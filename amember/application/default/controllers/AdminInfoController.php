@@ -7,7 +7,7 @@
 *        Web: http://www.cgi-central.net
 *    Details: Admin Info / PHP
 *    FileName $RCSfile$
-*    Release: 5.5.0 ($Revision$)
+*    Release: 5.6.0 ($Revision$)
 *
 * Please direct bug reports,suggestions or feedback to the cgi-central forums.
 * http://www.cgi-central.net/forum/
@@ -95,56 +95,56 @@ class AdminInfoController extends Am_Mvc_Controller
 
         $version_title = ___('Software version info');
         $amInfo = <<<CUT
-<div class="grid-container">
-<table class="grid">
-<tr class="grid-row">
+<div class="am-grid-container">
+<table class="am-grid">
+<tr class="am-grid-row">
     <td align="right">$now_title</td>
     <td><strong>$now</strong></td>
 </tr>
-<tr class="grid-row odd">
+<tr class="am-grid-row odd">
     <td align="right">$timezone_title</td>
     <td><strong>$timezone</strong></td>
 </tr>
-<tr class="grid-row">
+<tr class="am-grid-row">
     <td align="right">aMember</td>
     <td><strong>$am_version</strong>
     $trial
     </td>
 </tr>
-<tr class="grid-row odd">
+<tr class="am-grid-row odd">
     <td align="right">Zend Framework</td>
     <td><strong>$zend_version</strong></td>
 </tr>
-<tr class="grid-row">
+<tr class="am-grid-row">
     <td align="right">PHP</td>
     <td><strong>$phpversion</strong></td>
 </tr>
-<tr class="grid-row odd">
+<tr class="am-grid-row odd">
     <td align="right">OS</td>
     <td><strong>$os</strong></td>
 </tr>
-<tr class="grid-row">
+<tr class="am-grid-row">
     <td align="right">MySQL</td>
     <td><strong>$mysql</strong><br />
         <strong>$dsn</strong></td>
 </tr>
-<tr class="grid-row odd">
+<tr class="am-grid-row odd">
     <td align="right">$cacheBackend_title</td>
     <td><strong>$cacheBackend</strong></td>
 </tr>
-<tr class="grid-row">
+<tr class="am-grid-row">
     <td align="right">$root_title</td>
     <td><strong>$root</strong></td>
 </tr>
-<tr class="grid-row odd">
+<tr class="am-grid-row odd">
     <td align="right">$cron_last_run_title</td>
     <td><strong>$cron_last_run</strong></td>
 </tr>
-<tr class="grid-row">
+<tr class="am-grid-row">
     <td align="right">$modules_title</td>
     <td>$modules</td>
 </tr>
-<tr class="grid-row odd">
+<tr class="am-grid-row odd">
     <td align="right">$plugins_title</td>
     <td>$plugins</td>
 </tr>
@@ -183,7 +183,7 @@ CUT;
             preg_match('/<body>(.*)<\/body>/s', $phpInfo, $matches);
             $phpInfo = $matches[1];
 
-            $content .= sprintf('<style type="text/css">%s</style><h1>PHP Info</h1><div id="phpinfo" class="grid-container"><br />%s</div>',
+            $content .= sprintf('<style type="text/css">%s</style><h1>PHP Info</h1><div id="phpinfo" class="am-grid-container"><br />%s</div>',
                 $phpStyles, $phpInfo);
 
         }

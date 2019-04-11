@@ -66,7 +66,6 @@ class am4MenuPageFormController extends am4MenuPageController
             <input type="submit" class="button-primary" name="save" value="Apply Changes">
             </form>
         </div>
-
         <?php
     }
 }
@@ -92,13 +91,14 @@ class am4MenuPage_settings extends am4MenuPageFormController
     {
         $options = new am4_Settings_Config();
         $options->loadFromArray($post)->save();
+        am4PluginsManager::reloadOptions();
     }
 
     function validate($options)
     {
-        try{
+        try {
             am4PluginsManager::initAPI(@$options['path']);
-        }catch(Exception $ex){
+        } catch(Exception $ex){
             return $ex->getMessage();
         }
         return true;
@@ -331,8 +331,8 @@ class am4MenuPage_styles extends am4MenuPageFormController{
     }
 
 }
-
 */
+
 class am4MenuPage_errormessages extends am4MenuPageFormController
 {
     protected $simple;

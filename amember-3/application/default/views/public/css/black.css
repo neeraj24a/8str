@@ -1,0 +1,15 @@
+.black{color: #000000;}
+.white{color: #ffffff;}
+
+.black-hemi img {
+    width: 71%;
+    margin: 7px 0 0
+}
+
+.white-hemi img{
+	width: 71%;
+	margin: 0 0 11px
+}
+
+/*================================================ BLACK CSS ======================================================*/
+

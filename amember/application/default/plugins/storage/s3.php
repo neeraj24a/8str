@@ -9,27 +9,42 @@ class Am_Storage_S3 extends Am_Storage
     protected $_endpoints = array(
         'us-east-1' => 's3.amazonaws.com',
         'us-east-2' => 's3-us-east-2.amazonaws.com',
-        'us-west-2'  =>  's3-us-west-2.amazonaws.com',
-        'us-west-1'  =>  's3-us-west-1.amazonaws.com',
-        'eu-west-1'  =>  's3-eu-west-1.amazonaws.com',
-        'eu-central-1'  =>  's3.eu-central-1.amazonaws.com',
-        'ap-southeast-1'  =>  's3-ap-southeast-1.amazonaws.com',
-        'ap-southeast-2'  =>  's3-ap-southeast-2.amazonaws.com',
-        'ap-northeast-1'  =>  's3-ap-northeast-1.amazonaws.com',
-        'sa-east-1'  =>  's3-sa-east-1.amazonaws.com'
+        'us-west-1' => 's3-us-west-1.amazonaws.com',
+        'us-west-2' => 's3-us-west-2.amazonaws.com',
+        'ap-south-1' => 's3-ap-south-1.amazonaws.com',
+        'ap-northeast-3' => 's3-ap-northeast-3.amazonaws.com',
+        'ap-northeast-2' => 's3-ap-northeast-2.amazonaws.com',
+        'ap-southeast-1' => 's3-ap-southeast-1.amazonaws.com',
+        'ap-southeast-2' => 's3-ap-southeast-2.amazonaws.com',
+        'ap-northeast-1' => 's3-ap-northeast-1.amazonaws.com',
+        'ca-central-1' => 's3-ca-central-1.amazonaws.com',
+        'cn-north-1' => 's3.cn-north-1.amazonaws.com.cn',
+        'cn-northwest-1' => 's3.cn-northwest-1.amazonaws.com.cn',
+        'eu-central-1' => 's3.eu-central-1.amazonaws.com',
+        'eu-west-1' => 's3-eu-west-1.amazonaws.com',
+        'eu-west-2' => 's3-eu-west-2.amazonaws.com',
+        'eu-west-3' => 's3-eu-west-3.amazonaws.com',
+        'sa-east-1' => 's3-sa-east-1.amazonaws.com'
     );
     protected $_regions = array(
-        'us-east-1' => 'US Standard',
+        'us-east-1' => 'US East (N. Virginia)',
         'us-east-2' => 'US East (Ohio)',
-        'us-west-2'  =>  'US West (Oregon)',
-        'us-west-1'  =>  'US West (N. California)',
-        'eu-west-1'  =>  'EU (Ireland)',
+        'us-west-1' => 'US West (N. California)',
+        'us-west-2' => 'US West (Oregon)',
+        'ap-south-1' => 'Asia Pacific (Mumbai)',
+        'ap-northeast-3' => 'Asia Pacific (Osaka-Local)',
+        'ap-northeast-2' => 'Asia Pacific (Seoul)',
+        'ap-southeast-1' => 'Asia Pacific (Singapore)',
+        'ap-southeast-2' => 'Asia Pacific (Sydney)',
+        'ap-northeast-1' => 'Asia Pacific (Tokyo)',
+        'ca-central-1' => 'Canada (Central)',
+        'cn-north-1' => 'China (Beijing)',
+        'cn-northwest-1' => 'China (Ningxia)',
         'eu-central-1'  =>  'EU (Frankfurt)',
-        'ap-southeast-1'  =>  'Asia Pacific (Singapore)',
-        'ap-southeast-2'  =>  'Asia Pacific (Sydney)',
-        'ap-northeast-1'  =>  'Asia Pacific (Tokyo)',
-        'sa-east-1'  =>  'South America (Sao Paulo)'
-
+        'eu-west-1' => 'EU (Ireland)',
+        'eu-west-2' => 'EU (London)',
+        'eu-west-3' => 'EU (Paris)',
+        'sa-east-1' => 'South America (Sao Paulo)'
     );
 
     public function isConfigured()
@@ -79,11 +94,9 @@ CUT
 
     public function getDescription()
     {
-        if ($this->isConfigured()) {
-            return ___("Files located on Amazon S3 storage. (Warning: Your buckets should not contain letters in uppercase in its name)");
-        } else {
-            return ___("Amazon S3 storage is not configured");
-        }
+        return $this->isConfigured() ?
+            ___("Files located on Amazon S3 storage. (Warning: Your buckets should not contain letters in uppercase in its name)") :
+            ___("Amazon S3 storage is not configured");
     }
 
     /** @return S3 */
@@ -93,9 +106,16 @@ CUT
         {
             $this->_connector = new S3($this->getConfig('access_key'), $this->getConfig('secret_key'), false, $this->getEndpoint(), $this->getRegion());
             switch($this->getRegion()){
-                case 'eu-central-1' :
-                case 'us-east-2' :
-                    
+                case 'eu-central-1':
+                case 'us-east-2':
+                case 'eu-west-2':
+                case 'eu-west-3':
+                case 'ap-south-1':
+                case 'ap-northeast-3':
+                case 'ap-northeast-2':
+                case 'ca-central-1':
+                case 'cn-north-1':
+                case 'cn-northwest-1':
                     $this->_connector->setRequestClass('S3Request_HttpRequest4');
                     break;
                 default :
@@ -126,30 +146,35 @@ CUT
 
         } else {
             @list($bucket, $bpath) = explode('/', $path, 2);
+            if(@$bpath)
+                $bpath .= '/';
+            else
+                $bpath = null;
             $ret = $this->getDi()->cacheFunction->call(
                 array($this->getConnector(), 'getBucket'),
-                array($bucket, null/*$bpath*/, null, null/*, $delimiter = '/'*/), array(), $this->cacheLifetime);
+                array($bucket, $bpath, null, null, $delimiter = '/', true),
+                    array(), $this->cacheLifetime);
 
             $this->_bucket = $bucket;
             $tree = array();
             foreach ($ret as $r)
             {
-                $p = & $tree;
-                $is_dir = substr($r['name'], -1) == '/';
-                foreach(explode('/', $r['name']) as $part) {
-                    if ($part) {$p = & $p[$part];}
-                }
-                if (!$is_dir) {
-                    $p = $r;
-                    $p['is_blob'] = true;
+                if (!empty($r['prefix']) && substr($r['prefix'], -1) == '/') {
+                    $part = rtrim($r['prefix'], '/');
+                    $part = explode('/', $part);
+                    $part = $part[count($part) -1];
+                    $tree[$part] = $part;
+                } else {
+                    $part = rtrim($r['name'], '/');
+                    $part = explode('/', $part);
+                    $part = $part[count($part) -1];
+                    $r['is_blob'] = true;
+                    $tree[$part] = $r;
                 }
             }
 
             $ctree = & $tree;
             $bpath = array_filter(explode('/', $bpath));
-            foreach ($bpath as $part) {
-                $ctree = & $ctree[$part];
-            }
             $ppath = implode('/', array_slice($bpath, 0, count($bpath)-1));
             $parent = $bpath ? rtrim("$bucket/$ppath", "/") : '';
             $items[] = new Am_Storage_Folder($this, '..', $parent);

@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use Yii;
 use yii\web\Controller;
 use frontend\models\ContactForm;
+use backend\models\Newsletter;
 
 class ContactController extends Controller {
     
@@ -34,12 +35,27 @@ class ContactController extends Controller {
 	{
 		$data = Yii::$app->request->post();
 		$model = new ContactForm();
-		$res = [];
-		if($model->sendSubscribeEmail(Yii::$app->params['adminEmail'], $data['email'])){
-			$res['error'] = 'false';
-		} else {
-			$res['error'] = 'true';
-		}
+        $rec = Newsletter::find()->where('email = :email',[':email' => $data['email']])->limit(1)->all();
+        $res = [];
+        if(sizeof($rec) === 0){
+            $nLetter = new Newsletter();
+            $nLetter->email = $data['email'];
+            if($nLetter->save()){
+                if($model->sendSubscribeEmail(Yii::$app->params['adminEmail'], $data['email'])){
+                    $res['error'] = 'false';
+                    $res['msg'] = 'Success'; 
+                } else {
+                    $res['error'] = 'true';
+                    $res['msg'] = 'Error! Please Try after sometime.';        
+                }
+            } else {
+                $res['error'] = 'true';
+                $res['msg'] = 'Error! Please Try after sometime.';        
+            }
+        } else {
+            $res['msg'] = 'Already Subscribed!'; 
+            $res['error'] = 'true';
+        }
 		echo json_encode($res);
 	}
     

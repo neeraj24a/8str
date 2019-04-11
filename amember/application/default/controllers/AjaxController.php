@@ -39,6 +39,11 @@ class AjaxController extends Am_Mvc_Controller
         return $this->_response->ajaxResponse($msg ? $msg : true);
     }
 
+    function checkUniqEmailAction()
+    {
+        $this->ajaxCheckUniqEmail($this->getRequest()->toArray());
+    }
+
     function ajaxCheckUniqEmail($vars)
     {
         $user_id = $this->getDi()->auth->getUserId();
@@ -49,9 +54,9 @@ class AjaxController extends Am_Mvc_Controller
         $email = $vars['email'];
         $msg = null;
         if(isset($vars['_url'])) {
-            $url = $this->getDi()->url('login', array('amember_redirect_url' => $vars['_url']));
+            $url = $this->getDi()->surl('login', array('amember_redirect_url' => $vars['_url']));
         } else {
-            $url = $this->getDi()->url('member');
+            $url = $this->getDi()->surl('member');
         }
         if (!$this->getDi()->userTable->checkUniqEmail($email, $user_id))
             $msg = ___('An account with the same email already exists.').'<br />'.
@@ -102,7 +107,6 @@ class AjaxController extends Am_Mvc_Controller
 
     function invoiceSummaryAction()
     {
-        $invoice = $this->getDi()->invoiceRecord;
         $vars = $this->getRequest()->getParams();
         if(!$user = $this->getDi()->auth->getUser()) {
             $user = $this->getDi()->userRecord;
@@ -124,7 +128,6 @@ class AjaxController extends Am_Mvc_Controller
 
         $user->remote_addr = $this->_request->getClientIp();
 
-        $invoice->setUser($user);
         $param = array();
         $page_current = $this->getRequest()->getParam('_save_');
         $vars_added = false;
@@ -139,49 +142,61 @@ class AjaxController extends Am_Mvc_Controller
 
         $vars = $vars_added ? $param : array_merge($param, $vars);
 
-        foreach ($vars as $k => $v) {
-            if (strpos($k, 'product_id')===0) {
-                foreach ((array)$vars[$k] as $key => $product_id) {
-                    if (substr($key, 0, 4) == '_qty') continue;
-                    @list($product_id, $plan_id, $qty) = explode('-', $product_id, 3);
+        if (!empty($vars['_button']) && ($btn = $this->getDi()->buttonTable->findFirstByHash($vars['_button']))) {
+            $invoice = $btn->createInvoice();
+            $invoice->setUser($user);
+            $invoice->calculate();
+        } else {
+            $invoice = $this->getDi()->invoiceRecord;
+            $invoice->setUser($user);
+            if (!empty($vars['giftVoucherCode'])) {
+                $invoice->data()->set('giftVoucherCode', $vars['giftVoucherCode']);
+            }
 
-                    $qty_key = sprintf('_qty-%d-%d', $product_id, $plan_id);
-                    if (isset($vars[$k][$qty_key]))
-                        $qty = $vars[$k][$qty_key];
+            foreach ($vars as $k => $v) {
+                if (strpos($k, 'product_id')===0) {
+                    foreach ((array)$vars[$k] as $key => $product_id) {
+                        if (substr($key, 0, 4) == '_qty') continue;
+                        @list($product_id, $plan_id, $qty) = explode('-', $product_id, 3);
 
-                    $product_id = (int)$product_id;
-                    if (!$product_id) continue;
-                    $p = $this->getDi()->productTable->load($product_id);
-                    if ($plan_id > 0) $p->setBillingPlan(intval($plan_id));
-                    $qty = (int)$qty;
-                    if (!$p->getBillingPlan()->variable_qty || ($qty <= 0))
-                        $qty = 1;
-                    $plan_id = $p->getBillingPlan()->pk();
-                    $options = array();
-                    if (!empty($vars['productOption']["$product_id-$plan_id"])) {
-                        $options = $vars['productOption']["$product_id-$plan_id"][0];
+                        $qty_key = sprintf('_qty-%d-%d', $product_id, $plan_id);
+                        if (isset($vars[$k][$qty_key]))
+                            $qty = $vars[$k][$qty_key];
+
+                        $product_id = (int)$product_id;
+                        if (!$product_id) continue;
+                        $p = $this->getDi()->productTable->load($product_id);
+                        if ($plan_id > 0) $p->setBillingPlan(intval($plan_id));
+                        $qty = (int)$qty;
+                        if (!$p->getBillingPlan()->variable_qty || ($qty <= 0))
+                            $qty = 1;
+                        $plan_id = $p->getBillingPlan()->pk();
+                        $options = array();
+                        if (!empty($vars['productOption']["$product_id-$plan_id"])) {
+                            $options = $vars['productOption']["$product_id-$plan_id"][0];
+                        }
+                        $prOpt = $p->getOptions(true);
+                        foreach ($options as $opk => $opv) {
+                            $options[$opk] = array('value' => $opv, 'optionLabel' => $prOpt[$opk]->title,
+                                'valueLabel' => $prOpt[$opk]->getOptionLabel($opv));
+                        }
+                        $invoice->add($p, $qty, $options);
                     }
-                    $prOpt = $p->getOptions(true);
-                    foreach ($options as $opk => $opv) {
-                        $options[$opk] = array('value' => $opv, 'optionLabel' => $prOpt[$opk]->title,
-                            'valueLabel' => $prOpt[$opk]->getOptionLabel($opv));
-                    }
-                    $invoice->add($p, $qty, $options);
                 }
             }
-        }
-        if (!empty($vars['coupon'])) {
-            $invoice->setCouponCode($vars['coupon']);
-            if ($error = $invoice->validateCoupon()) {
-                $invoice->setCouponCode('');
+            if (!empty($vars['coupon'])) {
+                $invoice->setCouponCode($vars['coupon']);
+                if ($error = $invoice->validateCoupon()) {
+                    $invoice->setCouponCode('');
+                }
             }
-        }
-        $this->_handleDonation($invoice, $vars);
+            $this->_handleDonation($invoice, $vars);
 
-        $invoice->calculate();
-        if (($invoice->first_total > 0 || $invoice->second_total > 0) &&
-            isset($vars['paysys_id'])) {
-            $invoice->setPaysystem($vars['paysys_id']);
+            $invoice->calculate();
+            if (($invoice->first_total > 0 || $invoice->second_total > 0) &&
+                isset($vars['paysys_id'])) {
+                $invoice->setPaysystem($vars['paysys_id']);
+            }
         }
         $v = $this->getDi()->view;
         $v->invoice = $invoice;
@@ -224,6 +239,22 @@ class AjaxController extends Am_Mvc_Controller
             return $this->ajaxError(___('You must be logged-in to run this action'));
         if ($user->unsubscribed != $v) {
             $user->set('unsubscribed', $v)->update();
+            if (!$v) {
+                $this->getDi()->userConsentTable->recordConsent(
+                        $user,
+                        'site-emails',
+                        $this->getRequest()->getClientIp(),
+                        ___('Subscription Management Page: %s', ___('Dashboard')),
+                        ___('Site Email Messages')
+                    );
+            } else {
+                $this->getDi()->userConsentTable->cancelConsent(
+                        $user,
+                        'site-emails',
+                        $this->getRequest()->getClientIp(),
+                        ___('Subscription Management Page: %s', ___('Dashboard'))
+                    );
+            }
             $this->getDi()->hook->call(Am_Event::USER_UNSUBSCRIBED_CHANGED,
                 array('user'=>$user, 'unsubscribed' => $v));
         }

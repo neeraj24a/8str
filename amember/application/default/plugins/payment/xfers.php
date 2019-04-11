@@ -11,7 +11,7 @@
 class Am_Paysystem_Xfers extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Xfers';
     protected $defaultDescription = 'Pay by credit card card';
@@ -33,15 +33,15 @@ class Am_Paysystem_Xfers extends Am_Paysystem_Abstract
                 '3' => 'V3',
             ));
         $form->setDefault("api_ver", '');
-        $form->addSecretText("api_key", array('class' => 'el-wide api_v2'))
+        $form->addSecretText("api_key", array('class' => 'am-el-wide api_v2'))
             ->setLabel('Merchant API Key');
-        $form->addSecretText("api_secret", array('class' => 'el-wide api_v2'))
+        $form->addSecretText("api_secret", array('class' => 'am-el-wide api_v2'))
             ->setLabel('Merchant API Secret');
 
-        $form->addSecretText("api_key_v3", array('class' => 'el-wide api_v3'))
+        $form->addSecretText("api_key_v3", array('class' => 'am-el-wide api_v3'))
             ->setLabel('X-XFERS-USER-API-KEY');
 
-        $form->addTextarea('meta_fields', array('class' => 'el-wide api_v3', 'rows' => 8))
+        $form->addTextarea('meta_fields', array('class' => 'am-el-wide api_v3', 'rows' => 8))
             ->setLabel("Additional Fields\n"
                 . "xfers_field|amember_field\n"
                 . "one pair per row, eg:\n"
@@ -69,8 +69,8 @@ class Am_Paysystem_Xfers extends Am_Paysystem_Abstract
             ->setScript(<<<CUT
 jQuery(function(){
     jQuery('[name$=api_ver]').change(function(){
-        jQuery('.api_v2').closest('.row').toggle(jQuery('[name$=api_ver]:checked').val() != 3);
-        jQuery('.api_v3').closest('.row').toggle(jQuery('[name$=api_ver]:checked').val() == 3);
+        jQuery('.api_v2').closest('.am-row').toggle(jQuery('[name$=api_ver]:checked').val() != 3);
+        jQuery('.api_v3').closest('.am-row').toggle(jQuery('[name$=api_ver]:checked').val() == 3);
     }).change();
 })
 CUT
@@ -287,8 +287,13 @@ class Am_Paysystem_Transaction_Xfers3 extends Am_Paysystem_Transaction_Incoming
 
             $req->setBody(json_encode($data));
             $resp = $req->send();
-
-            if($resp->getStatus() != 200 || !($body = $resp->getBody()) || !($ret = json_decode($body, true)) || $ret['msg'] !== 'VERIFIED') {
+            $log = Am_Di::getInstance()->invoiceLogRecord;
+            if($invoice = Am_Di::getInstance()->invoiceTable->findFirstBy(array('public_id' => $this->request->getFiltered('order_id'))))
+                $log->setInvoice($invoice);
+            $log->add($req);
+            $log->add($resp);
+            $log->save();
+            if(($resp->getStatus() != 200) || !($body = $resp->getBody()) || !($ret = json_decode($body, true)) || ($ret['msg'] !== 'VERIFIED')) {
                 throw new Am_Exception_Paysystem("Wrong IPN received, Xrefs answers: " . $resp->getBody() . '=' . $resp->getStatus());
             }
         }

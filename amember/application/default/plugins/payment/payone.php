@@ -11,7 +11,7 @@
 //api doc http://www.payone.de/downloads/Platform-Server-API-EN
 class Am_Paysystem_Payone extends Am_Paysystem_Abstract{
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Payone';
     protected $defaultDescription = 'Credit Card Payment';
@@ -39,7 +39,7 @@ class Am_Paysystem_Payone extends Am_Paysystem_Abstract{
     {
         $form->addText("aid")->setLabel('Sub-Account-ID')->addRule('required');
         $form->addText("portalid")->setLabel('Portal-ID')->addRule('required');
-        $form->addSecretText('secret_key', array('class' => 'el-wide'))
+        $form->addSecretText('secret_key', array('class' => 'am-el-wide'))
             ->setLabel('Key')->addRule('required');
         $form->addSelect("testing", array(), array('options' => array(
                 ''=>'No',

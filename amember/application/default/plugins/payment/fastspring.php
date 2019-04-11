@@ -14,7 +14,7 @@
  */
 class Am_Paysystem_Fastspring extends Am_Paysystem_Abstract{
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'FastSpring';
     protected $defaultDescription = 'Pay by credit card';
@@ -122,19 +122,19 @@ class Am_Paysystem_Fastspring extends Am_Paysystem_Abstract{
     }
 
     public function getReadme(){
+        $OrderProductQuantities = Am_Html::escape('<repeat value="#{order.allItems}" var="orderItem">#{orderItem.productName}=#{orderItem.quantity} </repeat>');
         return <<<CUT
 <b>FastSpring plugin installation</b>
 
  1. Configure plugin at aMember CP -> Setup/Configuration -> FastSpring
 
- 2. Configure FastSpring Product ID/Name at aMember CP -> Manage Products -> ->Billing Plans
+ 2. Configure FastSpring Product ID/Name at aMember CP -> Manage Products -> Billing Plans
     Please note that in order for integration to work, Product Name should not have spaces included.
-
 
  4. Configure Remote Server URL in your FastSpring account (NOTIFY -> Add Notification Rule)
 
     Format: HTTP Remote Server Call
-    Type:  Order Notification
+    Type:  Order Completed
     Remote Server URL: %root_surl%/payment/fastspring/ipn
 
     Optionally, after clicking 'Next' button you can add following 'HTTP Parameters'.
@@ -147,6 +147,9 @@ class Am_Paysystem_Fastspring extends Am_Paysystem_Abstract{
 
     Name:  OrderReferrer2
     Value: #{order.allItems[0].subscription.referrer}
+
+    Name:  OrderProductQuantities
+    Value: {$OrderProductQuantities}
 
  5. Run a test transaction to ensure everything is working correctly.
 
@@ -204,7 +207,7 @@ class Am_Paysystem_Transaction_Fastspring extends Am_Paysystem_Transaction_Incom
         'zip'       =>  'AddressPostalCode',
         'user_external_id' => 'CustomerEmail',
         'invoice_external_id' => array(
-            'OrderReference', 'OrderReference2'
+            'OrderReference', 'OrderReference2', 'OrderID'
         )
     );
 
@@ -264,7 +267,7 @@ class Am_Paysystem_Transaction_Fastspring extends Am_Paysystem_Transaction_Incom
         if (empty($prId)) return;
 
         $products = array();
-        foreach(array_merge(array($prId), explode(' ', $prId)) as $prId){
+        foreach(array_merge(array($prId), preg_split('/\s/', $prId)) as $prId){
             $pl = $this->getPlugin()->getDi()->billingPlanTable->findFirstByData('fastspring_product_name', $prId);
             if (!$pl) continue;
             $pr = $pl->getProduct();
@@ -276,7 +279,17 @@ class Am_Paysystem_Transaction_Fastspring extends Am_Paysystem_Transaction_Incom
 
     function autoCreateGetProductQuantity(Product $pr)
     {
-        return ($this->request->get('Quantity') ?: 1);
+        if ($OrderProductQuantities = trim($this->request->get('OrderProductQuantities'))) {
+            $map = array();
+            foreach (explode(" ", $OrderProductQuantities) as $item) {
+                list($pid, $qty) = explode("=", $item);
+                $map[$pid] = $qty;
+            }
+            $_ = $pr->getBillingPlan()->data()->get('fastspring_product_name');
+            return isset($map[$_]) ? $map[$_] : 1;
+        } else {
+            return $this->request->get('Quantity') ?: 1;
+        }
     }
 
     public function autoCreateInvoice()

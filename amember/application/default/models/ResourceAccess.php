@@ -789,4 +789,55 @@ class ResourceAccessTable extends Am_Table
             $recordId, $recordType
         );
     }
+
+    /**
+     * Check if access is allowed by provided conditions in PHP code instead of MySQL
+     * against ?_access_cache table
+     * @topo optimization? caching?
+     * @todo special
+     */
+    function checkConditions($user_id, array $conditions)
+    {
+        $rows = $this->getDi()->db->select("SELECT *, CONCAT(fn,':',id) AS ARRAY_KEY FROM ?_access_cache"
+            . " WHERE user_id=?d", $user_id);
+        foreach ($conditions as $cond)
+        {
+            $check_rows = [];
+            if ($cond['fn'] == 'product_category_id' && $cond['id'] == '-1') 
+            {
+                // any category special code
+                foreach ($rows as $r)
+                    if ($r['fn'] == 'product_id') 
+                        $check_rows[] =  $r;
+            } else {
+                $key = $cond['fn'] . ':' . $cond['id'];
+                if (empty($rows[$key])) continue;
+                $check_rows = [ $rows[$key] ];
+            }
+            foreach ($check_rows as $row)
+            {
+                //parsed conditions vars
+                $start_days = 0;
+                $start_payments = 0;
+                $stop_days = PHP_INT_MAX;
+                // parse from array to vars
+                if (!empty($cond['start']) && preg_match('/^(\d+)(d|p)$/', strtolower($cond['start']), $regs)) {
+                    if ($regs[2] == 'd') $start_days = $regs[1];
+                    if ($regs[2] == 'p') $start_payments = $regs[1];
+                }
+                if (!empty($cond['stop']) && preg_match('/^([-]?\d+)(d)$/', strtolower($cond['stop']), $regs))
+                {
+                    if ($regs[2] == 'd') $stop_days = $regs[1];
+                }
+                // check
+                if (($stop_days != '-1') && ($row['status'] != 'active')) continue; // only allow expired status for 'forever'=-1d
+                if ($start_days > $row['days']) continue;
+                if (($stop_days >= 0) && ($stop_days < $row['days'])) continue;
+                if ($start_payments > $row['payments_count']) continue;
+                return true; // we got it if any condition matched
+            }
+        }
+        return false; // no matches found
+    }
 }
+

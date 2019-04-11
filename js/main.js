@@ -31,7 +31,7 @@ $(document).ready(function(){
 				success: function (data) {
 					data = JSON.parse(data);
 					if(data['error'] == 'true'){
-						$('#email-error').html("Error! Please Try after sometime.");
+						$('#email-error').html(data['msg']);
 					} else {
 						$("#Email").val('');
 						$('#email-error').html("");

@@ -7,15 +7,17 @@
  * @recurring paysystem
  * @logo_url fastspring.png
  *
- *
- * after paypal we go to https://www.amember.com/amember/signup/HIX7QU3q?fscNext=fsc:invoke:session
- *
  */
+
+/*
+ * after paypal we go to https://www.amember.com/amember/signup/HIX7QU3q?fscNext=fsc:invoke:session
+ */
+
 class Am_Paysystem_FastspringContextual extends Am_Paysystem_Abstract
 {
     const
         PLUGIN_STATUS = self::STATUS_PRODUCTION,
-        PLUGIN_REVISION = '5.5.0',
+        PLUGIN_REVISION = '5.6.0',
         API_ENDPOINT = 'https://api.fastspring.com',
         FASTSPRING_ACCOUNT = 'fastspring-account-id',
         PRODUCT_PATH = 'fastspring_product_path',
@@ -32,20 +34,25 @@ class Am_Paysystem_FastspringContextual extends Am_Paysystem_Abstract
         return self::REPORTS_REBILL;
     }
 
+    function getAccountKey()
+    {
+        return self::FASTSPRING_ACCOUNT;
+    }
+
     function _initSetupForm(\Am_Form_Setup $form)
     {
         $form
-            ->addText('storefront', 'class="el-wide"')
+            ->addText('storefront', 'class="am-el-wide"')
             ->setLabel(___('Your Web storefront URL'))
             ->addFilter(function($v) {
                 return trim(preg_replace('#^https?://#', '', $v), '/');
             });
 
         $form
-            ->addText('api_username', 'class="el-wide"')
+            ->addText('api_username', 'class="am-el-wide"')
             ->setLabel(___('Your Fastspring API Username'));
         $form
-            ->addSecretText('api_password', 'class="el-wide"')
+            ->addSecretText('api_password', 'class="am-el-wide"')
             ->setLabel(___('Your Fastspring API Password'));
         $form->addText('webhook_secret')->setLabel(___('Webhook HMAC SHA256 Secret'));
 
@@ -74,9 +81,9 @@ class Am_Paysystem_FastspringContextual extends Am_Paysystem_Abstract
 
         $form->addScript()->setScript(<<<CUT
 jQuery(function(){
-    jQuery("#fs_onsite_js").closest(".row").toggle(jQuery("#fs_onsite").prop('checked'));
+    jQuery("#fs_onsite_js").closest(".am-row").toggle(jQuery("#fs_onsite").prop('checked'));
     jQuery("#fs_onsite").click(function(){
-         jQuery("#fs_onsite_js").closest(".row").toggle(this.checked);
+         jQuery("#fs_onsite_js").closest(".am-row").toggle(this.checked);
     });
 });
 CUT
@@ -109,7 +116,7 @@ CUT
     function getFastspringAccountId(Invoice $invoice)
     {
         $user = $invoice->getUser();
-        if ($account = $user->data()->get(self::FASTSPRING_ACCOUNT))
+        if ($account = $user->data()->get($this->getAccountKey()))
         {
 
             $req = $this->getApiRequest('accounts/' . $account);
@@ -145,7 +152,7 @@ CUT
 
         if (@$ret['result'] == 'success')
         {
-            $user->data()->set(self::FASTSPRING_ACCOUNT, $ret['accounts'][0]['id'])->update();
+            $user->data()->set($this->getAccountKey(), $ret['accounts'][0]['id'])->update();
             return $ret['accounts'][0];
         }
 
@@ -153,7 +160,7 @@ CUT
         $req->setBody(json_encode(array(
             'contact' => array(
                 'first'  => $user->name_f,
-                'last'   => $user->name_l,
+                'last'   => $user->name_l ?: $user->name_f,
                 'email'  => $user->email
             ),
             'country' => $user->country ? $user->country : 'US',
@@ -172,7 +179,7 @@ CUT
         }
         else
         {
-            $user->data()->set(self::FASTSPRING_ACCOUNT, $ret['account'])->update();
+            $user->data()->set($this->getAccountKey(), $ret['account'])->update();
             return $ret['account'];
         }
     }
@@ -410,7 +417,8 @@ CUT;
     public
         function getReadme()
     {
-        return <<<CUT
+        $ipn = $this->getPluginUrl('ipn');
+    return <<<CUT
 <b>FastSpring plugin installation</b>
 
 1. Configure plugin at aMember CP -> Configuration -> Setup/Configuration -> FastSpring Contextual Commerce
@@ -419,7 +427,7 @@ CUT;
 
 3. Configure Webhook URL  in your FastSpring account (Integrations -> Webhooks)
 
-    URL: %root_surl%/payment/fastspring-contextual/ipn
+    URL: {$ipn}
     Events:
     order.completed
     return.created
@@ -496,10 +504,21 @@ class Am_Paysystem_Transaction_Incoming_Fastspring_Contextual extends Am_Paysyst
             return $this->event['data']['tags']['invoice_id'];
         } elseif (isset($this->event['data']['original']['tags']['invoice_id'])) {
             return $this->event['data']['original']['tags']['invoice_id'];
-        } elseif ($subscr_id = $this->event['data']['subscription']) {
-            $invoice = $this->plugin->getDi()->invoiceTable->findFirstByData(Am_Paysystem_FastspringContextual::SUBSCR_ID, $subscr_id);
-            if ($invoice)
+        } elseif ($_ = @$this->event['data']['subscription']) {
+            $subscr_id = is_array($_) ? $_['id'] : $_;
+            if ($invoice = $this->plugin->getDi()->invoiceTable->findFirstByData(Am_Paysystem_FastspringContextual::SUBSCR_ID, $subscr_id)) {
                 return $invoice->public_id;
+            }
         }
+    }
+
+    public function findTime()
+    {
+        if ($t = $this->event['data']['timestampInSeconds']) {
+            $d = new DateTime("@{$t}");
+            $d->setTimezone(new DateTimeZone(date_default_timezone_get()));
+            return $d;
+        }
+        return parent::findTime();
     }
 }

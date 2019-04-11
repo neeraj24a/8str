@@ -12,7 +12,7 @@
 class Am_Paysystem_Zaxaa extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     public $domain = "";
     protected $defaultTitle = "Zaxaa";

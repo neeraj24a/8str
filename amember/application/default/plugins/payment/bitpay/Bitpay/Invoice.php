@@ -30,7 +30,7 @@ class Invoice implements InvoiceInterface
     /**
      * @var string
      */
-    protected $transactionSpeed = self::TRANSACTION_SPEED_MEDIUM;
+    protected $transactionSpeed;
 
     /**
      * @var string
@@ -60,12 +60,12 @@ class Invoice implements InvoiceInterface
     /**
      * @var boolean
      */
-    protected $fullNotifications = true;
+    protected $fullNotifications;
 
     /**
      * @var boolean
      */
-    protected $extendedNotifications = false;
+    protected $extendedNotifications;
 
     /**
      * @var string
@@ -78,7 +78,6 @@ class Invoice implements InvoiceInterface
     protected $url;
 
     /**
-     * @deprecated Deprecated with introduction of BCH
      * @var float
      */
     protected $btcPrice;
@@ -109,18 +108,11 @@ class Invoice implements InvoiceInterface
     protected $exceptionStatus;
 
     /**
-     * @deprecated Deprecated with introduction of BCH
      * @var
      */
     protected $btcPaid;
 
-     /**
-     * @var
-     */
-    protected $amountPaid;
-
     /**
-     * @deprecated Deprecated with introduction of BCH
      * @var
      */
     protected $rate;
@@ -131,30 +123,19 @@ class Invoice implements InvoiceInterface
     protected $token;
 
     /**
-     * @var array
+     * @var Array
      */
     protected $refundAddresses;
 
-    /**
-     * @var string
-     */
-    protected $transactionCurrency;
 
     /**
-     * @var array
      */
-    protected $exchangeRates;
-
-    /**
-     * @var array
-     */
-    protected $paymentSubtotals;
-
-    /**
-     * @var array
-     */
-    protected $paymentTotals;
-
+    public function __construct()
+    {
+        $this->transactionSpeed  = self::TRANSACTION_SPEED_MEDIUM;
+        $this->fullNotifications = true;
+        $this->extendedNotifications = false;
+    }
 
     /**
      * @inheritdoc
@@ -463,7 +444,6 @@ class Invoice implements InvoiceInterface
     }
 
     /**
-     * @deprecated Deprecated with introduction of BCH
      * @inheritdoc
      */
     public function getBtcPrice()
@@ -472,7 +452,6 @@ class Invoice implements InvoiceInterface
     }
 
     /**
-     * @deprecated Deprecated with introduction of BCH
      * @param float $btcPrice
      *
      * @return InvoiceInterface
@@ -501,13 +480,10 @@ class Invoice implements InvoiceInterface
      */
     public function setInvoiceTime($invoiceTime)
     {
-        if (is_a($invoiceTime, 'DateTime')) {
+        if (!empty($invoiceTime)) {
             $this->invoiceTime = $invoiceTime;
-        } else if (is_numeric($invoiceTime)) {
-            $invoiceDateTime = new \DateTime('', new \DateTimeZone("UTC"));
-            $invoiceDateTime->setTimestamp($invoiceTime);
-            $this->invoiceTime = $invoiceDateTime;
         }
+
         return $this;
     }
 
@@ -526,13 +502,10 @@ class Invoice implements InvoiceInterface
      */
     public function setExpirationTime($expirationTime)
     {
-        if (is_a($expirationTime, 'DateTime')) {
+        if (!empty($expirationTime)) {
             $this->expirationTime = $expirationTime;
-        } else if (is_numeric($expirationTime)) {
-            $expirationDateTime = new \DateTime('', new \DateTimeZone("UTC"));
-            $expirationDateTime->setTimestamp($expirationTime);
-            $this->expirationTime = $expirationDateTime;
         }
+
         return $this;
     }
 
@@ -551,13 +524,10 @@ class Invoice implements InvoiceInterface
      */
     public function setCurrentTime($currentTime)
     {
-        if (is_a($currentTime, 'DateTime')) {
+        if (!empty($currentTime)) {
             $this->currentTime = $currentTime;
-        } else if (is_numeric($currentTime)) {
-            $currentDateTime = new \DateTime('', new \DateTimeZone("UTC"));
-            $currentDateTime->setTimestamp($currentTime);
-            $this->currentTime = $currentDateTime;
         }
+
         return $this;
     }
 
@@ -706,7 +676,6 @@ class Invoice implements InvoiceInterface
     }
 
     /**
-     * @deprecated Deprecated with introduction of BCH
      * @param void
      * @return
      */
@@ -716,7 +685,6 @@ class Invoice implements InvoiceInterface
     }
 
     /**
-     * @deprecated Deprecated with introduction of BCH
      * @param
      * @return Invoice
      */
@@ -731,29 +699,6 @@ class Invoice implements InvoiceInterface
 
     /**
      * @param void
-     * @return
-     */
-    public function getAmountPaid()
-    {
-        return $this->amountPaid;
-    }
-
-    /**
-     * @param
-     * @return Invoice
-     */
-    public function setAmountPaid($amountPaid)
-    {
-        if (isset($amountPaid)) {
-            $this->amountPaid = $amountPaid;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @deprecated Deprecated with introduction of BCH
-     * @param void
      * @return Invoice
      */
     public function getRate()
@@ -762,7 +707,6 @@ class Invoice implements InvoiceInterface
     }
 
     /**
-     * @deprecated Deprecated with introduction of BCH
      * @param
      * @return
      */
@@ -774,29 +718,6 @@ class Invoice implements InvoiceInterface
 
         return $this;
     }
-
-    /**
-     * @param void
-     * @return Invoice
-     */
-    public function getExchangeRates()
-    {
-        return $this->exchangeRates;
-    }
-
-    /**
-     * @param
-     * @return
-     */
-    public function setExchangeRates($exchangeRates)
-    {
-        if (!empty($exchangeRates)) {
-            $this->exchangeRates = $exchangeRates;
-        }
-
-        return $this;
-    }
-
 
     /**
      * @return TokenInterface
@@ -836,68 +757,4 @@ class Invoice implements InvoiceInterface
         return $this;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getTransactionCurrency()
-    {
-        return $this->transactionCurrency;
-    }
-
-    /**
-     * @param string $transactionCurrency
-     *
-     * @return InvoiceInterface
-     */
-    public function setTransactionCurrency($transactionCurrency)
-    {
-        if (!empty($transactionCurrency) && ctype_print($transactionCurrency)) {
-            $this->transactionCurrency = trim($transactionCurrency);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param void
-     * @return Invoice
-     */
-    public function getPaymentSubtotals()
-    {
-        return $this->paymentSubtotals;
-    }
-
-    /**
-     * @param
-     * @return
-     */
-    public function setPaymentSubtotals($paymentSubtotals)
-    {
-        if (!empty($paymentSubtotals)) {
-            $this->paymentSubtotals = $paymentSubtotals;
-        }
-
-        return $this;
-    }
-     /**
-     * @param void
-     * @return Invoice
-     */
-    public function getPaymentTotals()
-    {
-        return $this->paymentTotals;
-    }
-
-    /**
-     * @param
-     * @return
-     */
-    public function setPaymentTotals($paymentTotals)
-    {
-        if (!empty($paymentTotals)) {
-            $this->paymentTotals = $paymentTotals;
-        }
-
-        return $this;
-    }
 }

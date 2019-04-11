@@ -10,7 +10,7 @@
 class Am_Paysystem_Hipay extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     const URL = "https://payment.hipay.com/order/";
     const TEST_URL = "https://test-payment.hipay.com/order/";

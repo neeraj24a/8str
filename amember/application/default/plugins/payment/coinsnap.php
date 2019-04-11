@@ -9,7 +9,7 @@
 class Am_Paysystem_Coinsnap extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Coinsnap';
     protected $defaultDescription = 'paid by bitcoins';
@@ -25,12 +25,12 @@ class Am_Paysystem_Coinsnap extends Am_Paysystem_Abstract
     public function _initSetupForm(Am_Form_Setup $form)
     {
 
-        $form->addText('api_key', array('class' => 'el-wide'))
+        $form->addText('api_key', array('class' => 'am-el-wide'))
             ->setLabel("API KEY\n" .
                 'Get it from your Coinsnap account')
             ->addRule('required');
         
-        $form->addSecretText('api_secret', array('class' => 'el-wide'))
+        $form->addSecretText('api_secret', array('class' => 'am-el-wide'))
             ->setLabel("API SECRET\n" .
                 'Get it from your Coinsnap account')
             ->addRule('required');

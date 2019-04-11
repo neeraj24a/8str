@@ -23,49 +23,59 @@ function am4_from_camel($string, $separator="_") {
     return strtolower(preg_replace('/([A-Z])/', $separator.'\1', lcfirst($string)));
 }
 
-class aMemberJson{
+class aMemberJson
+{
     protected $_data = array();
 
-    function __construct($arr = null){
+    function __construct($arr = null)
+    {
         if($arr) $this->_data = $arr;
-
     }
 
-    function setError($str){
+    function setError($str)
+    {
         $this->_data['error'] = $str;
     }
 
-    function send(){
+    function send()
+    {
         echo $this->__toString();
     }
 
-    function  __get($name) {
+    function  __get($name)
+    {
         if(array_key_exists($name, $this->_data))
             return $this->_data[$name];
         else
             return false;
     }
 
-    function  __set($name, $value) {
+    function  __set($name, $value)
+    {
         $this->_data[$name] = $value;
     }
 
-    function  __toString() {
+    function  __toString()
+    {
         return json_encode($this->_data);
     }
 
-    static function init($arr){
+    static function init($arr)
+    {
         return new self($arr);
     }
 }
 
-class aMemberJsonError extends aMemberJson {
-    function __construct($error){
+class aMemberJsonError extends aMemberJson
+{
+    function __construct($error)
+    {
         $this->setError($error);
     }
 }
 
-class am4Request{
+class am4Request
+{
     static $vars = array();
     static $post = array();
     static $get = array();
@@ -74,25 +84,30 @@ class am4Request{
     const GET = 'get';
     const POST = 'post';
 
-    static function get($k,$default=''){
+    static function get($k,$default='')
+    {
         if(!array_key_exists($k, self::$vars)) return $default;
         return self::$vars[$k]  ? self::$vars[$k] : 'default';
     }
 
-    static function getWord($k,$default=''){
+    static function getWord($k,$default='')
+    {
         $r = self::get($k, $default);
         return preg_replace('/[^a-zA-Z0-9]/', '', $r);
     }
 
-    static function getInt($k,$default=''){
+    static function getInt($k,$default='')
+    {
         return intval(self::get($k,$default));
     }
 
-    static function defined($k){
+    static function defined($k)
+    {
         return array_key_exists($k, self::$vars);
     }
 
-    static function init(){
+    static function init()
+    {
         foreach($_GET as $k=>$v){
             self::$vars[$k] = $v;
             self::$get[$k] = $v;
@@ -101,9 +116,10 @@ class am4Request{
             self::$vars[$k] = $v;
             self::$post[$k] = $v;
         }
-        self::$method = $_SERVER['REQUEST_METHOD'];
+        self::$method = @$_SERVER['REQUEST_METHOD'];
     }
 }
+
 am4Request::init();
 
 function strleft($s1, $s2) {

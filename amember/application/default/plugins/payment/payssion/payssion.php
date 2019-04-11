@@ -33,7 +33,7 @@ class Am_Paysystem_Action_HtmlTemplate_Payssion extends Am_Paysystem_Action_Html
 class Am_Paysystem_Payssion extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Payssion';
     protected $defaultDescription = 'accepts all major credit cards';
@@ -133,7 +133,7 @@ class Am_Paysystem_Payssion extends Am_Paysystem_Abstract
                 "your Payssion account -> App -> <your app> -> Edit -> API Key")
             ->addRule('required');
 
-        $form->addText('secret_key', array('class' => 'el-wide'))
+        $form->addText('secret_key', array('class' => 'am-el-wide'))
             ->setLabel("Secret Key\n" .
                 "your Payssion account -> App -> <your app> -> Edit -> Secret Key")
             ->addRule('required');

@@ -4,7 +4,8 @@ class am4Shortcodes extends am4Plugin
 {
     protected $shortcodes;
 
-    function action_Init(){
+    function action_Init()
+    {
         foreach(get_declared_classes() as $c){
             if(preg_match("/^am4Shortcode_(\S+)$/", $c, $regs)){
                 $this->registerShortcode($regs[1], $c);
@@ -96,7 +97,8 @@ class am4Shortcode
         } catch(Exception $e){}
     }
 
-    function convertToAccessRequirement($setting){
+    function convertToAccessRequirement($setting)
+    {
         $records = array();
         $lines = explode(";", $setting);
         foreach((array)$lines as $l){
@@ -129,7 +131,7 @@ class am4Shortcode_am4user extends am4Shortcode
     {
         if(am4PluginsManager::getAPI()){
             $user = am4PluginsManager::getAPI()->getUser();
-            if(!$atts) $atts['var'] = 'name';
+            $atts = $atts ?: array('var' => 'name');
             switch($atts['var']){
                 case 'name'   : $ret = $user['name_f']." ".$user['name_l']; break;
                 case 'expires': am4PluginsManager::getAPI()->getExpire(); break;
@@ -156,7 +158,7 @@ class am4Shortcode_am4affiliate extends am4Shortcode
     {
         if(am4PluginsManager::getAPI()){
             $aff = am4PluginsManager::getAPI()->getAffiliate();
-            if(!$atts) $atts['var'] = 'name';
+            $atts = $atts ?: array('var' => 'name');
             switch($atts['var']){
                 case 'name':
                     $ret = $aff['name_f']." ".$aff['name_l'];
@@ -189,6 +191,7 @@ class am4Shortcode_am4info extends am4Shortcode
             case 'signupurl'    :   $ret = am4PluginsManager::getAPI()->getSignupURL(); break;
             case 'logouturl'    :   $ret = am4PluginsManager::getAPI()->getLogoutURL(); break;
             case 'loginurl'     :   $ret = am4PluginsManager::getAPI()->getLoginURL($_SERVER['REQUEST_URI']); break;
+            //leave to make old versions working
             case 'renewurl'     :   $ret = am4PluginsManager::getAPI()->getRenewURL(); break;
             case 'profileurl'   :   $ret = am4PluginsManager::getAPI()->getProfileURL(); break;
             default : $ret = ''; break;
@@ -196,7 +199,6 @@ class am4Shortcode_am4info extends am4Shortcode
         return ($ret ? (!empty($atts['title']) ? '<a href="'.$ret.'">'.$atts['title'].'</a>' : $ret):'');
     }
 }
-
 
 class am4Shortcode_am4guest extends am4Shortcode
 {
@@ -219,7 +221,6 @@ class am4Shortcode_am4guest extends am4Shortcode
     }
 }
 
-
 class am4Shortcode_am4aff extends am4Shortcode
 {
     function getDescription()
@@ -231,6 +232,7 @@ class am4Shortcode_am4aff extends am4Shortcode
     {
         return "[am4aff][/am4aff]";
     }
+
     function run($atts=array(), $content='')
     {
         $api = am4PluginsManager::getAPI();
@@ -242,8 +244,6 @@ class am4Shortcode_am4aff extends am4Shortcode
     }
 }
 
-
-
 class am4Shortcode_am4show extends am4Shortcode
 {
     function getDescription()
@@ -253,7 +253,7 @@ class am4Shortcode_am4show extends am4Shortcode
 
     function getSyntax()
     {
-        return "[am4show have='' not_have='' user_error='' guest_error=''][/am4show]";
+        return "[am4show have='' not_have='' user_error='' guest_error='' require_all=''][/am4show]";
     }
 
     function run($atts=array(), $content='')
@@ -271,10 +271,14 @@ class am4Shortcode_am4show extends am4Shortcode
         }
 
         $access = new am4UserAccess();
+        $require_all = !empty($atts['require_all'])?true:false;
         //User is logged in let's check his access level;
         if(!empty($atts['have'])){
             $records = $this->convertToAccessRequirement(@$atts['have']);
-            if(!$access->anyTrue($records)) return do_shortcode($errors->getTextByName(@$atts['user_error']));
+
+            $haveAccess = $require_all? $access->allTrue($records) : $access->anyTrue($records);
+
+            if(!$haveAccess) return do_shortcode($errors->getTextByName(@$atts['user_error']));
         }
         if(!empty($atts['not_have'])){
             $records = $this->convertToAccessRequirement(@$atts['not_have']);
@@ -308,14 +312,10 @@ class am4Shortcode_am4afflink extends am4Shortcode
 
             $url = am4PluginsManager::getAmemberURL();
 
-            $vars = array('r'=>$user['user_id']);
-
-            if(array_key_exists('id', $atts) && $atts['id']) $vars['i'] = $atts['id'];
-
             if(array_key_exists('title', $atts) && $atts['title'])
-                $ret = sprintf("<a href='%s/aff/go?%s'>%s</a>", $url, http_build_query($vars, '', '&'), $title);
+                $ret = sprintf("<a href='%s/aff/go/%s'>%s</a>", $url, urlencode($user['login']), $title);
             else
-                $ret = sprintf("%s/aff/go?%s", $url, http_build_query($vars, '', '&'));
+                $ret = sprintf("%s/aff/go/%s", $url, urlencode($user['login']));
         }
         return $ret;
     }

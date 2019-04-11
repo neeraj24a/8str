@@ -6,7 +6,7 @@
  *        Web: http://www.cgi-central.net
  *    Details: Admin index
  *    FileName $RCSfile$
- *    Release: 5.4.3 ($Revision$)
+ *    Release: 5.6.0 ($Revision$)
  *
  * Please direct bug reports,suggestions or feedback to the cgi-central forums.
  * http://www.cgi-central.net/forum/
@@ -51,6 +51,9 @@ class AdminReportsController_Index extends Am_Mvc_Controller
 
     function runAction()
     {
+        set_time_limit(AM_HEAVY_MAX_EXECUTION_TIME);
+        ini_set('memory_limit', AM_HEAVY_MEMORY_LIMIT);
+
         if (!$this->_request->isPost()) {
             throw new Am_Exception_InputError('Only POST accepted');
         }
@@ -126,7 +129,7 @@ CUT;
     function createSaveReportForm($title)
     {
         $form = new Am_Form_Admin();
-        $form->addText('title', array('class' => 'el-wide'))
+        $form->addText('title', array('class' => 'am-el-wide'))
             ->setLabel(___('Title of Report for your Reference'))
             ->setValue($title)
             ->addRule('required');

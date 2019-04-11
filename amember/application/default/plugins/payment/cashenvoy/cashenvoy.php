@@ -3,7 +3,7 @@
 class Am_Paysystem_Cashenvoy extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     const LIVE_PAY_URL = "https://www.cashenvoy.com/webservice/?cmd=cepay";
     const SANDBOX_PAY_URL = "https://www.cashenvoy.com/sandbox/?cmd=cepay";

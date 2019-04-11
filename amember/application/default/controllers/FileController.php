@@ -8,7 +8,7 @@
 *        Web: http://www.cgi-central.net
 *    Details: Member display page
 *    FileName $RCSfile$
-*    Release: 5.4.3 ($Revision: 5371 $)
+*    Release: 5.6.0 ($Revision: 5371 $)
 *
 * Please direct bug reports,suggestions or feedback to the cgi-central forums.
 * http://www.cgi-central.net/forum/
@@ -36,8 +36,7 @@ class FileController extends Am_Mvc_Controller {
     protected function _getFile($attachment)
     {
         $path = $this->getParam('path');
-        if ($path[0] != '.') {$path = '.' . $path;}
-        $file = $this->getDi()->uploadTable->findFirstByPath($path);
+        $file = $this->getDi()->uploadTable->findFirstByPath([".$path", $path]);
         if (!$file) {
             throw new Am_Exception_InputError('File Not Found');
         }

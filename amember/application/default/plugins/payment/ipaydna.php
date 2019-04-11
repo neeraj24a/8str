@@ -12,7 +12,7 @@ class Am_Paysystem_Ipaydna extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
     const PLUGIN_DATE = '$Date$';
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = "iPayDNA";
     protected $defaultDescription = "accepts credit cards";
@@ -27,7 +27,7 @@ class Am_Paysystem_Ipaydna extends Am_Paysystem_Abstract
         $form->addText('tid')
             ->setLabel("Merchant terminal ID (TID)\n" .
                 'registered in gateDNA');
-        $form->addText('url', array('class' => 'el-wide'))
+        $form->addText('url', array('class' => 'am-el-wide'))
             ->setLabel("E-Payment URL\n" .
                 'to be provided by the respective account manager at gateDNA');
     }

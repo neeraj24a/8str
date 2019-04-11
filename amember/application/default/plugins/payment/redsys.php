@@ -12,7 +12,7 @@
 class Am_Paysystem_Redsys extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     const LIVE_URL = 'https://sis.redsys.es/sis/realizarPago';
     const SANDBOX_URL = 'https://sis-t.redsys.es:25443/sis/realizarPago';
@@ -43,7 +43,7 @@ class Am_Paysystem_Redsys extends Am_Paysystem_Abstract
     {
         $form->addText('code')->setLabel('Merchant Code (FUC)');
         $form->addText('terminal')->setLabel('Terminal');
-        $form->addSecretText('secret', array('class'=>'el-wide'))->setLabel('Secret Key (CLAVE SECRETA)');
+        $form->addSecretText('secret', array('class'=>'am-el-wide'))->setLabel('Secret Key (CLAVE SECRETA)');
         $form->addAdvRadio('version')
             ->setLabel('Version')
             ->loadOptions(array(

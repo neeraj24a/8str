@@ -7,7 +7,7 @@
 *        Web: http://www.cgi-central.net
 *    Details: Admin accounts
 *    FileName $RCSfile$
-*    Release: 5.5.0 ($Revision: 4649 $)
+*    Release: 5.6.0 ($Revision: 4649 $)
 *
 * Please direct bug reports,suggestions or feedback to the cgi-central forums.
 * http://www.cgi-central.net/forum/
@@ -94,11 +94,11 @@ CUT
                 );
         }
 
-        $this->addText('title', array('class' => 'el-wide'))
+        $this->addText('title', array('class' => 'am-el-wide translate'))
             ->setLabel(___("Custom Signup Form Title\n".
                 "keep empty to use default title"));
 
-        $this->addText('comment', array('class' => 'el-wide'))
+        $this->addText('comment', array('class' => 'am-el-wide'))
             ->setLabel(___("Comment\nfor admin reference"));
 
         if ($this->record->isSignup() || $this->record->isProfile())
@@ -133,13 +133,13 @@ CUT
         $fs = $this->addAdvFieldset('meta', array('id'=>'meta'))
             ->setLabel(___('Meta Data'));
 
-        $fs->addText('meta_title', array('class' => 'el-wide'))
+        $fs->addText('meta_title', array('class' => 'am-el-wide'))
             ->setLabel(___('Title'));
 
-        $fs->addText('meta_keywords', array('class' => 'el-wide'))
+        $fs->addText('meta_keywords', array('class' => 'am-el-wide'))
             ->setLabel(___('Keywords'));
 
-        $fs->addText('meta_description', array('class' => 'el-wide'))
+        $fs->addText('meta_description', array('class' => 'am-el-wide'))
             ->setLabel(___('Description'));
 
         $gr = $fs->addGroup()->setLabel(___("Robots\n" .
@@ -290,7 +290,7 @@ CUT
         $grid->addCallback(Am_Grid_ReadOnly::CB_RENDER_STATIC, function(& $out, $grid) {
             $out .= <<<CUT
 <script type="text/javascript">
-jQuery('.grid-wrap').on('change', 'input.set-default', function(){
+jQuery('.am-grid-wrap').on('change', 'input.set-default', function(){
     var t = jQuery(this);
     jQuery.post(t.data('url'), t.data('post'), function(){
         window.location.reload();

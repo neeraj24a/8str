@@ -7,7 +7,7 @@
 *        Web: http://www.cgi-central.net
 *    Details: Admin accounts
 *    FileName $RCSfile$
-*    Release: 5.5.0 ($Revision$)
+*    Release: 5.6.0 ($Revision$)
 *
 * Please direct bug reports,suggestions or feedback to the cgi-central forums.
 * http://www.cgi-central.net/forum/
@@ -32,6 +32,8 @@ class AdminAdminsController extends Am_Mvc_Controller_Grid
         $grid->addField(new Am_Grid_Field('admin_id', '#', true, '', null, '1%'));
         $grid->addField(new Am_Grid_Field('login', ___('Username'), true));
         $grid->addField(new Am_Grid_Field('email', ___('E-Mail'), true));
+        $grid->addField(new Am_Grid_Field_IsDisabled())
+            ->addDecorator(new Am_Grid_Field_Decorator_EmptyIf($this->getDi()->authAdmin->getUserId()), Am_Grid_Field::DEC_LAST);
         $grid->addField(new Am_Grid_Field('super_user', ___('Super Admin'), true))
             ->setRenderFunction(function($rec) use($grid){
                 return $grid->renderTd($rec->super_user?___('Yes') : ___('No'));
@@ -59,39 +61,46 @@ class AdminAdminsController extends Am_Mvc_Controller_Grid
     public function createForm()
     {
         $mainForm = new Am_Form_Admin();
+        $record = $this->grid->getRecord();
 
         $form = $mainForm->addFieldset()->setLabel(___('Admin Settings'));
-        $login = $form->addText('login')
-            ->setLabel(___('Admin Username'));
+        if (!defined('HP_ROOT_DIR'))
+        {
+            $login = $form->addText('login')
+                ->setLabel(___('Admin Username'));
 
-        $login->addRule('required')
-            ->addRule('length', ___('Length of username must be from %d to %d', 4, 16), array(4,16))
-            ->addRule('regex', ___('Admin username must be alphanumeric in small caps'), '/^[a-z][a-z0-9_-]+$/')
-            ->addRule('callback2', '-error-', array($this, 'checkUniqLogin'));
+            $login->addRule('required')
+                ->addRule('length', ___('Length of username must be from %d to %d', 4, 16), array(4,16))
+                ->addRule('regex', ___('Admin username must be alphanumeric in small caps'), '/^[a-z][a-z0-9_-]+$/')
+                ->addRule('callback2', '-error-', array($this, 'checkUniqLogin'));
 
-        $set = $form->addGroup()->setLabel(___('First and Last Name'));
-        $set->setSeparator(' ');
-        $set->addText('name_f');
-        $set->addText('name_l');
+            $set = $form->addGroup()->setLabel(___('First and Last Name'));
+            $set->setSeparator(' ');
+            $set->addText('name_f');
+            $set->addText('name_l');
 
-        $pass = $form->addPassword('_passwd')
-            ->setLabel(___('New Password'));
-        $pass->addRule('minlength', ___('The admin password should be at least %d characters long', 6), 6);
-        $pass->addRule('neq', ___('Password must not be equal to username'), $login);
-        $pass0 = $form->addPassword('_passwd0')
-            ->setLabel(___('Confirm New Password'));
-        $pass0->addRule('eq', ___('Passwords must be the same'), $pass);
-
-        $form->addText('email')
-            ->setLabel(___('E-Mail Address'))
-            ->addRule('required')
-            ->addRule('callback2', '-error-', array($this, 'checkUniqEmail'));;
-        $super = $form->addAdvCheckbox('super_user')
-            ->setId('super-user')
-            ->setLabel(___('Super Admin'));
+            $pass = $form->addPassword('_passwd')
+                ->setLabel(___('New Password'));
+            $pass->addRule('minlength', ___('The admin password should be at least %d characters long', 6), 6);
+            $pass->addRule('neq', ___('Password must not be equal to username'), $login);
+            $pass0 = $form->addPassword('_passwd0')
+                ->setLabel(___('Confirm New Password'));
+            $pass0->addRule('eq', ___('Passwords must be the same'), $pass);
+            if(!$record->pk())
+            {
+                $pass->addRule('required');
+                $pass0->addRule('required');
+            }
+            $form->addText('email')
+                ->setLabel(___('E-Mail Address'))
+                ->addRule('required')
+                ->addRule('callback2', '-error-', array($this, 'checkUniqEmail'));;
+            $super = $form->addAdvCheckbox('super_user')
+                ->setId('super-user')
+                ->setLabel(___('Super Admin'));
+        }
 
         //Only Super Admin has access to this page
-        $record = $this->grid->getRecord();
         if ($this->getDi()->authAdmin->getUserId() == $record->get('admin_id')) {
             $super->toggleFrozen(true);
         }
@@ -140,7 +149,7 @@ CUT
             );
         }
 
-        $self_password = $mainForm->addFieldset()
+        $self_password = $mainForm->addFieldset(null, array('id' => 'auth-confirm'))
                 ->setLabel(___('Authentication'))
                 ->addPassword('self_password')
                 ->setLabel(___("Your Password\n".
@@ -203,6 +212,24 @@ CUT
     {
         if ($this->getDi()->authAdmin->getUserId() == $record->admin_id) {
             throw new Am_Exception_InputError(___('You can not delete your own account'));
+        }
+    }
+}
+
+class Am_Grid_Field_Decorator_EmptyIf extends Am_Grid_Field_Decorator_Abstract
+{
+    protected $id;
+
+    public function __construct($id)
+    {
+        $this->id = $id;
+        parent::__construct();
+    }
+
+    public function render(&$out, $obj, $controller)
+    {
+        if ($obj->pk() == $this->id) {
+            $out = preg_replace('|(<td.*?>)(.+)(</td>)|i', '\1\3', $out);
         }
     }
 }

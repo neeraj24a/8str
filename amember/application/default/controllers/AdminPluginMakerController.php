@@ -144,9 +144,9 @@ class Am_Form_Controller_Page_PluginMaker_Display extends HTML_QuickForm2_Contro
         $cnt .= highlight_string($view->render('admin/plugin-template.phtml'), true);
         $cnt .= "</div>";
 
-        $el = $this->form->addStatic(null, array('class'=>'no-label'))->setContent($cnt);
+        $el = $this->form->addStatic(null, array('class'=>'am-no-label'))->setContent($cnt);
 
-        $gr = $this->form->addGroup(null, array('class' => 'no-label'));
+        $gr = $this->form->addGroup(null, array('class' => 'am-no-label'));
         $gr->setSeparator(' ');
         $gr->addHtml()->setHtml('<div style="text-align:center">');
         $gr->addSubmit($this->getButtonName('back'), array('value'=>'Back'));
@@ -209,7 +209,7 @@ class Am_Form_Controller_Page_PluginMaker_Plugin extends HTML_QuickForm2_Control
             if (strpos($k, 'GROUP_')===0)
                 $sel->addOption($class->getName().'::'.$k, $class->getName().'::'.$k);
 
-        $gr = $this->form->addGroup(null, array('class' => 'no-label'));
+        $gr = $this->form->addGroup(null, array('class' => 'am-no-label'));
         $gr->setSeparator(' ');
         $gr->addHtml()->setHtml('<div style="text-align:center">');
         $gr->addSubmit($this->getButtonName('back'), array('value'=>'Start Over'));
@@ -244,7 +244,7 @@ class Am_Form_Controller_Page_PluginMaker_Tables extends HTML_QuickForm2_Control
         $options = @array_merge(array('' => 'No Prefix'), @array_combine($prefixes, $prefixes));
         $this->form->addSelect('table_prefix')->setLabel('Tables Prefix')->loadOptions((array)$options);
 
-        $gr = $this->form->addGroup(null, array('class' => 'no-label'));
+        $gr = $this->form->addGroup(null, array('class' => 'am-no-label'));
         $gr->setSeparator(' ');
         $gr->addHtml()->setHtml('<div style="text-align:center">');
         $gr->addSubmit($this->getButtonName('back'), array('value'=>'Back'));
@@ -398,14 +398,14 @@ class Am_Form_Controller_Page_PluginMaker_Columns extends HTML_QuickForm2_Contro
         $this->form->addScript()->setScript(<<<CUT
 jQuery(function(){
     jQuery("select.field").change(function(){
-        var row = jQuery(this).closest(".row");
+        var row = jQuery(this).closest(".am-row");
         var val = jQuery(this).val();
         row.find("input[name$='[text]']").toggle(val=='expr' || val=='string');
     }).change();
 });
 CUT
 );
-        $gr = $this->form->addGroup(null, array('class' => 'no-label'));
+        $gr = $this->form->addGroup(null, array('class' => 'am-no-label'));
         $gr->setSeparator(' ');
         $gr->addHtml()->setHtml('<div style="text-align:center">');
         $gr->addSubmit($this->getButtonName('back'), array('value'=>'Back'));

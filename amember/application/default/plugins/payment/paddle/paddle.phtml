@@ -3,14 +3,32 @@
 <?php $title=___('Payment Info'); $this->setLayout('layout.phtml'); $this->layoutNoMenu = true; ?>
 <?php include $this->_script('_receipt.phtml'); ?>
 <div style="text-align:center">
+<a href="javascript:void();" class="paddle_styled_button green" onclick="javascript:paddle_pr_open();">Complete Payment</a>
+<!--
 <a href="#!" class="paddle_button"
-    data-product="<?= $product ?>"
-    data-success="<?= $return_url ?>"
-    data-passthrough="<?= $passthrough ?>"
-    data-price="<?= $price ?>"
-    data-auth="<?= $auth ?>"
+    data-product=<?= $product ?>
+    data-success=<?= $return_url ?>
+    data-passthrough=<?= $passthrough ?>
+    data-price=<?= $price ?>
+    data-auth=<?= $auth ?>
 >Complete Payment</a>
+-->
 </div>
 <script type="text/javascript">
 Paddle.Setup({vendor: <?= $vendor ?>, debug: <?= $debug ?>});
+jQuery( document ).ready(function() {
+paddle_pr_open();
+});
+function paddle_pr_open() {
+Paddle.Checkout.open({
+    product: <?= $product ?>,
+    recurringPrices: [
+        {
+            currency: 'USD',
+            price: <?= $price ?>,
+            auth: <?= $auth ?>
+        }
+    ]
+});
+}
 </script>

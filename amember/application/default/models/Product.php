@@ -584,7 +584,7 @@ class ProductTable extends Am_Table_WithData
      * @param array $haveActiveIds int product# user has active subscriptions to
      * @param array $haveExpiredIds int product# user has expired subscriptions to
      * @param bool $select_multiple - is user able to select multiple products on signup form.
-     * @return array Product objects.
+     * @return Product[] $products Array of products.
      */
     function filterProducts(array $products, array $haveActiveIds = array(), array $haveExpiredIds=array(), $select_multiple=false){
         $have = array_unique(array_merge(

@@ -2,7 +2,7 @@
 class Am_Paysystem_Free extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = "Free Signup";
     protected $defaultDescription = "Totally free";

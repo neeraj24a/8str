@@ -4,11 +4,6 @@ class Am_Form_Admin_Product extends Am_Form_Admin
 {
     protected $plans = array();
 
-    public function checkAdminPermissions(Admin $admin)
-    {
-        return $admin->hasPermission('grid_product');
-    }
-
     public function __construct($plans)
     {
         $this->plans = (array) $plans;
@@ -191,7 +186,7 @@ CUT
                     "displayed to visitors on order page below the title"))
             ->setAttribute('cols', 40)->setAttribute('rows', 2);
 
-        $fieldSet->addText('url', array('class' => 'el-wide'))
+        $fieldSet->addText('url', array('class' => 'am-el-wide'))
             ->setLabel(___("Link (optional)\n" .
                 "used to represent product in Active Subscriptions widget on user dashboard, leave empty to display product without link. This link will not become automatically protected."));
 
@@ -199,7 +194,7 @@ CUT
         $g = $fieldSet->addGroup()
             ->setLabel(___("Comment\nfor admin reference"));
         $g->setSeparator(' ');
-        $g->addTextarea('comment', array('class' => 'el-wide', 'style' => "display:none"))
+        $g->addTextarea('comment', array('class' => 'am-el-wide', 'style' => "display:none"))
             ->setAttribute('rows', 1);
         $g->addHtml()
             ->setHtml(<<<CUT
@@ -301,7 +296,7 @@ CUT
         $fs = $this->addAdvFieldset('options')
                 ->setLabel(___('Product Options'));
 
-        $fs1 = $fs->addGroup('', array('id' => 'am-product-option-group-TPL', 'class' => 'no-label',));
+        $fs1 = $fs->addGroup('', array('id' => 'am-product-option-group-TPL', 'class' => 'am-no-label',));
         $types = Am_Html::renderOptions(array(
             '' => '',
             'text' => ___('Text'),
@@ -336,7 +331,7 @@ CUT
 CUT
             );
 
-            $fs->addHtml(null, array('class' => 'no-label'))->setHtml('<a href="javascript:;" class="am-product-option-add local">'.___('Add Option').'</a><div id="am-product-options-options" style="display:none"></div>');
+            $fs->addHtml(null, array('class' => 'am-no-label'))->setHtml('<a href="javascript:;" class="am-product-option-add local">'.___('Add Option').'</a><div id="am-product-options-options" style="display:none"></div>');
             $fs->addHidden('_options', array('id' => 'am-product-options-hidden'));
     }
 
@@ -419,48 +414,63 @@ CUT
 
 class Am_Grid_Filter_Product extends Am_Grid_Filter_Abstract
 {
+    protected $varList = array(
+        'q', 'cat_id', 'h_disabled'
+    );
+
     protected function applyFilter()
     {
         $query = $this->grid->getDataSource();
-        if ($s = @$this->vars['filter']['text']) {
+        if ($s = $this->getParam('q')) {
             $query->add(new Am_Query_Condition_Field('title', 'LIKE', '%' . $s . '%'))
                 ->_or(new Am_Query_Condition_Field('product_id', '=', $s));
         }
-        if ($category_id = @$this->vars['filter']['category_id']) {
+        if ($category_id = $this->getParam('cat_id')) {
             $query->leftJoin("?_product_product_category", "ppc");
-            $query->addWhere("ppc.product_category_id=?d", $category_id);
+            $query->addWhere("ppc.product_category_id IN (?a)", $category_id);
         }
 
-        if (@$this->vars['filter']['dont_show_disabled']) {
+        if ($this->getParam('h_disabled')) {
             $query->addWhere("t.is_disabled=0");
         }
     }
 
     public function renderInputs()
     {
-        $options = array('' => '-' . ___('Filter by Category') . '-');
-        $options = $options +
-            Am_Di::getInstance()->productCategoryTable->getAdminSelectOptions(
+        $this->attributes['value'] = (string) $this->getParam('q');
+
+        $offer = '-- ' . ___('Filter by Category');
+        $options = Am_Di::getInstance()->productCategoryTable->getAdminSelectOptions(
                 array(ProductCategoryTable::COUNT => true));
-        $options = Am_Html::renderOptions(
+        $optionsHtml = Am_Html::renderOptions(
                 $options,
-                @$this->vars['filter']['category_id']
-        );
-        $out = sprintf('<select onchange="this.form.submit()" name="_product_filter[category_id]">%s</select>&nbsp;' . PHP_EOL, $options);
-        $this->attributes['value'] = (string) $this->vars['filter']['text'];
-        $out .= $this->renderInputText('filter[text]');
-        $out .= '<br />' . $this->renderShowDisabled();
-        return $out;
+                $this->getParam('cat_id'));
+        $text = $this->renderInputText(array(
+            'name' => 'q',
+            'placeholder' => ___('Product Title/ID')));
+        $disabled = $this->renderShowDisabled();
+
+        return <<<CUT
+<div style='display:table-cell; padding-right:0.4em; padding-bottom:0.4em; width:200px; box-sizing:border-box;'>
+<select name="_product_cat_id[]" style="width:200px" class="magicselect" multiple="multiple" data-offer="{$offer}">
+{$optionsHtml}
+</select>
+</div>
+<div style='display:table-cell; padding-bottom:0.4em; width:160px; box-sizing:border-box;'>
+{$text}
+</div>
+$disabled
+CUT;
     }
 
     public function renderShowDisabled()
     {
         return sprintf('<label>
-                <input type="hidden" name="%s_filter[dont_show_disabled]" value="0" />
-                <input type="checkbox" name="%s_filter[dont_show_disabled]" value="1" %s /> %s</label>',
+                <input type="hidden" name="%s_h_disabled" value="0" />
+                <input type="checkbox" name="%s_h_disabled" value="1" %s /> %s</label>',
             $this->grid->getId(), $this->grid->getId(),
-            (@$this->vars['filter']['dont_show_disabled'] == 1 ? 'checked' : ''),
-            Am_Html::escape(___('do not show disabled products'))
+            ($this->getParam('h_disabled') == 1 ? 'checked' : ''),
+            Am_Html::escape(___('hide disabled products'))
         );
     }
 }
@@ -513,6 +523,54 @@ class Am_Grid_Action_Group_ProductAssignCategory extends Am_Grid_Action_Group_Ab
             $categories[] = $category_id;
         }
         $record->setCategories($categories);
+    }
+}
+
+class Am_Grid_Action_Group_ProductAssignCategoryHierarchy extends Am_Grid_Action_Group_Abstract
+{
+    protected $needConfirmation = true;
+    protected $index = null;
+
+    public function __construct()
+    {
+        parent::__construct('product-assign-category-hierarchy',
+                ___("Assign Mutual Category Hierarchy to Products"));
+    }
+
+    /**
+     * @param int $id
+     * @param Product $record
+     */
+    public function handleRecord($id, $record)
+    {
+        $categories = $record->getCategories();
+        $add = array();
+        $index = $this->getIndex();
+        foreach ($categories as $c_id) {
+            $add = array_merge($add, $index[$c_id]);
+        }
+        $record->setCategories(array_merge($categories, $add));
+    }
+
+    function getIndex()
+    {
+        if (is_null($this->index)) {
+            $this->index = array();
+            $this->setParentCategories(
+                $this->grid->getDi()->productCategoryTable->getTree(false),
+                array(),
+                $this->index);
+        }
+        return $this->index;
+    }
+
+    protected function setParentCategories($data, $cat_ids, & $res)
+    {
+        foreach ($data as $c) {
+            $res[$c['product_category_id']] = $cat_ids;
+            $this->setParentCategories($c['childNodes'],
+                array_merge($cat_ids, array($c['product_category_id'])), $res);
+        }
     }
 }
 
@@ -644,7 +702,12 @@ class Am_Grid_Action_CopyProduct extends Am_Grid_Action_Abstract
         $controller->valuesToForm($vars, $record);
         $plan = array();
         $plan_map = array();
-        foreach ($vars['_plan'] as $p) {
+        foreach ($vars['_plan'] as $k => $p) {
+            if ($k == 'TPL') {
+                $plan[$k] = $p;
+                $plan[$k]['plan_id'] = $k;
+                continue;
+            }
             $id = is_null($id) ? 0 : time() . rand(100, 999);
             $plan_map[$p['plan_id']] = $id;
             $p['plan_id'] = $id;
@@ -671,12 +734,13 @@ class Am_Grid_Action_CopyProduct extends Am_Grid_Action_Abstract
             $opts[] = $_;
         }
         $vars['_options'] = json_encode(array('options' => $opts));
-
+        $vars['start_date'] = $record->getStartDate($vars['start_date']);
+        $vars['require_other'] = $record->unserializeList($vars['require_other']);
+        $vars['prevent_if_other'] = $record->unserializeList($vars['prevent_if_other']);
         $request = new Am_Mvc_Request($vars + array($this->grid->getId() . '_a' => 'insert',
                 $this->grid->getId() . '_b' => $this->grid->getBackUrl()), Am_Mvc_Request::METHOD_POST);
 
         $controller->setRequest($request);
-
 
         $request->setModuleName('default')
             ->setControllerName('admin-products')
@@ -789,6 +853,7 @@ class AdminProductsController extends Am_Mvc_Controller_Grid
         $grid->actionAdd(new Am_Grid_Action_Group_ProductEnable(true));
         $grid->actionAdd(new Am_Grid_Action_Group_ProductAssignCategory(false));
         $grid->actionAdd(new Am_Grid_Action_Group_ProductAssignCategory(true));
+        $grid->actionAdd(new Am_Grid_Action_Group_ProductAssignCategoryHierarchy);
         $grid->actionAdd(new Am_Grid_Action_Group_ChangeOrder)
             ->setTitle(___('Change Order'));
         $grid->actionAdd(new Am_Grid_Action_Group_Archive(true));
@@ -803,7 +868,9 @@ class AdminProductsController extends Am_Mvc_Controller_Grid
                 )
                 ->setRenderFunction(array($this, 'renderPGroup'));
         }
-        $grid->addField(new Am_Grid_Field('terms', ___('Billing Terms'), false))->setRenderFunction(array($this, 'renderTerms'));
+        $grid->addField(new Am_Grid_Field('terms', ___('Billing Terms'), false))
+            ->setRenderFunction(array($this, 'renderTerms'));
+
         if ($this->getDi()->plugins_tax->getEnabled()) {
             $grid->addField(new Am_Grid_Field('tax_group', ___('Tax')));
             $grid->actionAdd(new Am_Grid_Action_LiveCheckbox('tax_group'))
@@ -884,11 +951,17 @@ class AdminProductsController extends Am_Mvc_Controller_Grid
             $res[] = $options[$pc_id];
         }
 
-        $d = new Am_Grid_Field_Decorator_Shorten(50);
-        $cats = implode(", ", $res);
-        $d->render($cats, $p, $controller);
+        $_ = implode(", ", $res);
+        $max_len = 50;
 
-        return $this->renderTd(sprintf("<a href='javascript:' class='local' onClick='amOpenProductCatEdit(%d, this);'>%s</a>", $p->pk(), $cats ?: '...'), false);
+        if (mb_strlen($_) > $max_len)
+        {
+            $_ = sprintf('<span title="%s">%s&hellip;</span>',
+                Am_Html::escape($_),
+                Am_Html::escape(mb_substr($_, 0, $max_len)));
+        }
+
+        return $this->renderTd(sprintf("<a href='javascript:' class='local' onClick='amOpenProductCatEdit(%d, this);'>%s</a>", $p->pk(), $_ ?: '...'), false);
     }
 
     function renderTerms(Product $record)
@@ -1120,6 +1193,7 @@ class AdminProductsController extends Am_Mvc_Controller_Grid
 
         $ds = new Am_Query($this->getDi()->productUpgradeTable);
         $grid = new Am_Grid_Editable('_upgrades', ___("Product Upgrades"), $ds, $this->_request, $this->view);
+        $grid->setEventId('gridProductUpgrade');
         $grid->setPermissionId('grid_product');
         $grid->_planOptions = $planOptions;
         $grid->addField(new Am_Grid_Field_Enum('from_billing_plan_id', ___('From')))->setTranslations($planOptions);
@@ -1136,6 +1210,7 @@ class AdminProductsController extends Am_Mvc_Controller_Grid
         $from = $form->addSelect('from_billing_plan_id', array('class' => 'am-combobox'), array('options' => $options))->setLabel(___('From'));
         $to = $form->addSelect('to_billing_plan_id', array('class' => 'am-combobox'), array('options' => $options))->setLabel(___('To'));
         $to->addRule('neq', ___('[From] and [To] billing plans must not be equal'), $from);
+        $form->addAdvcheckbox('hide_if_to')->setLabel(___("Hide upgrade link\nif customer already has <strong>To</strong> product"));
         $form->addText('surcharge', array('placeholder' => '0.0', 'size'=>7))->setLabel(___(
                 "Surcharge\nto be additionally charged when customer moves [From]->[To] plan. aMember does not charge First Price on upgrade, use Surcharge instead"));
         $el  = $form->addAdvRadio('type')->setLabel(___('Upgrade Price Calculation Type'));
@@ -1148,11 +1223,12 @@ CUT
 CUT
    , ProductUpgrade::TYPE_FLAT);
 
+        $form->addText('comment', array('class' => 'am-el-wide'))
+            ->setLabel(___("Comment for User\nwill be shown on upgrade screen"));
         return $form;
     }
 
-    public
-        function init()
+    public function init()
     {
         parent::init();
         $this->view->placeholder('after-content')->append('<div id="am-cat-dialog" style="display:none"></div>');
@@ -1188,7 +1264,7 @@ function amOpenProductCatEdit(id,link)
                     }
                 }
             });
-            jQuery("#am-cat-dialog .grid-wrap").ngrid();
+            jQuery("#am-cat-dialog .am-grid-wrap").ngrid();
         }
     );
 }
@@ -1201,7 +1277,6 @@ CUT
         $this->view->headScript()->appendFile($this->view->_scriptJs("adminproduct.js"));
         $this->getDi()->plugins_payment->loadEnabled()->getAllEnabled();
     }
-
 }
 
 class AdminProductsController_Copy extends AdminProductsController

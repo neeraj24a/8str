@@ -204,6 +204,10 @@ Regija-drava',
   'Street' => 'Ulica',
   'Street Address' => 'Ulica',
   'Subject' => 'Predmet',
+  'Subscribe' => '#-#-#-#-#  hr.po  #-#-#-#-#
+Prijava
+#-#-#-#-#  hr.po  #-#-#-#-#
+Naruči',
   'Subscribe to Site Newsletters' => 'Prijavite se na na Newsletter',
   'Subscription/Product Title' => '#-#-#-#-#  hr.po  #-#-#-#-#
 Naslov Pretplate/Proizvoda
@@ -221,7 +225,6 @@ Sveukupno',
   'Try again' => 'Pokuajte ponovo',
   'Unknown period unit: %s' => 'Nepoznata jedinica razdoblja: %s',
   'Unsubscribe from all e-mail messages' => 'Odjava od svih email poruka',
-  'Unsubscription Confirmation' => 'Potvrda odjave',
   'Username' => 'Korisničko ime',
   'Username contains invalid characters - please use digits, letters or spaces' => 'Korisničko ime sadri nedozvoljene znakove - molimo da koristite brojke, slova ili prazna mjesta',
   'Username contains invalid characters - please use digits, letters, dash and underscore' => 'Korisničko ime sadri nedozvoljene znakove - molimo da koristite brojke i slova',

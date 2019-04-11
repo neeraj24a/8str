@@ -11,7 +11,7 @@
 class Am_Paysystem_Walletone extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     const URL_PAY = "https://merchant.w1.ru/checkout/default.aspx";
     

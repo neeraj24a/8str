@@ -3,7 +3,7 @@
 class Am_Plugin_Oto extends Am_Plugin
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     const NEED_SHOW_OTO = 'need_show_oto';
     const LAST_OTO_SHOWN = 'last_oto_shown';
@@ -197,6 +197,7 @@ CUT;
     function renderParentInvoices(Am_View $view)
     {
         $invoice = $view->invoice;
+        if(!$invoice) return; 
         $out = null;
         while ($parent_invoice_id = $invoice->data()->get('oto_parent')) {
             $invoice = $this->getDi()->invoiceTable->load($parent_invoice_id);
@@ -314,7 +315,7 @@ class AdminOneTimeOfferController extends Am_Mvc_Controller_Grid
     {
         $form = new Am_Form_Admin();
 
-        $form->addText('comment', array('class' => 'el-wide'))
+        $form->addText('comment', array('class' => 'am-el-wide'))
             ->setLabel(___("Comment\n" .
                     'for your reference'))
             ->addRule('required');
@@ -378,7 +379,7 @@ class AdminOneTimeOfferController extends Am_Mvc_Controller_Grid
 
         $fs = $form->addFieldSet()->setLabel(___('Offer Page Settings'));
 
-        $fs->addText('view[title]', array('class' => 'el-wide'))->setLabel(___('Title'));
+        $fs->addText('view[title]', array('class' => 'am-el-wide'))->setLabel(___('Title'));
 
         $fs->addHtmlEditor('view[html]')->setLabel("Offer Text\nuse %yes% and %no% to insert buttons");
         $fs->addHtmlEditor('view[yes][label]', null, array('showInPopup' => true))

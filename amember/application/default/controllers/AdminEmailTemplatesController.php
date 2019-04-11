@@ -7,7 +7,7 @@
  *        Web: http://www.cgi-central.net
  *    Details: Admin Info / PHP
  *    FileName $RCSfile$
- *    Release: 5.4.3 ($Revision$)
+ *    Release: 5.6.0 ($Revision$)
  *
  * Please direct bug reports,suggestions or feedback to the cgi-central forums.
  * http://www.cgi-central.net/forum/
@@ -21,7 +21,7 @@ class AdminEmailTemplatesController extends Am_Mvc_Controller
 
     public function checkAdminPermissions(Admin $admin)
     {
-        return $admin->hasPermission(Am_Auth_Admin::PERM_EMAIL);
+        return $admin->hasPermission(Am_Auth_Admin::PERM_EMAIL_TPL);
     }
 
     public function deleteAction()
@@ -36,10 +36,12 @@ class AdminEmailTemplatesController extends Am_Mvc_Controller
     {
         if (!$this->getParam('name'))
             throw new Am_Exception_InputError(___('Name of template is undefined'));
+        
+        $this->getDi()->plugins_payment->loadEnabled()->getAllEnabled();
 
         $form = $this->createForm($this->getParam('name'), $this->getParam('label'));
         $tpl = $this->getTpl($this->getParam('copy_from', null));
-
+        
         if (!$form->isSubmitted()) {
             $form->setDataSources(array(
                 new HTML_QuickForm2_DataSource_Array(
@@ -64,6 +66,8 @@ class AdminEmailTemplatesController extends Am_Mvc_Controller
             $tpl->attachments = $this->prepareAttachments($vars['attachments']);
             $tpl->recipient_admins = implode(',', isset($vars['_admins']) ? $vars['_admins'] : array());
             $tpl->save();
+
+            $this->getDi()->adminLogTable->log("Edit Email Template ({$tpl->name})", 'email_template', $tpl->pk());
         } else {
             echo $this->createActionsForm($tpl)
             . "\n"
@@ -91,7 +95,8 @@ class AdminEmailTemplatesController extends Am_Mvc_Controller
                 new HTML_QuickForm2_DataSource_Array(
                     array(
                         'attachments' => $this->prepareAttachments($tpl->attachments, true),
-                        'conditions' => $this->prepareAttachments($tpl->conditions, true),
+                        '_conditions_pid' => array_filter($this->prepareAttachments($tpl->conditions, true), function ($_) {return strpos($_, 'PAYSYSTEM-') === false;}),
+                        '_conditions_paysys_id' => array_filter($this->prepareAttachments($tpl->conditions, true), function ($_) {return strpos($_, 'PAYSYSTEM-') === 0;}),
                         'days' => $this->prepareAttachments($tpl->days, true),
                         '_admins' => $tpl->recipient_admins ? explode(',', $tpl->recipient_admins) : array(-1),
                     ) + $tpl->toArray()
@@ -106,7 +111,7 @@ class AdminEmailTemplatesController extends Am_Mvc_Controller
                 $vars['email_template_layout_id'] = null;
             }
             $tpl->isLoaded() ? $tpl->setForUpdate($vars) : $tpl->setForInsert($vars);
-            $tpl->conditions = $this->prepareAttachments($vars['conditions']);
+            $tpl->conditions = $this->prepareAttachments(array_merge($vars['_conditions_pid'], $vars['_conditions_paysys_id']));
             $tpl->attachments = $this->prepareAttachments($vars['attachments']);
             $this->sortDays($vars['days']);
             $tpl->days = $this->prepareAttachments($vars['days']);
@@ -125,8 +130,9 @@ class AdminEmailTemplatesController extends Am_Mvc_Controller
 
     public function exportAction()
     {
-        $this->_helper->sendFile->sendData(
-            $this->getDi()->emailTemplateTable->exportReturnXml(array('email_template_id')), 'text/xml', 'amember-email-templates-' . $this->getDi()->sqlDate . '.xml');
+        $q = new Am_Query($this->getDi()->emailTemplateTable);
+        $xml = $q->exportReturnXml(['no_keys' => true]);
+        $this->_helper->sendFile->sendData($xml, 'text/xml', 'amember-email-templates-' . $this->getDi()->sqlDate . '.xml');
     }
 
     public function importAction()
@@ -211,28 +217,21 @@ class AdminEmailTemplatesController extends Am_Mvc_Controller
         return $op;
     }
 
-    protected function getConditionOptions()
+    protected function getProductConditionOptions()
     {
-        $paysys_options = array();
-        foreach ($this->getDi()->paysystemList->getAllPublic() as $ps)
-        {
-            $paysys_options['PAYSYSTEM-' . $ps->getId()] = ___('Payment System: ') . Am_Html::escape(___($ps->getTitle()));
-        }
-
         $product_options = array();
-        foreach (Am_Di::getInstance()->productTable->getOptions() as $id => $title)
+        foreach ($this->getDi()->productTable->getOptions() as $id => $title)
         {
             $product_options['PRODUCT-' . $id] = ___('Product: ') . Am_Html::escape(___($title));
         }
 
         $group_options = array();
-        foreach (Am_Di::getInstance()->productCategoryTable->getAdminSelectOptions() as $id => $title)
+        foreach ($this->getDi()->productCategoryTable->getAdminSelectOptions() as $id => $title)
         {
             $group_options['CATEGORY-' . $id] = ___('Product Category: ') . Am_Html::escape(___($title));
         }
 
         $options = array(
-            ___('Payment System') => $paysys_options,
             ___('Products') => $product_options
         );
 
@@ -242,6 +241,17 @@ class AdminEmailTemplatesController extends Am_Mvc_Controller
         }
 
         return $options;
+    }
+
+    protected function getPaysysConditionOptions()
+    {
+        $paysys_options = array();
+        foreach ($this->getDi()->paysystemList->getAllPublic() as $ps)
+        {
+            $paysys_options['PAYSYSTEM-' . $ps->getId()] = Am_Html::escape(___($ps->getTitle()));
+        }
+
+        return $paysys_options;
     }
 
     protected function getTpl($copy_from = null)
@@ -297,10 +307,8 @@ class AdminEmailTemplatesController extends Am_Mvc_Controller
         $form->addHidden('name');
 
         $langOptions = $this->getLanguageOptions(
-                $this->getDi()->config->get('lang.enabled',
-                    array($this->getDi()->config->get('lang.default', 'en')))
+                $this->getDi()->getLangEnabled()
         );
-
         $lang = $form->addSelect('lang')
                 ->setId('lang')
                 ->setLabel(___('Language'))
@@ -323,7 +331,7 @@ class AdminEmailTemplatesController extends Am_Mvc_Controller
                 ->addRule('required');
 
         } else {
-            $form->addText('bcc', array('class' => 'el-wide', 'placeholder' => ___('Email Addresses Separated by Comma')))
+            $form->addText('bcc', array('class' => 'am-el-wide', 'placeholder' => ___('Email Addresses Separated by Comma')))
                 ->setLabel(___("BCC\n" .
                     "blind carbon copy allows the sender of a message to conceal the person entered in the Bcc field from the other recipients"))
                 ->addRule('callback', ___('Please enter valid e-mail addresses'), array('Am_Validate', 'emails'));
@@ -333,7 +341,7 @@ class AdminEmailTemplatesController extends Am_Mvc_Controller
 
         $form->addHidden('label')
             ->setValue($label);
-        
+
         $this->getDi()->hook->call(Am_Event::EMAIL_TEMPLATE_INIT_FORM, array('form' => $form));
 
         return $form;
@@ -403,7 +411,7 @@ class AdminEmailTemplatesController extends Am_Mvc_Controller
                 ->setId('_admins')
                 ->addRule('required');
         } else {
-            $form->addText('bcc', array('class' => 'el-wide', 'placeholder' => ___('Email Addresses Separated by Comma')))
+            $form->addText('bcc', array('class' => 'am-el-wide', 'placeholder' => ___('Email Addresses Separated by Comma')))
                 ->setLabel(___("BCC\n" .
                     "blind carbon copy allows the sender of a message to conceal the person entered in the Bcc field from the other recipients"))
                 ->addRule('callback', ___('Please enter valid e-mail addresses'), array('Am_Validate', 'emails'));
@@ -415,9 +423,17 @@ class AdminEmailTemplatesController extends Am_Mvc_Controller
             ->setLabel(___('Days to Send'))
             ->loadOptions($this->getDayOptions());
 
-        $form->addMagicSelect('conditions')
-            ->setLabel(___('Optional Conditions') . "\n" . ___('notification will be sent in case of one of selected products exits in invoice or one of selected payment system was used for invoice'))
-            ->loadOptions($this->getConditionOptions());
+        $g = $form->addFieldset()
+            ->setLabel('Optional Conditions');
+
+        $g->addMagicSelect('_conditions_pid', array('class' => 'am-row-highlight'))
+            ->setLabel(___("Conditions by Product\n" .
+                'notification will be sent in case of one of selected products exits in invoice, keep empty if you want to send for any'))
+            ->loadOptions($this->getProductConditionOptions());
+        $g->addHtml(null, array('class' => 'am-row-highlight'))->setHtml("<strong>AND</strong>");
+        $g->addMagicSelect('_conditions_paysys_id', array('class' => 'am-row-highlight'))
+            ->setLabel(___('Conditions by Payment System') . "\n" . ___('notification will be sent in case of one of selected payment system was used for invoice, keep empty if you want to send for any'))
+            ->loadOptions($this->getPaysysConditionOptions());
 
         $form->addElement(new Am_Form_Element_MailEditor($name, array('upload-prefix'=>'email-pending')));
 

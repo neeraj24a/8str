@@ -12,7 +12,7 @@ use Amazon\InstantAccess\Log\Logger;
 class Am_Paysystem_AmazonInstantAccess extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Amazon Instant Access';
     protected $defaultDescription = 'uses for postback request only';
@@ -184,7 +184,6 @@ class Am_Paysystem_AmazonInstantAccess extends Am_Paysystem_Abstract
 
     protected function loadAmazonLib()
     {
-        require_once __DIR__ . '/autoload.php';
         require_once __DIR__ . '/AmLogger.php';
     }
 

@@ -1,0 +1,43 @@
+a:4:{s:4:"data";s:2931:"s:2921:"<div class="admin-last admin-lastusers">
+    <h2>Last 5 User Signin</h2>
+    <div class="am-grid-container">
+        <table class="am-grid grid-no-highlight">
+                        <tr class="am-grid-row even">
+                <td>                        <strong>Correy Mcclure</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15382" data-tooltip-url="/amember/admin-users/card?id=15382">iamdj704</a>)
+                                        -
+                    75.176.59.33 at <time datetime="2019-04-01T08:00:13-04:00" title="1 hrs ago">04/01/19, 08:00 AM</time>                    <br />
+                    iamdj704@gmail.com</td>
+            </tr>
+                        <tr class="am-grid-row odd">
+                <td>                        <strong>Tyrone Evans</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15311" data-tooltip-url="/amember/admin-users/card?id=15311">djteey</a>)
+                                        -
+                    68.34.26.195 at <time datetime="2019-04-01T05:22:04-04:00" title="4 hrs ago">04/01/19, 05:22 AM</time>                    <br />
+                    ringoevans44@gmail.com</td>
+            </tr>
+                        <tr class="am-grid-row even">
+                <td>                        <strong>Davila Alfonso</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=3844" data-tooltip-url="/amember/admin-users/card?id=3844">djfunkshun</a>)
+                                        -
+                    66.68.186.155 at <time datetime="2019-04-01T04:35:40-04:00" title="4 hrs ago">04/01/19, 04:35 AM</time>                    <br />
+                    djaldavila@gmail.com</td>
+            </tr>
+                        <tr class="am-grid-row odd">
+                <td>                        <strong>Jose A</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15178" data-tooltip-url="/amember/admin-users/card?id=15178">dvjmando79</a>)
+                                        -
+                    107.184.163.221 at <time datetime="2019-04-01T03:25:23-04:00" title="6 hrs ago">04/01/19, 03:25 AM</time>                    <br />
+                    uribearmando25@gmail.com</td>
+            </tr>
+                        <tr class="am-grid-row even">
+                <td>                        <strong>Walt Downing</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15380" data-tooltip-url="/amember/admin-users/card?id=15380">djwaltdzl</a>)
+                                        -
+                    24.12.154.136 at <time datetime="2019-04-01T01:20:58-04:00" title="8 hrs ago">04/01/19, 01:20 AM</time>                    <br />
+                    djwaltdzl@gmail.com</td>
+            </tr>
+                    </table>
+    </div>
+</div>
+";";s:8:"lifetime";i:2592000;s:6:"expire";i:1556717405;s:8:"priority";i:8;}

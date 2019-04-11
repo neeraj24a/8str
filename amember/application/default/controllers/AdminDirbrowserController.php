@@ -7,7 +7,7 @@
 *        Web: http://www.cgi-central.net
 *    Details: Admin Access log
 *    FileName $RCSfile$
-*    Release: 5.4.3 ($Revision: 4961 $)
+*    Release: 5.6.0 ($Revision: 4961 $)
 *
 * Please direct bug reports,suggestions or feedback to the cgi-central forums.
 * http://www.cgi-central.net/forum/

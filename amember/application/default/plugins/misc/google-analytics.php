@@ -58,7 +58,7 @@ CUT;
 class Am_Plugin_GoogleAnalytics extends Am_Plugin
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
     const TRACKED_DATA_KEY = 'google-analytics-done';
 
     protected $id;
@@ -75,11 +75,10 @@ class Am_Plugin_GoogleAnalytics extends Am_Plugin
     {
         return !empty($this->id);
     }
-    function onSetupForms(Am_Event_SetupForms $forms)
+    function onSetupForms(Am_Event_SetupForms $event)
     {
         $form = new Am_Form_Setup('google_analytics');
         $form->setTitle("Google Analytics");
-        $forms->addForm($form);
         $form->addText('google_analytics')
              ->setLabel("Google Analytics Account ID\n" .
                  'To enable automatic sales and hits tracking with GA,
@@ -107,6 +106,8 @@ class Am_Plugin_GoogleAnalytics extends Am_Plugin
                 'universal' => 'Universal Analytics',
                 'tag' => 'Google Tag Manager',
             ));
+        $this->_afterInitSetupForm($form);
+        $event->addForm($form);
     }
     public function getStrategy()
     {

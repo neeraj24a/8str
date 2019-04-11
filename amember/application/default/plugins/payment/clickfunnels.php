@@ -4,7 +4,7 @@ class Am_Paysystem_Clickfunnels extends Am_Paysystem_Abstract
 {
     const
         PLUGIN_STATUS = self::STATUS_BETA,
-        PLUGIN_REVISION = '5.5.0';
+        PLUGIN_REVISION = '5.6.0';
 
     protected
         $defaultTitle = 'ClickFunnels',
@@ -126,7 +126,6 @@ class Am_Paysystem_Transaction_Clickfunnels extends Am_Paysystem_Transaction_Inc
 
     function fetchUserInfo()
     {
-
         $ret = array();
         foreach (array(
                 'name_f' => 'first_name',
@@ -134,13 +133,16 @@ class Am_Paysystem_Transaction_Clickfunnels extends Am_Paysystem_Transaction_Inc
                 'email' => 'email',
                 'street' => 'address',
                 'city' => 'city',
-                'status' => 'state',
+                'state' => 'state',
                 'country' => 'country',
                 'zip' => 'zip',
                 'phone' => 'phone'
             ) as $k => $v)
         {
             $ret[$k] = $this->req['contact'][$v] ?: $this->req['contact']['contact_profile'][$v];
+        }
+        if (!empty($ret['country']) && ($c = $this->getPlugin()->getDi()->countryTable->findFirstByTitle($ret['country']))) {
+            $ret['country'] = $c->country;
         }
         return $ret;
     }
@@ -167,7 +169,7 @@ class Am_Paysystem_Transaction_Clickfunnels extends Am_Paysystem_Transaction_Inc
 
     function getUniqId()
     {
-        return $this->req['charge_id'];
+        return $this->req['charge_id'] ?: $this->req['id'];
     }
 
     function validateSource()

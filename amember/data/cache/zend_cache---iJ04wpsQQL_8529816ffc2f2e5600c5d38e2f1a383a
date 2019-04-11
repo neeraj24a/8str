@@ -1,0 +1,85 @@
+a:4:{s:4:"data";s:1876:"s:1866:"
+<h2>Today<span class="widget-title-info"> &middot;
+            03/31/19    </span></h2>
+<div class="admin-dashboard-wrapper">
+<table class="admin-dashboard">
+    <tr>
+        <td class="first">
+                        <dl>
+    <dt>Payments</dt>
+    <dd>
+                    0
+            </dd>
+</dl>
+                        <dl>
+    <dt>Refunds</dt>
+    <dd>
+                    0
+            </dd>
+</dl>
+                                            </td>
+        <td>
+                        <dl>
+    <dt>Registrations</dt>
+        <dd>
+                    0
+            </dd>
+</dl>
+                        <dl>
+    <dt>Cancellations</dt>
+        <dd>
+                    0
+            </dd>
+</dl>
+                        <dl>
+    <dt>Rebills (<small title="03/31/19&ndash;04/01/19">next day</small>)</dt>
+        <dd>
+                    0
+            </dd>
+</dl>
+                    </td>
+    </tr>
+</table>
+</div>
+<h2>This Week (Sun-Sat)<span class="widget-title-info"> &middot;
+            03/31/19&ndash;04/06/19    </span></h2>
+<div class="admin-dashboard-wrapper">
+<table class="admin-dashboard">
+    <tr>
+        <td class="first">
+                        <dl>
+    <dt>Payments</dt>
+    <dd>
+                    0
+            </dd>
+</dl>
+                        <dl>
+    <dt>Refunds</dt>
+    <dd>
+                    0
+            </dd>
+</dl>
+                                            </td>
+        <td>
+                        <dl>
+    <dt>Registrations</dt>
+        <dd>
+                    0
+            </dd>
+</dl>
+                        <dl>
+    <dt>Cancellations</dt>
+        <dd>
+                    0
+            </dd>
+</dl>
+                        <dl>
+    <dt>Rebills (<small title="03/31/19&ndash;04/07/19">next 7 days</small>)</dt>
+        <dd>
+                    0
+            </dd>
+</dl>
+                    </td>
+    </tr>
+</table>
+</div>";";s:8:"lifetime";i:2592000;s:6:"expire";i:1556650208;s:8:"priority";i:8;}

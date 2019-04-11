@@ -11,7 +11,7 @@
 class Am_Paysystem_Worldpay extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     const URL = "https://secure.worldpay.com/wcc/purchase";
     const TEST_URL = "https://secure-test.worldpay.com/wcc/purchase";
@@ -20,6 +20,8 @@ class Am_Paysystem_Worldpay extends Am_Paysystem_Abstract
     protected $defaultDescription = 'purchase using WorldPay';
     
     protected $_canResendPostback = true;
+    
+    const FUTUREPAY_ID = 'worldpay-futurepay-id';
     
     public function supportsCancelPage()
     {
@@ -154,6 +156,9 @@ CUT;
     }
     public function directAction(Am_Mvc_Request $request, Am_Mvc_Response $response, array $invokeArgs)
     {
+        if($this->isFuturePayCancel($request))
+            return parent::directAction ($request, $response, $invokeArgs);
+        
         try
         {
             $invoiceLog = $this->_logDirectAction($request, $response, $invokeArgs);
@@ -212,9 +217,23 @@ CUT;
         }
         
     }
+    function isFuturePayCancel(Am_Mvc_Request $request)
+    {
+        $futurePayUpdate = $request->get('futurePayStatusChange');
+        
+        if(!empty($futurePayUpdate) && strpos($futurePayUpdate, 'Cancelled') !== false)
+            return true;
+        
+        return false;
+        
+    }
+    
     public function createTransaction(Am_Mvc_Request $request, Am_Mvc_Response $response, array $invokeArgs)
     {
-        return new Am_Paysystem_Transaction_Worldpay($this, $request, $response, $invokeArgs);
+        if($this->isFuturePayCancel($request))
+            return new Am_Paysystem_Transaction_Worldpay_Cancel($this, $request, $response, $invokeArgs);
+        else
+            return new Am_Paysystem_Transaction_Worldpay($this, $request, $response, $invokeArgs);
     }
 
 }
@@ -290,5 +309,55 @@ IPS
             $this->invoice->addPayment($this);
         elseif ($this->invoice->status == Invoice::PENDING)
             $this->invoice->addAccessPeriod($this);
+        
+        if($futurePayId  = $this->request->get('futurePayId')){
+            $this->invoice->data()->set(Am_Paysystem_Worldpay::FUTUREPAY_ID, $futurePayId)->update();
+        }
     }
+}
+
+class Am_Paysystem_Transaction_Worldpay_Cancel extends Am_Paysystem_Transaction_Incoming
+{
+    protected $isfirst = false;
+    function findInvoiceId()
+    {
+        $invoice = Am_Di::getInstance()->invoiceTable->findFirstByData(Am_Paysystem_Worldpay::FUTUREPAY_ID, $this->request->get('futurePayId'));
+        
+        if($invoice)
+            return $invoice->public_id;
+    }
+    public function validateSource()
+    {
+        $this->_checkIp(<<<IPS
+195.35.90.0-195.35.90.255
+155.136.68.0-155.136.68.255
+193.41.220.0-193.41.220.255
+195.166.19.0-195.166.19.255
+193.41.221.0-193.41.221.255
+155.136.16.0-155.136.16.255
+.outbound.wp3.rbsworldpay.com
+.worldpay.com
+IPS
+        );
+        return true;
+    }
+    public function validateStatus()
+    {
+        return true;
+    }
+    public function validateTerms()
+    {   
+        return true;
+    }
+    public function processValidated()
+    {
+        $this->invoice->setCancelled(true);
+    }
+
+    public
+        function getUniqId()
+    {
+        
+    }
+
 }

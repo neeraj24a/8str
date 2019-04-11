@@ -14,7 +14,7 @@
 
 class Am_Paysystem_Verotel extends Am_Paysystem_Abstract {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Verotel';
     protected $defaultDescription = 'Credit Card Payment';
@@ -60,7 +60,7 @@ class Am_Paysystem_Verotel extends Am_Paysystem_Abstract {
         return strlen($this->getConfig('merchant_id'));
     }
 
-    public function _process(Invoice $invoice, Am_Mvc_Request $request, Am_Paysystem_Result $result)
+    public function _process(Invoice $invoice, Am_Mvc_Request_Interface $request, Am_Paysystem_Result $result)
     {
         if($this->getConfig('dynamic_pricing')) {
             if($invoice->rebill_times == Product::RECURRING_REBILLS)

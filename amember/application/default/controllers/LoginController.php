@@ -11,7 +11,7 @@
  *        Web: http://www.cgi-central.net
  *    Details: Member display page
  *    FileName $RCSfile$
- *    Release: 5.4.3 ($Revision$)
+ *    Release: 5.6.0 ($Revision$)
  *
  * Please direct bug reports,suggestions or feedback to the cgi-central forums.
  * http://www.cgi-central.net/forum/
@@ -290,6 +290,8 @@ class LoginController extends Am_Mvc_Controller_Auth
             return $this->view->render('_login.phtml');
         }
         $this->view->content = $this->view->render('_login.phtml');
+        $hidden = $this->view->hidden;
+        $this->view->signup_url = $this->url('signup' . (isset($hidden['saved_form']) ? "/{$hidden['saved_form']}" : ''), false);
         return $this->view->render('login.phtml');
     }
 

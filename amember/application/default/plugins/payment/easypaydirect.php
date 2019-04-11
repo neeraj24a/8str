@@ -10,7 +10,7 @@ class Am_Paysystem_Easypaydirect extends Am_Paysystem_Nmi
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
     const PLUGIN_DATE = '$Date$';
-    const PLUGIN_REVISION = '5.4.3';    
+    const PLUGIN_REVISION = '5.6.0';    
     
     
     protected $defaultTitle = "EasyPayDirect";

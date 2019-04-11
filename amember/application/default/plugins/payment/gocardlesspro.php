@@ -156,7 +156,7 @@ CUT;
     }
 
     private
-        function _sendRequest($url, $params, $method = 'POST')
+        function _sendRequest($url, $params=null, $method = 'POST')
     {
         $request = $this->createHttpRequest();
         $request->setHeader(array(

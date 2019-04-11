@@ -9,7 +9,7 @@
 class Am_Paysystem_Gourl extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'GoUrl';
     protected $defaultDescription = 'paid by bitcoins';
@@ -21,14 +21,17 @@ class Am_Paysystem_Gourl extends Am_Paysystem_Abstract
 
     public function getSupportedCurrencies()
     {
-        return array('USD', 'BTC');
+        return array('USD', 'BTC', 'AUD', 'BRL', 'CAD', 'CHF', 'CLP',
+            'CNY', 'DKK', 'EUR', 'GBP', 'HKD', 'INR',
+            'ISK', 'JPY', 'KRW', 'NZD', 'PLN', 'RUB',
+            'SEK', 'SGD', 'THB', 'TWD');
     }
 
     public function _initSetupForm(Am_Form_Setup $form)
     {
-        $form->addText('public_key', array('class' => 'el-wide'))
+        $form->addText('public_key', array('class' => 'am-el-wide'))
             ->setLabel("Public Key");
-        $form->addPassword('private_key', array('class' => 'el-wide'))
+        $form->addPassword('private_key', array('class' => 'am-el-wide'))
             ->setLabel("Private Key");
     }
 
@@ -50,10 +53,10 @@ class Am_Paysystem_Gourl extends Am_Paysystem_Abstract
         $a->boxID = $this->getBoxId();
         $a->coinName = 'bitcoin';
         $a->public_key = $this->getConfig('public_key');
-        $a->amount = $invoice->currency == 'BTC' ? $invoice->first_total : 0;
-        $a->amountUSD = $invoice->currency == 'BTC' ? 0 : $invoice->first_total;
+        $a->amount = $invoice->currency !== 'USD' ? $this->covertToBTC($invoice->first_total, $invoice->currency) : 0;
+        $a->amountUSD = $invoice->currency == 'USD' ? $invoice->first_total : 0;
         $a->period = '1 HOUR';
-        $a->webdev_key = 'DEV965G3B0780000DCF4AFG495252124'; 
+        $a->webdev_key = 'DEV965G3B0780000DCF4AFG495252124';
 
         $a->language = $this->getDi()->locale->getLanguage();
         $a->iframeID = 'am-gourl-widget';
@@ -76,6 +79,21 @@ class Am_Paysystem_Gourl extends Am_Paysystem_Abstract
         ));
 
         $result->setAction($a);
+    }
+
+    function covertToBTC($amount, $currency)
+    {
+        if ($currency == 'BTC') return $amount;
+
+        $req = new Am_HttpRequest('https://blockchain.info/ticker');
+        $resp = $req->send();
+
+        if ($resp->getStatus() == 200 && ($_ = json_decode($resp->getBody(), true))) {
+            $data = $_[$currency];
+            return $amount / ($data["15m"] > 1000 ? $data["15m"] : $data['last']);
+        } else {
+            throw new Am_Exception_InternalError("Can not do currency conversion");
+        }
     }
 
     public function directAction($request, $response, $invokeArgs)

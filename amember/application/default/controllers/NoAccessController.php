@@ -20,6 +20,16 @@ class NoAccessController extends Am_Mvc_Controller
         // Check if login cookie exists. If not, user is not logged in and should be redirected to login page.
         $pl = $this->getDi()->plugins_protect->loadGet('new-rewrite');
 
+        /**
+         * handle case with remember me cookie
+         */
+        if (($user = $this->getDi()->auth->getUser()) && $folder->hasAccess($user)) {
+            Am_Mvc_Response::redirectLocation($this->url('protect/new-rewrite', array(
+                    'f' => $id,
+                    'url' => $this->getParam('url', $folder->getUrl()),
+                ), false));
+        }
+
         // User will be there only if file related to folder doesn't exists.
         // So if main file exists, this means that user is logged in but don't have an access.
         // If main file doesn't exists, redirect user to new-rewrite in order to recreate it.

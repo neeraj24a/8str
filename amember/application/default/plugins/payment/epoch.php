@@ -10,7 +10,7 @@
 class Am_Paysystem_Epoch extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Epoch';
     protected $defaultDescription = 'Pay by credit card/debit card';
@@ -49,7 +49,7 @@ class Am_Paysystem_Epoch extends Am_Paysystem_Abstract
     {
         $form->addText("co_code")
             ->setLabel("Company code\n" .
-            'Three (3) alphanumeric ID assigned by Epoch (Company code does not change)');
+            'Three (3) alphanumeric ID assigned by Epoch (Company code does not change, usually it is "def")');
 
         $form->addAdvCheckbox("testing")
             ->setLabel("Testing\n" .
@@ -58,7 +58,7 @@ class Am_Paysystem_Epoch extends Am_Paysystem_Abstract
         $form->addAdvCheckbox("ach_form")
             ->setLabel("Enable ACH Flag\n" .
                 'If this field is passed in it will enable online check (ACH) processing. Online check processing is only valid for US');
-        $form->addText('topimage', array('class' => 'el-wide'))
+        $form->addText('topimage', array('class' => 'am-el-wide'))
             ->setLabel("Logo Image\n" .
                 "epoch support should give you name of your logo image");
     }
@@ -126,14 +126,22 @@ class Am_Paysystem_Epoch extends Am_Paysystem_Abstract
 <b>Epoch payment plugin</b>
 ----------------------------------------------------------------------
 
- - Set up products with the same settings as you have defined in
+ - Contact EPOCH support <i>techsupport@epoch.com</i> and ask them to configure :
+   - set PostBack URL and DataPlus URLs (EpochTransStats and MemberCancelStats)
+          {$url}
+   - Enable passthrough variable 'x_payment_id' to be added to EpochTransStats as 'ets_payment_id'
+
+ - Set up products in epoch with the same settings as you have defined in
    aMember.
    Then enter Epoch Product IDs into corresponding field in aMember
-   Product settings (aMember Cp -> Manage Products->Edit product -> Billing terms)
+   Product settings (aMember CP -> Manage Products->Edit product -> Billing terms)
 
- - Set up the data postback URL to
-   {$url}
 CUT;
+    }
+
+    public function getSupportedCurrencies()
+    {
+        return array_keys(Am_Currency::getFullList());
     }
 }
 
@@ -146,7 +154,7 @@ class Am_Paysystem_Transaction_Epoch_IPN extends Am_Paysystem_Transaction_Incomi
         'state' => 'state',
         'zip'   =>  'zip',
         'state' => 'state',
-        'user_external_id' => 'email',
+        'user_external_id' => array('username', 'email'),
         'invoice_external_id' => 'order_id',
     );
 
@@ -244,7 +252,7 @@ class Am_Paysystem_Transaction_Epoch_IPN extends Am_Paysystem_Transaction_Incomi
             if (in_array($this->request->get("ets_transaction_type"), array('K')))
                 $this->invoice->setCancelled();
             if (in_array($this->request->get("ets_transaction_type"), array('D', 'C', 'X', 'A')))
-                $this->invoice->addRefund($this, $this->request->get("ets_ref_trans_ids"), abs($this->request->get("ets_amountlocal")));
+                $this->invoice->addRefund($this, $this->request->get("ets_ref_trans_ids"), abs($this->request->get("ets_transaction_amount")));
         }
         elseif ($mcs_mcs_memberstype = $this->request->get("mcs_memberstype"))
         {
@@ -254,11 +262,11 @@ class Am_Paysystem_Transaction_Epoch_IPN extends Am_Paysystem_Transaction_Incomi
         {
             if (in_array($ets_payment_type, array('X', 'D')))
             {
-                $this->invoice->addRefund($this, $this->request->get("ets_ref_trans_ids"), abs($this->request->get("ets_amountlocal")));
+                $this->invoice->addRefund($this, $this->request->get("ets_ref_trans_ids"), abs($this->request->get("ets_transaction_amount")));
                 $this->invoice->setCancelled();
             }
             if (in_array($ets_payment_type, array('A', 'C')))
-                $this->invoice->addRefund($this, $this->request->get("ets_ref_trans_ids"), abs($this->request->get("ets_amountlocal")));
+                $this->invoice->addRefund($this, $this->request->get("ets_ref_trans_ids"), abs($this->request->get("ets_transaction_amount")));
         } else
         {
             $this->invoice->addPayment($this);

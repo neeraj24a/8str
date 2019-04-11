@@ -8,16 +8,16 @@ class Admin_RestorePassForm extends Am_Form_Admin
             ->setLabel(___('Restore Password'));
 
         if (Am_Recaptcha::isConfigured() && $this->getDi()->config->get('recaptcha')) {
-            $captcha = $fs->addGroup(null, array('class' => 'row-wide'));
+            $captcha = $fs->addGroup(null, array('class' => 'am-row-wide'));
             $captcha->addRule('callback', ___('Anti Spam check failed'), array($this, 'validateCaptcha'));
             $captcha->addStatic('captcha')->setContent($this->getDi()->recaptcha->render());
         }
 
-        $login = $fs->addText('login', array('class' => 'el-wide'))
+        $login = $fs->addText('login', array('class' => 'am-el-wide'))
             ->setLabel(___('Username/Email'));
-        $login->addRule('callback', ___('User is not found in database'), array($this, 'checkLogin'));
+        $login->addRule('callback2', null, array($this, 'checkLogin'));
 
-        $this->addSubmit('_', array('value' => ___('Get New Password'), 'class'=>'row-wide'));
+        $this->addSubmit('_', array('value' => ___('Get New Password'), 'class'=>'am-row-wide'));
     }
 
     public function validateCaptcha()
@@ -35,7 +35,12 @@ class Admin_RestorePassForm extends Am_Form_Admin
         if (!$admin = $this->getDi()->adminTable->findFirstByLogin($login)) {
             $admin = $this->getDi()->adminTable->findFirstByEmail($login);
         }
-        return (boolean) $admin;
+        if (!$admin) {
+            return ___('User is not found in database');
+        }
+        if ($admin->is_disabled) {
+            return ___('Account is disabled');
+        }
     }
 
     public function getDi()
@@ -181,6 +186,8 @@ class AdminAuthController extends Am_Mvc_Controller_Auth
             $this->getSession()->admin_redirect = $this->_request->getRequestUri();
         }
 
+        $this->getAuth()->plaintextPass = $this->getPass();
+
         return parent::indexAction();
     }
 
@@ -228,8 +235,9 @@ class AdminAuthController extends Am_Mvc_Controller_Auth
             header("Content-type: text/plain; charset=UTF-8");
             header('HTTP/1.0 200 OK');
             echo json_encode(array('ok' => true, 'adminLogin' => $this->getAuth()->getUsername()));
-        } else
+        } else {
             parent::redirectOk();
+        }
     }
 
     protected function getUriFromSession()

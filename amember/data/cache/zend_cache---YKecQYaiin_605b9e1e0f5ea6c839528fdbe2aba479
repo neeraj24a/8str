@@ -1,0 +1,99 @@
+a:4:{s:4:"data";s:8694:"s:8684:"<div class="admin-last admin-lastinvoices">
+    <h2>Last 5 Invoices</h2>
+    <div class="am-grid-container">
+        <table class="am-grid grid-no-highlight">
+            <tr>
+                <th class="helper-corner-left" nowrap="nowrap">Date/Time</th>
+                <th class="container-width-narrow-hide">Invoice</th>
+                <th class="container-width-narrow-hide">Items</th>
+                <th>Billing Terms</th>
+                <th class="helper-corner-right">User</th>
+            </tr>
+                        <tr class="am-grid-row even">
+                <td nowrap="nowrap"><time datetime="2019-04-01T08:00:34-04:00" title="1 hrs ago">
+                                            08:00 AM                                        </time></td>
+                <td class="container-width-narrow-hide"><a class="link" href="/amember/admin-user-payments/index/user_id/15382#invoice-9402" data-tooltip-url="/amember/admin-payments/invoice-card?id=9402">9402/K21D5</a><br />
+                    <small>stripe, <span style="color:#555555">Pending</span></small></td>
+                <td class="container-width-narrow-hide">8th Wonder Promos Monthly Membership (Member)</td>
+                <td>$19.99 for each month</td>
+                <td>                    <span class="widget-label widget-label_today">new</span>
+                                                                <strong>Correy Mcclure</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15382" data-tooltip-url="/amember/admin-users/card?id=15382">iamdj704</a>)
+                                        <br />
+                    iamdj704@gmail.com</td>
+            </tr>
+            <tr class="am-grid-row even">
+                <td colspan="5" class="container-width-narrow-show">
+                    <a class="link" href="/amember/admin-user-payments/index/user_id/15382#invoice-9402" data-tooltip-url="/amember/admin-payments/invoice-card?id=9402">9402/K21D5</a> <small>(<span style="color:#555555">Pending</span>)</small> - 8th Wonder Promos Monthly Membership (Member)                </td>
+            </tr>
+                        <tr class="am-grid-row odd">
+                <td nowrap="nowrap"><time datetime="2019-04-01T08:00:13-04:00" title="1 hrs ago">
+                                            08:00 AM                                        </time></td>
+                <td class="container-width-narrow-hide"><a class="link" href="/amember/admin-user-payments/index/user_id/15382#invoice-9401" data-tooltip-url="/amember/admin-payments/invoice-card?id=9401">9401/DJUGY</a><br />
+                    <small>paypal, <span style="color:#555555">Pending</span></small></td>
+                <td class="container-width-narrow-hide">8th Wonder Promos Monthly Membership</td>
+                <td>$9.99 for the first month, then $19.99 for each month</td>
+                <td>                    <span class="widget-label widget-label_today">new</span>
+                                                                <strong>Correy Mcclure</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15382" data-tooltip-url="/amember/admin-users/card?id=15382">iamdj704</a>)
+                                        <br />
+                    iamdj704@gmail.com</td>
+            </tr>
+            <tr class="am-grid-row odd">
+                <td colspan="5" class="container-width-narrow-show">
+                    <a class="link" href="/amember/admin-user-payments/index/user_id/15382#invoice-9401" data-tooltip-url="/amember/admin-payments/invoice-card?id=9401">9401/DJUGY</a> <small>(<span style="color:#555555">Pending</span>)</small> - 8th Wonder Promos Monthly Membership                </td>
+            </tr>
+                        <tr class="am-grid-row even">
+                <td nowrap="nowrap"><time datetime="2019-04-01T05:22:37-04:00" title="4 hrs ago">
+                                            05:22 AM                                        </time></td>
+                <td class="container-width-narrow-hide"><a class="link" href="/amember/admin-user-payments/index/user_id/15311#invoice-9400" data-tooltip-url="/amember/admin-payments/invoice-card?id=9400">9400/MGD79</a><br />
+                    <small>paypal, <span style="color:#488f37">Recurring Active</span></small></td>
+                <td class="container-width-narrow-hide">8th Wonder Promos Monthly Membership</td>
+                <td>$9.99 for the first month, then $19.99 for each month</td>
+                <td>                                            <strong>Tyrone Evans</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15311" data-tooltip-url="/amember/admin-users/card?id=15311">djteey</a>)
+                                        <br />
+                    ringoevans44@gmail.com</td>
+            </tr>
+            <tr class="am-grid-row even">
+                <td colspan="5" class="container-width-narrow-show">
+                    <a class="link" href="/amember/admin-user-payments/index/user_id/15311#invoice-9400" data-tooltip-url="/amember/admin-payments/invoice-card?id=9400">9400/MGD79</a> <small>(<span style="color:#488f37">Recurring Active</span>)</small> - 8th Wonder Promos Monthly Membership                </td>
+            </tr>
+                        <tr class="am-grid-row odd">
+                <td nowrap="nowrap"><time datetime="2019-04-01T01:21:19-04:00" title="8 hrs ago">
+                                            01:21 AM                                        </time></td>
+                <td class="container-width-narrow-hide"><a class="link" href="/amember/admin-user-payments/index/user_id/15380#invoice-9399" data-tooltip-url="/amember/admin-payments/invoice-card?id=9399">9399/MNKL4</a><br />
+                    <small>stripe, <span style="color:#488f37">Recurring Active</span></small></td>
+                <td class="container-width-narrow-hide">8th Wonder Promos Monthly Membership (Member)</td>
+                <td>$19.99 for each month</td>
+                <td>                    <span class="widget-label widget-label_today">new</span>
+                                                                <strong>Walt Downing</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15380" data-tooltip-url="/amember/admin-users/card?id=15380">djwaltdzl</a>)
+                                        <br />
+                    djwaltdzl@gmail.com</td>
+            </tr>
+            <tr class="am-grid-row odd">
+                <td colspan="5" class="container-width-narrow-show">
+                    <a class="link" href="/amember/admin-user-payments/index/user_id/15380#invoice-9399" data-tooltip-url="/amember/admin-payments/invoice-card?id=9399">9399/MNKL4</a> <small>(<span style="color:#488f37">Recurring Active</span>)</small> - 8th Wonder Promos Monthly Membership (Member)                </td>
+            </tr>
+                        <tr class="am-grid-row even">
+                <td nowrap="nowrap"><time datetime="2019-04-01T01:20:58-04:00" title="8 hrs ago">
+                                            01:20 AM                                        </time></td>
+                <td class="container-width-narrow-hide"><a class="link" href="/amember/admin-user-payments/index/user_id/15380#invoice-9398" data-tooltip-url="/amember/admin-payments/invoice-card?id=9398">9398/N1L2D</a><br />
+                    <small>stripe, <span style="color:#555555">Pending</span></small></td>
+                <td class="container-width-narrow-hide">8th Wonder Promos Monthly Membership</td>
+                <td>$9.99 for the first month, then $19.99 for each month</td>
+                <td>                    <span class="widget-label widget-label_today">new</span>
+                                                                <strong>Walt Downing</strong>
+                        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15380" data-tooltip-url="/amember/admin-users/card?id=15380">djwaltdzl</a>)
+                                        <br />
+                    djwaltdzl@gmail.com</td>
+            </tr>
+            <tr class="am-grid-row even">
+                <td colspan="5" class="container-width-narrow-show">
+                    <a class="link" href="/amember/admin-user-payments/index/user_id/15380#invoice-9398" data-tooltip-url="/amember/admin-payments/invoice-card?id=9398">9398/N1L2D</a> <small>(<span style="color:#555555">Pending</span>)</small> - 8th Wonder Promos Monthly Membership                </td>
+            </tr>
+                    </table>
+    </div>
+</div>
+";";s:8:"lifetime";i:2592000;s:6:"expire";i:1556717405;s:8:"priority";i:8;}

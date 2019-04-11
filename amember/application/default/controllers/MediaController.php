@@ -79,7 +79,8 @@ abstract class MediaController extends Am_Mvc_Controller
             $view->headMeta()->setName('description', $media->meta_description);
         if ($media->meta_robots)
             $view->headMeta()->setName('robots', $media->meta_robots);
-        $view->title = $this->getMedia()->title;
+        $view->title = $media->title;
+        $view->media_item = $media;
         $view->content =
             '<script type="text/javascript" id="am-' . $this->type . '-' . $this->id . '">' . "\n" .
             $this->renderJs() .
@@ -90,11 +91,10 @@ abstract class MediaController extends Am_Mvc_Controller
     function getSignedLink(ResourceAbstract $media)
     {
         $rel = $media->pk() . '-' . ($this->getDi()->time + 3600 * 24);
-        return $this->getDi()->url(
+        return $this->getDi()->surl(
             $this->type . '/d/id/' . $rel . '-' .
             $this->getDi()->security->siteHash('am-' . $this->type . '-' . $rel, 10),
-            false,
-            $this->getRequest()->isSecure() ? true : 2);
+            false);
     }
 
     function validateSignedLink($id)

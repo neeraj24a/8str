@@ -12,7 +12,7 @@ class AdminVatGroupController extends Am_Mvc_Controller
         $plugin = $this->getPlugin();
 
         $form = new Am_Form_Admin;
-        $form->addText('name', array('class' => 'el-wide'))
+        $form->addText('name', array('class' => 'am-el-wide'))
             ->setLabel(___("Tax Group Name\n" .
                 'for your reference'))
             ->addRule('required');
@@ -69,7 +69,7 @@ CUT
             $tax_groups = $plugin->getConfig('tax_groups');
 
             $form = new Am_Form_Admin;
-            $form->addText('name', array('class' => 'el-wide'))
+            $form->addText('name', array('class' => 'am-el-wide'))
                 ->setLabel(___("Tax Group Name\n" .
                     'for your reference'))
                 ->addRule('required');

@@ -5,6 +5,8 @@ class Am_Paysystem_EpayBg extends Am_Paysystem_Abstract
     protected $defaultTitle = "ePay";
     protected $defaultDescription = "ePay plugin configuration";
 
+    protected $_canResendPostback = true;
+
     function init()
     {
         parent::init();
@@ -17,13 +19,13 @@ class Am_Paysystem_EpayBg extends Am_Paysystem_Abstract
 
     public function _initSetupForm(Am_Form_Setup $form)
     {
-        $form->addText("min", array('class' => 'el-wide'))
+        $form->addText("min", array('class' => 'am-el-wide'))
             ->setLabel("MIN\n"
                 . "This value is provided by ePay.bg")
             ->addRule('regex', 'MIN must be 10 hexadecimal digits', '/^[A-F0-9]{10}$/')
             ->addRule('required');
 
-        $form->addSecretText("secret", array('class' => 'el-wide'))
+        $form->addSecretText("secret", array('class' => 'am-el-wide'))
             ->setLabel("Secret\n"
                 . "This value is provided by ePay.bg")
             ->addRule('required');
@@ -132,7 +134,7 @@ class Am_Paysystem_Transaction_EpayBg extends Am_Paysystem_Transaction_Incoming
         $this->validateSource();
 
         $data = base64_decode($vars['encoded']);
-        $lines_arr = split("\n", $data);
+        $lines_arr = explode("\n", $data);
         $info_data = '';
 
         foreach ($lines_arr as $line)

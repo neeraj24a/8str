@@ -26,7 +26,7 @@ interface ClientInterface
      * @see RFC2616 section 14.43 for User-Agent Format
      */
     const NAME    = 'BitPay PHP-Client';
-    const VERSION = '2.2.20';
+    const VERSION = '0.0.0';
 
     //public function createApplication(ApplicationInterface $application);
 
@@ -55,8 +55,6 @@ interface ClientInterface
      * @throws \Exception
      */
     public function getInvoice($invoiceId);
-
-
 
     //public function getLedgers();
     //public function getLedger(CurrencyInterface $currency);

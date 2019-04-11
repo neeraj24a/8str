@@ -13,7 +13,7 @@
  * @see Am_Table
  * @package Am_SavedForm
  */
-class SavedForm extends Am_Record 
+class SavedForm extends Am_Record_WithData
 {
     // default_for field values (set)
     const D_SIGNUP  = 'signup';
@@ -232,7 +232,7 @@ class SavedForm extends Am_Record
 /**
  * @package Am_SavedForm
  */
-class SavedFormTable extends Am_Table {
+class SavedFormTable extends Am_Table_WithData {
     protected $_key = 'saved_form_id';
     protected $_table = '?_saved_form';
     protected $_recordClass = 'SavedForm';

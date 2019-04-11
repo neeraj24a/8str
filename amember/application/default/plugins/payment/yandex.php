@@ -3,7 +3,7 @@
 class Am_Paysystem_Yandex extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
     
     const LIVE_URL = 'https://money.yandex.ru/eshop.xml';
     const SANDBOX_URL = 'https://demomoney.yandex.ru/eshop.xml';

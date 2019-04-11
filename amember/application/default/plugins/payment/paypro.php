@@ -11,7 +11,7 @@
 class Am_Paysystem_Paypro extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
     const URL = "https://secure.payproglobal.com/orderpage.aspx";
     const URL_NEW = "https://store.payproglobal.com/checkout";
 
@@ -22,15 +22,12 @@ class Am_Paysystem_Paypro extends Am_Paysystem_Abstract
     {
         parent::__construct($di, $config);
         $di->billingPlanTable->customFields()->add(
-            new Am_CustomFieldText(
-            'paypro_product_id', "Paypro product ID", ""
-            , array(/* ,'required' */)
-        ));
+            new Am_CustomFieldText('paypro_product_id', "Paypro product ID"));
     }
 
     public function getRecurringType()
     {
-        return self::REPORTS_NOT_RECURRING;
+        return $this->getConfig('new') ? self::REPORTS_REBILL : self::REPORTS_NOT_RECURRING;
     }
 
     public function canAutoCreate()
@@ -48,29 +45,22 @@ class Am_Paysystem_Paypro extends Am_Paysystem_Abstract
         $form->setDefault('new', 1);
         $form->addSecretText('key', array('size' => 20, 'rel' => 'protocol-old'))
             ->setLabel('PayPro Product Variable Price Hash');
-        $form->addSecretText('enc_key', array('class' => 'el-wide', 'rel' => 'protocol-new'))
+        $form->addSecretText('enc_key', array('class' => 'am-el-wide', 'rel' => 'protocol-new'))
             ->setLabel("Encryption key\n" .
                 "Key must be length 32 symbols");
-        $form->addSecretText('enc_vector', array('class' => 'el-wide', 'rel' => 'protocol-new'))
+        $form->addSecretText('enc_vector', array('class' => 'am-el-wide', 'rel' => 'protocol-new'))
             ->setLabel("Encryption init. vector\n" .
                 "Initialization vector must be length 16 symbols");
-        $g = $form->addGroup()
-            ->setLabel('Use Test Mode')
-            ->setSeparator(' ');
-        $g->addAdvcheckbox('testing', array('id' => 'testing'))
-            ->setLabel('Use Test Mode');
-        $g->addSecretText('secret_key', array(
-            'id' => 'secret_key',
-            'placeholder' => 'Secret Key'));
+        $form->addSecretText('secret_key', array('id' => 'secret_key'))
+            ->setLabel("Secret Key\nSecretKey can be specified in Account Settings – Business Info in PayPro CloudCommerce control panel");
+        $form->addAdvCheckbox('testing', array('id' => 'testing'))
+            ->setLabel("Use Test Mode");
         $form->addScript()
             ->setScript(<<<CUT
 jQuery(function(){
-    jQuery('#testing').change(function(){
-        jQuery('#secret_key').toggle(this.checked);
-    }).change();
     jQuery('#protocol-version').change(function(){
-        jQuery('[rel=protocol-old]').closest('.row').toggle(!this.checked);
-        jQuery('[rel=protocol-new]').closest('.row').toggle(this.checked);
+        jQuery('[rel=protocol-old]').closest('.am-row').toggle(!this.checked);
+        jQuery('[rel=protocol-new]').closest('.am-row').toggle(this.checked);
     }).change();
 })
 CUT
@@ -120,12 +110,15 @@ CUT
                 'Description' => $desc,
             );
             $data['Price'][$invoice->currency]['Amount'] = $invoice->first_total;
+            if($invoice->second_total)
+                $data['Recurringprice'][$invoice->currency]['Amount'] = $invoice->second_total;
             $data = http_build_query($data);
 
             $a = new Am_Paysystem_Action_Redirect(self::URL_NEW);
             $params = array(
                 'products[1][id]' => current(array_filter(array($invoice->getItem(0)->getBillingPlanData('paypro_product_id'), $this->getConfig('product_id')))),
                 'products[1][data]' => base64_encode($this->encrypt($data)),
+                "products[1][price][$invoice->currency][amount]" => $invoice->first_total,
                 'currency' => $invoice->currency,
                 'billing-first-name' => $invoice->getFirstName(),
                 'billing-last-name' => $invoice->getLastName(),
@@ -138,6 +131,8 @@ CUT
                 'billing-address' => $invoice->getStreet(),
                 'x-invoice' => $invoice->public_id
             );
+            if($invoice->second_total)
+                $params["products[1][recurringprice][$invoice->currency][amount]"] = $invoice->second_total;
             if ($this->getConfig('testing')) {
                 $params['use-test-mode'] = 'true';
                 $params['secret-key'] = $this->getConfig('secret_key');
@@ -152,7 +147,6 @@ CUT
             $a->products = current(array_filter(array($invoice->getItem(0)->getBillingPlanData('paypro_product_id'), $this->getConfig('product_id'))));
 
             $a->hash = base64_encode($this->getHash("price={$invoice->first_total}-{$invoice->currency}^^^name=$name^^^desc=$desc"));
-            ;
             $a->CustomField1 = $invoice->public_id;
 
             $a->firstname = $invoice->getFirstName();
@@ -183,6 +177,9 @@ Log in to your PayPro account and set up new product.
 Set IPN URL: $ipn
 In tab Pricing Config for 'Dynamic settings type' choose 'Encrypted dynamic settings'
 and fill in Encryption key and Encryption init. vector
+
+If you want to charge customers on recurring basis please enable option "First charge amount is different than recurring charges"
+    at Store Settings -> Product Setup -> Pricing Configuration
 CUT;
     }
 }
@@ -209,6 +206,13 @@ class Am_Paysystem_Transaction_Paypro extends Am_Paysystem_Transaction_Incoming
 
     public function validateSource()
     {
+        if ($this->request->get('TEST_MODE') == 1) {
+            return $this->plugin->getConfig('testing') &&
+                $this->request->get('HASH') == md5("1");
+        }
+        if ($this->plugin->getConfig('secret_key')) {
+            return $this->request->get('HASH') == md5($this->request->get('ORDER_ID') . $this->plugin->getConfig('secret_key'));
+        }
         return true;
     }
 

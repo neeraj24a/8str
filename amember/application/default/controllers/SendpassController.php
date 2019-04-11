@@ -8,7 +8,7 @@
 *        Web: http://www.cgi-central.net
 *    Details: Send lost password page
 *    FileName $RCSfile$
-*    Release: 5.5.0 ($Revision$)
+*    Release: 5.6.0 ($Revision$)
 *
 * Please direct bug reports,suggestions or feedback to the cgi-central forums.
 * http://www.cgi-central.net/forum/
@@ -30,8 +30,10 @@ class SendpassController extends Am_Mvc_Controller {
             } else {
                 throw new Am_Exception_InputError(___('Security code is either invalid or expired'));
             }
+        } elseif($this->getRequest()->isPost()) {
+            $this->doSend();
         } else {
-           $this->doSend();
+            Am_Mvc_Response::redirectLocation($this->url('login?sendpass'));
         }
     }
 
@@ -53,7 +55,11 @@ class SendpassController extends Am_Mvc_Controller {
                 break;
             }
 
-            $login = trim($this->getParam('login'));
+            if (!$login = trim($this->getParam('login'))) {
+                $ok = false;
+                $text = ___('Please enter either login or email');
+                break;
+            }
             $user = $this->getDi()->userTable->findFirstByLogin($login);
 
             if (!$user)
@@ -65,10 +71,16 @@ class SendpassController extends Am_Mvc_Controller {
             }
 
             if (!$user) {
-                $title = ___('Lost Password Sending Error');
-                $text = ___('The information you have entered is incorrect. ' .
-                    'Username [%s] does not exist in database', $this->getEscaped('login'));
-                $ok = false;
+                if ($this->getDi()->config->get('reset_pass_no_disclosure')) {
+                    $ok = true;
+                    $title = ___('Lost Password Sent');
+                    $text = ___('If you entered a valid email / username, a message has been sent with instructions on how to reset your password.');
+                } else {
+                    $ok = false;
+                    $title = ___('Lost Password Sending Error');
+                    $text = ___('The information you have entered is incorrect. ' .
+                        'Username [%s] does not exist in database', $this->getEscaped('login'));
+                }
                 break;
             }
 
@@ -79,7 +91,7 @@ class SendpassController extends Am_Mvc_Controller {
                 break;
             }
 
-            if ($user->is_locked) {
+            if ($user->is_locked > 0) {
                 $title = ___('Lost Password Sending Error');
                 $text = ___('Your account is locked');
                 $ok = false;
@@ -119,9 +131,17 @@ class SendpassController extends Am_Mvc_Controller {
             $user->save();
             $this->getDi()->store->delete(self::STORE_PREFIX . $code);
 
-            $msg = ___('Your password has been changed successfully. ' .
+            if ($this->getDi()->config->get('auto_login_after_pass_reset')) {
+                $adapter = new Am_Auth_Adapter_User($user);
+                $this->getDi()->auth->login($adapter, $this->getRequest()->getClientIp());
+            }
+
+            $msg = $this->getDi()->config->get('auto_login_after_pass_reset') ?
+                    ___('Your password has been changed successfully.') :
+                    ___('Your password has been changed successfully. ' .
                     'You can %slogin to your account%s with new password.',
-                        sprintf('<a href="%s">', $this->getDi()->url('login')), '</a>');
+                        sprintf('<a href="%s">', $this->getDi()->url('login',
+                            array('amember_login' => $user->login))), '</a>');
             $this->view->title = ___('Change Password');
             $this->view->content = <<<CUT
    <div class="am-info">$msg</div>

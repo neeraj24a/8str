@@ -3,17 +3,16 @@
 class Am_Protect_NewRewrite extends Am_Protect_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.4.3';
-
+    const PLUGIN_REVISION = '5.6.0';
     const NR_COOKIE = 'amember_nr';
 
-    
     function getFilePath($cookie, $folder_id = null)
     {
         $file = $cookie;
         if ($folder_id) $file .= '-' . $folder_id;
         return $this->getDi()->data_dir . '/new-rewrite/' . $file;
     }
+
     function createFile($fn)
     {
         if (@file_put_contents($fn , "") === false)
@@ -40,8 +39,8 @@ class Am_Protect_NewRewrite extends Am_Protect_Abstract
                 $this->getDi()->request->getHttpHost(), false, false, true);
             $_COOKIE[self::NR_COOKIE] = $cookie;
         }
-        // Create "main" file even if user is not active. 
-        // This file will be checked in NoAccessController if user doesn't have access to folder. 
+        // Create "main" file even if user is not active.
+        // This file will be checked in NoAccessController if user doesn't have access to folder.
         // (in order to check is user logged in or not)
         $this->createFile($this->getFilePath($cookie));
 
@@ -50,13 +49,14 @@ class Am_Protect_NewRewrite extends Am_Protect_Abstract
             $this->createFile($this->getFilePath($cookie, $f->pk()));
         }
     }
+
     function onAuthAfterLogout(Am_Event_AuthAfterLogout $event)
     {
         $this->deleteCookieFiles();
         Am_Cookie::set(self::NR_COOKIE, null, time() - 36000, '/',
                 $this->getDi()->request->getHttpHost(), false, false, true);
     }
-    
+
     function deleteCookieFiles()
     {
         $c = $this->getEscapedCookie();
@@ -93,24 +93,28 @@ class Am_Protect_NewRewrite extends Am_Protect_Abstract
         $event = new Am_Event_AuthAfterLogin($user);
         $this->onAuthAfterLogin($event);
     }
-    public function onAuthSessionRefresh(Am_Event_AuthSessionRefresh $event){
+
+    public function onAuthSessionRefresh(Am_Event_AuthSessionRefresh $event)
+    {
         $this->needRefresh($event->getUser());
     }
+
     public function onThanksPage(Am_event $e)
     {
-        if ($this->getDi()->auth->getUserId())
+        if ($this->getDi()->auth->getUserId()) {
             $this->needRefresh($this->getDi()->auth->getUser());
+        }
     }
 
     public function directAction(Am_Mvc_Request $request, Am_Mvc_Response $response, array $invokeArgs)
     {
         if($url = $request->get('url'))
             $url = urldecode($url);
-        
+
         if ($request->get('host') && $request->get('ssl'))
         {
             $url = (!strcasecmp($request->get('ssl'), 'on') ? 'https://' : 'http://') .
-                $request->get('host') . 
+                $request->get('host') .
                 $url;
             $request->set('url',$url);
         }
@@ -123,11 +127,11 @@ class Am_Protect_NewRewrite extends Am_Protect_Abstract
                 $url = sprintf('%s://%s%s', $request->isSecure()?'https':'http', $request->getHttpHost(),
                 $url);
             }
-            
+
             $response->redirectLocation($url);
             return;
         }
-        // 
+
         require_once AM_APPLICATION_PATH . '/default/controllers/LoginController.php';
         $c = new LoginController($request, $response, $invokeArgs);
         $c->setRedirectUrl(Am_Html::escape($url));
@@ -138,7 +142,4 @@ class Am_Protect_NewRewrite extends Am_Protect_Abstract
     {
         return null;
     }
-
 }
-
-;

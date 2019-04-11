@@ -888,6 +888,19 @@ class Invoice extends Am_Record_WithData
         $prefix = (!is_null($payment) && !$payment->isFirst()) ? 'second' : 'first';
         $tm_added = is_null($payment) ? $this->tm_added : $payment->dattm;
 
+        $taxes = array();
+        foreach ($this->getItems() as $item) {
+            if ($item->tax_rate && $item->{$prefix.'_tax'}) {
+                if (!isset($taxes[$item->tax_rate])) {
+                    $taxes[$item->tax_rate] = 0;
+                }
+                $taxes[$item->tax_rate] += $item->{$prefix.'_tax'};
+            }
+        }
+        if (!$taxes) {
+            $taxes[$this->tax_rate] = $this->{$prefix.'_tax'};
+        }
+
         $newline = "\r\n";
 
         $price_width = max(mb_strlen(Am_Currency::render($this->{$prefix . '_total'}, $this->currency)), 8);
@@ -925,8 +938,8 @@ class Invoice extends Am_Record_WithData
             $options = array();
             foreach($item->getOptions() as $optKey => $opt) {
                 $options[] = sprintf('%s: %s',
-                    $opt['optionLabel'],
-                    is_array($opt['valueLabel']) ? implode(',', $opt['valueLabel']) : $opt['valueLabel']);
+                    strip_tags($opt['optionLabel']),
+                    implode(', ', array_map('strip_tags', (array)$opt['valueLabel'])));
             }
             if ($options) {
                 $item_title .= sprintf(' (%s)', implode(', ', $options));
@@ -945,8 +958,11 @@ class Invoice extends Am_Record_WithData
             $out .= $indent . sprintf("{$total_space}%-{$column_total}s{$space}%{$price_width}s$newline", ___('Discount'), Am_Currency::render($this->{$prefix . '_discount'}, $this->currency));
         if ($this->{$prefix . '_shipping'} > 0)
             $out .= $indent . sprintf("{$total_space}%-{$column_total}s{$space}%{$price_width}s$newline", ___('Shipping'), Am_Currency::render($this->{$prefix . '_shipping'}, $this->currency));
-        if ($this->{$prefix . '_tax'} > 0)
-            $out .= $indent . sprintf("{$total_space}%-{$column_total}s{$space}%{$price_width}s$newline", ___('Tax') . sprintf(' (%d%s)', $this->tax_rate, '%'), Am_Currency::render($this->{$prefix . '_tax'}, $this->currency));
+        if ($this->{$prefix . '_tax'} > 0) {
+            foreach ($taxes as $rate => $tax) {
+                $out .= $indent . sprintf("{$total_space}%-{$column_total}s{$space}%{$price_width}s$newline", ___('Tax') . sprintf(' (%d%s)', $rate, '%'), Am_Currency::render($tax, $this->currency));
+            }
+        }
         $out .= $indent . sprintf("{$total_space}%-{$column_total}s{$space}%{$price_width}s$newline", ___('Total'), Am_Currency::render($this->{$prefix . '_total'}, $this->currency));
         $out .= $border;
         if ($this->rebill_times) {
@@ -1244,7 +1260,7 @@ class Invoice extends Am_Record_WithData
                 if ($item->item_type != 'product') {
                     continue; // if that is not a product then no access
                 }
-                if ($count[$item->item_id] > $item->rebill_times)
+                if (!$item->rebill_times || ($count[$item->item_id] > $item->rebill_times))
                     continue; // this item rebills is over
 
                 $start = max($lastExpire[$item->item_id], $today->format('Y-m-d'));
@@ -1341,7 +1357,7 @@ class Invoice extends Am_Record_WithData
     }
 
     /** @return Invoice_Payment */
-    protected function addPaymentWithoutAccessPeriod(Am_Paysystem_Transaction_Interface $transaction)
+    public function addPaymentWithoutAccessPeriod(Am_Paysystem_Transaction_Interface $transaction)
     {
         $c = $this->getPaymentsCount();
         if ($c >= $this->getExpectedPaymentsCount()) {
@@ -1857,6 +1873,7 @@ class Invoice extends Am_Record_WithData
                     array('invoiceItem'),
                     array('access', array('element' => 'access')),
                     array('invoicePayment', array('element' => 'invoice-payment')),
+                    array('invoiceRefund', array('element' => 'invoice-refund')),
             )));
         $xml->endElement();
 
@@ -1883,6 +1900,8 @@ class Invoice extends Am_Record_WithData
      */
     public function canUpgrade(InvoiceItem $item, ProductUpgrade $upgrade)
     {
+        if($upgrade->hide_if_to && in_array($upgrade->getToProduct()->pk(), $this->getUser()->getActiveProductIds()))
+            return false;
         if ($item->billing_plan_id != $upgrade->from_billing_plan_id)
             return false;
         // check for other recurring items
@@ -1997,7 +2016,7 @@ class Invoice extends Am_Record_WithData
                 if(!in_array($k, $keep)) unset($itemArr[$k]);
             }
 
-            $discount += $itemArr['second_discount'];
+            $discount += $item->data()->get('orig_second_discount') ?: $itemArr['second_discount'];
 
             // Now if user already has active period for this invoice we should compensate this;
             if(($free_days = $this->getDi()->db->selectCell("select to_days(max(expire_date)) - to_days(?) from ?_access where invoice_item_id=?", $this->getDi()->sqlDate, $item->pk())) >0)
@@ -2114,11 +2133,9 @@ class InvoiceTable extends Am_Table_WithData
         return $invoice;
     }
 
-    // We are doing it with plain SQL, it is potentially a trouble
-    // but does not kill server
     public function clearPending($date)
     {
-        $ids = $this->_db->selectCol("SELECT i.invoice_id
+        $q = $this->_db->queryResultOnly("SELECT i.*
             FROM ?_invoice i
                 LEFT JOIN ?_invoice_payment p ON p.invoice_id = i.invoice_id
                 LEFT JOIN ?_access a ON a.invoice_id = i.invoice_id
@@ -2127,19 +2144,16 @@ class InvoiceTable extends Am_Table_WithData
              AND (due_date IS NULL OR due_date < ?)
             GROUP BY i.invoice_id
             ", sqlTime($date), $this->getDi()->sqlDate);
-        if (!$ids)
-            return;
-        $tables = array('?_invoice', '?_invoice_item', '?_invoice_log', '?_invoice_refund');
-        foreach ($tables as $t)
-            $this->_db->query("DELETE FROM $t WHERE invoice_id IN (?a)", $ids);
-        $this->_db->query("DELETE FROM ?_data WHERE `table`='invoice' AND `id` IN (?a)", $ids);
-        return count($ids);
+        while ($r = $this->_db->fetchRow($q)) {
+            $i = $this->createRecord($r);
+            $i->delete();
+        }
     }
 
     function selectLast($num, $statuses = array())
     {
         return $this->selectObjects("SELECT i.*,
-            (SELECT GROUP_CONCAT(item_title SEPARATOR ', ') FROM ?_invoice_item WHERE invoice_id=i.invoice_id) AS items,
+            (SELECT GROUP_CONCAT(IF(qty>1, CONCAT(qty, ' pcs - ', item_title), item_title) SEPARATOR ', ') FROM ?_invoice_item WHERE invoice_id=i.invoice_id) AS items,
             u.login, u.email, CONCAT(u.name_f, ' ', u.name_l) AS name, u.added
             FROM ?_invoice i LEFT JOIN ?_user u USING (user_id)
             { WHERE i.status in (?a) }

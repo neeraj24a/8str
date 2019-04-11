@@ -1,0 +1,18 @@
+a:4:{s:4:"data";s:858:"s:849:"<h2>Revenue Goal<span class="widget-title-info"> &middot; This Month</span></h2>
+<div class="widget-revenue-goal">
+    <div class="progress-bar-conteiner  progress-bar-ontarget">
+        <div class="progress-bar">
+            <div class="progress-bar-bar" style="width:11%;">
+                                <div style="padding:0.6em;">&nbsp;</div>
+            </div>
+            <div class="progress-bar-title">
+                <div style="padding:0.6em;">
+                                            $1,075.28 <span style="opacity:.3">/</span> $10,000.00                                    </div>
+            </div>
+            <div style="padding:0.6em">&nbsp;</div>
+        </div>
+        <div class="progress-bar-target" title="$333.33">
+            <div class="progress-bar-target-bar" style="width:3%;"></div>
+        </div>
+    </div>
+</div>";";s:8:"lifetime";i:2592000;s:6:"expire";i:1556717405;s:8:"priority";i:8;}

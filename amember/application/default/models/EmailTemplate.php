@@ -91,11 +91,10 @@ class EmailTemplate extends ResourceAbstract
             $userPids = array_merge($userPids, $user->getFutureProductIds());
 
         $ret = !$pids || !array_intersect($pids, $userPids);
-        
+
         return $ret  && $this->getDi()->hook->filter(
-            $ret, Am_Event::EMAIL_TEMPLATE_CHECK_CONDITIONS, 
-            ['template' => $this, 'user'=>$user]
-            );
+            $ret, Am_Event::EMAIL_TEMPLATE_CHECK_CONDITIONS,
+            array('template' => $this, 'user'=>$user));
     }
 }
 
@@ -313,7 +312,13 @@ class EmailTemplateTable extends ResourceAbstractTable
 
         foreach ($this->getDi()->resourceAccessTable->getPaymentEmails($product_ids) as $et)
         {
-            if (($et->name != EmailTemplate::PAYMENT) || ($et->day != 0)) continue;
+            if ($et->paysys_ids && !in_array($payment->paysys_id, explode(',', $et->paysys_ids))) {
+                continue;
+            }
+
+            if (($et->name != EmailTemplate::PAYMENT) || ($et->day != 0)) {
+                continue;
+            }
 
             // check if no matching not_conditions
             if (!$et->checkNotConditions($user)) continue;
@@ -575,6 +580,109 @@ class EmailTemplateTable extends ResourceAbstractTable
         $event->getDi()->emailTemplateTable->sendZeroPayments($event->getUser(), $event->getPayment());
     }
 
+    static function onInvoicePaymentRefund(Am_Event $event)
+    {
+        /**
+         * This e-mail is sent for first payment in invoice only
+         * another template must be used for the following payments
+         */
+        // if ($event->getInvoice()->getPaymentsCount() != 1) return;
+        $event->getDi()->plugins_payment->loadEnabled()->getAllEnabled();
+        $products = array();
+        foreach ($event->getInvoice()->getProducts() as $product)
+            $products[] = $product->getTitle();
+        if ($event->getDi()->config->get('send_refund_mail'))
+        {
+            if($et = Am_Mail_Template::load('send_refund_mail', $event->getUser()->lang))
+            {
+                $et->setUser($event->getUser())
+                    ->setInvoice($event->getInvoice())
+                    ->setRefund($event->getRefund())
+                    ->setProduct_title(implode (", ", $products));
+
+                if ($event->getDi()->config->get('send_pdf_invoice') &&
+                    $event->getDi()->config->get('pdf_refund_sent_user')) {
+                    try{
+                        $event->getDi()->locale->changeLanguageTo($event->getUser()->lang);
+                        $refund = Am_Pdf_Invoice::create($event->getRefund());
+                        $refund->setDi(Am_Di::getInstance());
+                        $et->getMail()->createAttachment(
+                                    $refund->render(),
+                                    'application/pdf',
+                                    Zend_Mime::DISPOSITION_ATTACHMENT,
+                                    Zend_Mime::ENCODING_BASE64,
+                                    $refund->getFileName()
+                                );
+
+                        $event->getDi()->locale->restoreLanguage();
+                    }
+                    catch(Exception $e)
+                    {
+                        Am_Di::getInstance()->errorLogTable->logException($e);
+                    }
+                }
+                elseif($event->getDi()->config->get('store_pdf_file'))
+                {
+                    try{
+                        $refund = Am_Pdf_Invoice::create($event->getRefund());
+                        $refund->setDi(Am_Di::getInstance());
+                        $refund->render();
+                    }
+                    catch(Exception $e)
+                    {
+                        $event->getDi()->errorLogTable->logException($e);
+                    }
+                }
+
+                $et->send($event->getUser());
+            }
+        }
+
+        if ($event->getDi()->config->get('send_refund_admin'))
+        {
+            if($et = Am_Mail_Template::load('send_refund_admin', $event->getUser()->lang))
+            {
+                $et->setUser($event->getUser())
+                    ->setInvoice($event->getInvoice())
+                    ->setRefund($event->getRefund())
+                    ->setProduct_title(implode (", ", $products));
+
+                if ($event->getDi()->config->get('send_pdf_invoice', false) &&
+                    $event->getDi()->config->get('pdf_refund_sent_admin')) {
+                    try{
+                        $refund = Am_Pdf_Invoice::create($event->getRefund());
+                        $refund->setDi(Am_Di::getInstance());
+                        $et->getMail()->createAttachment(
+                                    $refund->render(),
+                                    'application/pdf',
+                                    Zend_Mime::DISPOSITION_ATTACHMENT,
+                                    Zend_Mime::ENCODING_BASE64,
+                                    $refund->getFileName()
+                                );
+                    }
+                    catch(Exception $e)
+                    {
+                        Am_Di::getInstance()->errorLogTable->logException($e);
+                    }
+                }
+                elseif($event->getDi()->config->get('store_pdf_file'))
+                {
+                    try{
+                        $refund = Am_Pdf_Invoice::create($event->getRefund());
+                        $refund->setDi(Am_Di::getInstance());
+                        $refund->render();
+                    }
+                    catch(Exception $e)
+                    {
+                        $event->getDi()->errorLogTable->logException($e);
+                    }
+                }
+
+                $et->send(Am_Mail_Template::TO_ADMIN);
+            }
+        }
+    }
+    
     protected function isNotificationRuleMatch(EmailTemplate $tmpl, Invoice $invoice)
     {
         if (!$tmpl->conditions) return true;
@@ -838,10 +946,12 @@ class EmailTemplateTable extends ResourceAbstractTable
 
     protected function _sendCronPayments($tmpls, $pids, $user, $payment, $invoice)
     {
-
         if ($user->unsubscribed||!$user->is_approved) return;
         foreach ($tmpls as $et)
         {
+            if ($et->paysys_ids && !in_array($payment->paysys_id, explode(',', $et->paysys_ids))) {
+                continue;
+            }
             if ($et->_productIds == ResourceAccess::ANY_PRODUCT ||
                 (array_intersect($pids, $et->_productIds)))
             {
@@ -904,7 +1014,7 @@ class EmailTemplateTable extends ResourceAbstractTable
                         $this->getDi()->errorLogTable->logException($e);
                     }
                 }
-                
+
                 foreach ($recipients as $recipient)
                 {
                     $tpl->send($recipient);

@@ -1,7 +1,7 @@
 #  Sample Nginx rules configuration:
 #  aMember rules (replace /amember to actual aMember Pro path from site root)
 #
-#       location ~* ^/amember/.*\.(js|ico|gif|jpg|png|css|swf|csv)$ {}
+#       location ~* ^/amember/.*\.(js|ico|gif|jpg|png|css|swf|csv|svg)$ {}
 #       location ~* ^/amember/setup/index.php$ { try_files not-existing-file @php; }
 #       location ~* ^/amember/js.php { try_files not-existing-file @php; }
 #       location ~* ^/amember/index.php$ { try_files not-existing-file @php; }
@@ -35,7 +35,7 @@
 # You may need to uncomment the following line if rewrite fails to work
 # RewriteBase must be setup to base URL of your aMember installation without
 # domain name
-    RewriteBase /amember/
+    RewriteBase /amember
     # Workaround for a bug introduced in Apache 2.4.18 (caused endless loop)
     RewriteCond %{ENV:REDIRECT_STATUS} 200
     RewriteRule .* - [L]

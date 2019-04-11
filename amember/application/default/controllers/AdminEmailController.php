@@ -7,7 +7,7 @@
  *        Web: http://www.cgi-central.net
  *    Details: Admin Info / PHP
  *    FileName $RCSfile$
- *    Release: 5.4.3 ($Revision$)
+ *    Release: 5.6.0 ($Revision$)
  *
  * Please direct bug reports,suggestions or feedback to the cgi-central forums.
  * http://www.cgi-central.net/forum/
@@ -130,7 +130,7 @@ CUT
         try {
             $m->send(new Am_Mail_Queue($config));
         } catch (Exception $e) {
-            echo '<span class="error">' . ___('Error during e-mail sending') . ': ' . get_class($e) . ':' . $e->getMessage() . '</span>';
+            echo '<span class="am-error">' . ___('Error during e-mail sending') . ': ' . get_class($e) . ':' . $e->getMessage() . '</span>';
             return;
         }
 
@@ -167,7 +167,6 @@ CUT
     {
         $saved = $this->getDi()->emailSentTable->createRecord();
         $saved->admin_id = $this->getDi()->authAdmin->getUserId();
-        $vars = $this->getRequest()->toArray();
 
         $saved->serialize($this->getRequest()->toArray());
         $saved->count_users = $this->searchUi->getFoundRows();
@@ -251,7 +250,7 @@ jQuery('#$id').change(function(){
 CUT
                 );
 
-        $subj = $form->addText('subject', array('class' => 'el-wide'))
+        $subj = $form->addText('subject', array('class' => 'am-el-wide'))
                 ->setLabel(___('Email Subject'));
         $subj->persistentFreeze(true); // ??? why is it necessary? but it is
         $subj->addRule('required', ___('Subject is required'));
@@ -261,11 +260,11 @@ CUT
         $format->addRadio('format', array('value' => 'html'))->setContent(___('HTML Message'));
         $format->addRadio('format', array('value' => 'text'))->setContent(___('Plain-Text Message'));
 
-        $group = $form->addGroup('', array('id' => 'body-group', 'class' => 'no-label'))
+        $group = $form->addGroup('', array('id' => 'body-group', 'class' => 'am-no-label'))
                 ->setLabel(___('Message Text'));
         $group->addStatic()->setContent('<div class="mail-editor">');
         $group->addStatic()->setContent('<div class="mail-editor-element">');
-        $group->addElement('textarea', 'body', array('id' => 'body-0', 'rows' => '15', 'class' => 'el-wide'));
+        $group->addElement('textarea', 'body', array('id' => 'body-0', 'rows' => '15', 'class' => 'am-el-wide'));
         $group->addStatic()->setContent('</div>');
 
         $group->addStatic()->setContent('<div class="mail-editor-element">');
@@ -288,8 +287,9 @@ CUT
 
         $id = 'body-0';
         $vars = "";
-        foreach ($this->tagsOptions as $k => $v)
+        foreach ($this->tagsOptions as $k => $v) {
             $vars .= sprintf("[%s, %s],\n", json_encode($v), json_encode($k));
+        }
         $vars = trim($vars, "\n\r,");
 
         if($this->queue_id)
@@ -349,6 +349,23 @@ CUT
         return $this->form;
     }
 
+    function testEmailAction()
+    {
+        if ($r = $this->getDi()->userTable->findFirstByLogin($this->getParam('_test_email'))) {
+            $this->doSend($r->toArray());
+            $r = array(
+                'status' => 'ok',
+                'msg' => ___("Email has been sent.")
+            );
+        } else {
+            $r = array(
+                'status' => 'error',
+                'msg' => ___("User with such login is not found.")
+            );
+        }
+        $this->getResponse()->ajaxResponse($r);
+    }
+
     function previewAction()
     {
         $form = $this->getForm();
@@ -405,6 +422,38 @@ jQuery(function(){
 });
 CUT
             );
+
+            $s = json_encode(___('Send Test E-Mail'));
+            $se = json_encode(___('Sending Test E-Mail...'));
+            $gr = $form->addGroup(null, array('class' => 'am-row-highlight'))
+                ->setLabel(___("Send Test Email\nUsername of existing user to send test email"));
+            $gr->setSeparator(" ");
+            $gr->addText('_test_email', array('placeholder' => 'Username'));
+            $gr->addInputButton('_', array('value' => ___('Send Test E-Mail'), 'id' => 'send-test-email'));
+            $form->addScript()
+                ->setScript(<<<CUT
+jQuery("input[name=_test_email]").autocomplete({
+    minLength: 2,
+    source: amUrl("/admin-users/autocomplete")
+});
+jQuery(function(){
+    jQuery('#send-test-email').click(function(){
+        jQuery(this).prop('disabled', true);
+        jQuery(this).val($se);
+        jQuery.post(amUrl("/admin-email/test-email"), jQuery(this).closest('form').serialize(), function(r){
+            jQuery('#send-test-email').prop('disabled', false);
+            jQuery('#send-test-email').val($s);
+            if (r.status == 'ok') {
+                flashMessage(r.msg);
+            } else {
+                flashError(r.msg);
+            }
+        });
+    });
+});
+CUT
+                );
+
         }
         return $this->indexAction();
     }
@@ -487,7 +536,94 @@ CUT
         $breaked ? $this->sendRedirect() : $this->sendComplete();
     }
 
-    public function batchSend(&$context, Am_BatchProcessor $batch)
+    function doSend($r)
+    {
+        $r['name'] = $r['name_f'] . ' ' . $r['name_l'];
+        $r['unsubscribe_link'] = Am_Mail::getUnsubscribeLink($r['email'], Am_Mail::LINK_USER);
+        $m = $this->getDi()->mail;
+        $m->setPeriodic(Am_Mail::ADMIN_REQUESTED);
+        $m->addHeader('X-Amember-Queue-Id', $this->_request->getFiltered('queue_id'));
+        $m->addUnsubscribeLink(Am_Mail::LINK_USER);
+        $m->addTo($r['email'], $r['name']);
+
+        if ($reply_to = $this->getParam('reply_to')) {
+            switch ($reply_to) {
+                case 'default' :
+                    $email = false;
+                    break;
+                case 'other' :
+                    $email = $this->getParam('reply_to_other');
+                    $name = null;
+                    break;
+                default:
+                    preg_match('/^admin-(\d+)$/', $reply_to, $match);
+                    $admin = $this->getDi()->adminTable->load($match[1], false);
+                    if ($admin) {
+                        $email = $admin->email;
+                        $name = $admin->getName();
+                    }
+                    break;
+            }
+            if ($email = filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $m->setReplyTo($email, $name);
+            }
+        }
+
+        $subject = $this->getParam('subject');
+        $body = $this->getParam('body');
+
+        $tpl = new Am_SimpleTemplate();
+        $tpl->assignStdVars();
+        if ((strpos($body, '%user.unsubscribe_link%') !== false) ||
+            (strpos($subject, '%user.unsubscribe_link%') !== false)) {
+
+            $r['unsubscribe_link'] = Am_Mail::getUnsubscribeLink($r['email'], Am_Mail::LINK_USER);
+        }
+        $tpl->user = $r;
+        $this->getDi()->hook->call(Am_Event::MAIL_SIMPLE_TEMPLATE_BEFORE_PARSE, array(
+            'template' => $tpl,
+            'body' => $body,
+            'subject' => $subject,
+            'mail' => $m,
+            'request' => $this->getRequest()
+        ));
+        $subject = $tpl->render($subject);
+        $body = $tpl->render($body);
+        if ($this->getParam('email_template_layout_id') &&
+            ($layout = $this->getDi()->emailTemplateLayoutTable->load($this->getParam('email_template_layout_id', false)))) {
+
+            $tpl->assign('content', $body);
+            $body = $tpl->render($layout->layout);
+        }
+
+        $m->setSubject($subject);
+        if ($this->getParam('format') == 'text') {
+            $m->setBodyText($body);
+        } else {
+            $text = strip_tags($body);
+            $html = strpos($body, '<html') === false ?
+                "<html><head><title>$subject</title></head><body>$body</body></html>" :
+                $body;
+            $m->setBodyHtml($html);
+            $m->setBodyText($text);
+        }
+        foreach ($this->getAttachments() as $at) {
+            $m->addAttachment($at);
+        }
+        try {
+            if ($this->getDi()->hook->have(Am_Event::MAIL_SIMPLE_TEMPLATE_BEFORE_SEND)) {
+                $this->getDi()->hook->call(Am_Event::MAIL_SIMPLE_TEMPLATE_BEFORE_SEND, array(
+                    'mail' => $m,
+                    'recepient' => $this->getDi()->userTable->load($r['user_id'])
+                ));
+            }
+            $m->send();
+        } catch (Zend_Mail_Exception $e) {
+            trigger_error("Error happened while sending e-mail to $r[email] : " . $e->getMessage(), E_USER_WARNING);
+        }
+    }
+
+    function batchSend(&$context, Am_BatchProcessor $batch)
     {
         if ($this->saved->count_users <= $this->saved->sent_users)
             return true; // we are done;
@@ -499,85 +635,13 @@ CUT
         while ($r = $db->fetchRow($q)) {
             $foundrows = true;
             if (!$batch->checkLimits()) return false;
-            $r['name'] = $r['name_f'] . ' ' . $r['name_l'];
             $this->saved->updateQuick(array('last_email' => $r['email'], 'sent_users' => $this->saved->sent_users + 1));
             if ($r['email'] == '')
                 continue;
-            $m = $this->getDi()->mail;
-            $m->setPeriodic(Am_Mail::ADMIN_REQUESTED);
-            $m->addHeader('X-Amember-Queue-Id', $this->_request->getFiltered('queue_id'));
-            $m->addUnsubscribeLink(Am_Mail::LINK_USER);
-            $m->addTo($r['email'], $r['name']);
 
-            if ($reply_to = $this->getParam('reply_to')) {
-                switch ($reply_to) {
-                    case 'default' :
-                        $email = false;
-                        break;
-                    case 'other' :
-                        $email = $this->getParam('reply_to_other');
-                        $name = null;
-                        break;
-                    default:
-                        preg_match('/^admin-(\d+)$/', $reply_to, $match);
-                        $admin = $this->getDi()->adminTable->load($match[1], false);
-                        if ($admin) {
-                            $email = $admin->email;
-                            $name = $admin->getName();
-                        }
-                        break;
-                }
-                if ($email = filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    $m->setReplyTo($email, $name);
-                }
-            }
-
-            $subject = $this->getParam('subject');
-            $body = $this->getParam('body');
-
-            $tpl = new Am_SimpleTemplate();
-            $tpl->assignStdVars();
-            if ((strpos($body, '%user.unsubscribe_link%') !== false) ||
-                (strpos($subject, '%user.unsubscribe_link%') !== false)) {
-
-                $r['unsubscribe_link'] = Am_Mail::getUnsubscribeLink($r['email'], Am_Mail::LINK_USER);
-            }
-            $tpl->user = $r;
-            $this->getDi()->hook->call(Am_Event::MAIL_SIMPLE_TEMPLATE_BEFORE_PARSE, array(
-                'template' => $tpl,
-                'body' => $body,
-                'subject' => $subject,
-                'mail' => $m,
-                'request' => $this->getRequest()
-            ));
-            $subject = $tpl->render($subject);
-            $body = $tpl->render($body);
-            if ($this->getParam('email_template_layout_id') &&
-                ($layout = $this->getDi()->emailTemplateLayoutTable->load($this->getParam('email_template_layout_id', false)))) {
-
-                $tpl->assign('content', $body);
-                $body = $tpl->render($layout->layout);
-            }
-
-            $m->setSubject($subject);
-            if ($this->getParam('format') == 'text') {
-                $m->setBodyText($body);
-            } else {
-                $text = strip_tags($body);
-                $html = strpos($body, '<html') === false ?
-                    "<html><head><title>$subject</title></head><body>$body</body></html>" :
-                    $body;
-                $m->setBodyHtml($html);
-                $m->setBodyText($text);
-            }
-            foreach ($this->getAttachments() as $at)
-                $m->addAttachment($at);
-            try {
-                $m->send();
-            } catch (Zend_Mail_Exception $e) {
-                trigger_error("Error happened while sending e-mail to $r[email] : " . $e->getMessage(), E_USER_WARNING);
-            }
+            $this->doSend($r);
         }
+
         $this->getDi()->db->freeResult($q);
         if(!$foundrows)
             return true;

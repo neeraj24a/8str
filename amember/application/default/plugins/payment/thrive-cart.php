@@ -3,7 +3,7 @@
 class Am_Paysystem_ThriveCart extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = "Thrive Cart";
     protected $defaultDescription = "";
@@ -40,14 +40,14 @@ class Am_Paysystem_ThriveCart extends Am_Paysystem_Abstract
 
     public function _initSetupForm(Am_Form_Setup $form)
     {
-        $form->addSecretText("secret", array('class'=>'el-wide'))
+        $form->addSecretText("secret", array('class'=>'am-el-wide'))
             ->setLabel("Thrive Cart Secret Word\n" .
                 "it can be found at Settings -> ThriveCart API");
     }
 
     public function getRecurringType()
     {
-        return self::REPORTS_NOT_RECURRING;
+        return self::REPORTS_REBILL;
     }
 
     function supportsCancelPage()
@@ -185,6 +185,7 @@ CUT
         switch($this->request->get('event'))
         {
             case 'order.success':
+            case 'order.subscription_payment':
                 $this->invoice->addPayment($this);
                 break;
             case 'order.refund':

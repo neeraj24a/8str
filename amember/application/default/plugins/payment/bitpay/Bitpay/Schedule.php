@@ -15,6 +15,9 @@ class Schedule implements ScheduleInterface
     public $dueDate;
     public $token;
     public $items;
+    public $name;
+    public $email;
+    
 	
 	function getSchedule() 
 	{
@@ -28,7 +31,9 @@ class Schedule implements ScheduleInterface
 			'quantity' => $this->quantity,
             'dueDate' => $this->dueDate,
             'token' => $this->token,
-            'items' => $this->items
+            'items' => $this->items,
+            'name' => $this->name,
+            'email' => $this->email
 		);
 	}
 }

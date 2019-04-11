@@ -28,7 +28,7 @@ class Am_Paysystem_Action_HtmlTemplate_MollieIdeal extends Am_Paysystem_Action_H
 class Am_Paysystem_MollieIdeal extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Mollie iDEAL';
     protected $defaultDescription = 'online betalen via uw eigen bank';

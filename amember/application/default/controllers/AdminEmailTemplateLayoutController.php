@@ -30,7 +30,7 @@ class AdminEmailTemplateLayoutController extends Am_Mvc_Controller_Grid
     public function createForm($grid) {
         $form = new Am_Form_Admin();
 
-        $name = $form->addText('name', array('class' => 'el-wide'))
+        $name = $form->addText('name', array('class' => 'am-el-wide'))
             ->setLabel(___('Title'));
 
         $r = $grid->getRecord();
@@ -41,7 +41,7 @@ class AdminEmailTemplateLayoutController extends Am_Mvc_Controller_Grid
             $name->addRule('required');
         }
 
-        $form->addTextarea('layout', array('rows' => 25, 'class' => 'row-wide el-wide'))
+        $form->addTextarea('layout', array('rows' => 25, 'class' => 'am-row-wide am-el-wide'))
             ->setLabel(___("Layout\n" .
                 "use placholder %content% for email output"))
             ->addRule('callback', ___('Your layout has not %content% placeholder'), array($this, 'checkLayout'));

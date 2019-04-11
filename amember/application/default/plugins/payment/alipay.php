@@ -12,7 +12,7 @@ class Am_Paysystem_Alipay extends Am_Paysystem_Abstract
 
     const
         PLUGIN_STATUS = self::STATUS_BETA,
-        PLUGIN_REVISION = '5.5.0',
+        PLUGIN_REVISION = '5.6.0',
         TEST_GATEWAY = 'https://openapi.alipaydev.com/gateway.do',
         LIVE_GATEWAY = 'https://mapi.alipay.com/gateway.do';
 
@@ -26,7 +26,7 @@ class Am_Paysystem_Alipay extends Am_Paysystem_Abstract
             "Partner ID\n"
             . "Composed of 16 digits beginning with 2088"
         );
-        $form->addSecretText('private_key', "class='el-wide'")->setLabel("Private Key");
+        $form->addSecretText('private_key', "class='am-el-wide'")->setLabel("Private Key");
 
         $form->addAdvCheckbox('testing')->setLabel('Test Mode');
     }

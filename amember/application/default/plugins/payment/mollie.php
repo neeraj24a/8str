@@ -4,7 +4,7 @@ class Am_Paysystem_Mollie extends Am_Paysystem_Abstract
 {
     const
         PLUGIN_STATUS = self::STATUS_BETA,
-        PLUGIN_REVISION = '5.5.0',
+        PLUGIN_REVISION = '5.6.0',
         DATA_MOLLIE_CUSTOMER_ID = 'mollie-customer-id',
         DATA_MOLLIE_SUBSCRIPTION_ID = 'mollie-subscription-id';
 
@@ -24,7 +24,7 @@ class Am_Paysystem_Mollie extends Am_Paysystem_Abstract
 
     function _initSetupForm(Am_Form_Setup $form)
     {
-        $form->addSecretText('api_key', 'class="el-wide"')
+        $form->addSecretText('api_key', 'class="am-el-wide"')
             ->setLabel('Mollie API Key');
     }
 

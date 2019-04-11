@@ -9,7 +9,7 @@
  */
 class Am_Paysystem_Premiumwebcart extends Am_Paysystem_Abstract{
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Premium Web Cart';
     protected $defaultDescription = 'All major credit cards accepted';
@@ -23,7 +23,7 @@ class Am_Paysystem_Premiumwebcart extends Am_Paysystem_Abstract{
         $form->addText('merchant_id')
             ->setLabel("Merchant ID\n" .
                 'Your PremiumWebCart Merchant ID');
-        $form->addSecretText('api_signature', array('class' => 'el-wide'))
+        $form->addSecretText('api_signature', array('class' => 'am-el-wide'))
             ->setLabel("API Sinature\n" .
                 'You can get it from Home >> Cart Settings >> Advance Integration >> API Integration');
     }

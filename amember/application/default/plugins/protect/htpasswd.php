@@ -2,7 +2,7 @@
 class Am_Protect_Htpasswd extends Am_Protect_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     const NO_PASSWORD = '*NOPASSWORD*';
 

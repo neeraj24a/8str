@@ -69,6 +69,7 @@ class Am_Core_Rebuild
         }
         if (!$count) {
             $changed = $this->getDi()->userTable->checkAllSubscriptionsFindChanged($pageCount);
+            $this->getDi()->db->query("DELETE FROM ?_data WHERE `table`='user' AND `key`=?", self::NEED_REBUILD);
             if (!$changed)
             {
                 $context = '';
@@ -80,6 +81,7 @@ class Am_Core_Rebuild
                     SELECT 'user', m.user_id, ?, 1
                     FROM ?_user m
                     WHERE m.user_id IN (?a)", self::NEED_REBUILD, $changed);
+                $context = 0;
                 return false;
             }
         }

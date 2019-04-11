@@ -33,7 +33,7 @@ class Am_Paysystem_Junglepay extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
     const PLUGIN_DATE = '$Date$';
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     const URL_ACC = 'http://my.junglepay.com/dashboard';
     const URL_INSTRUCTION = 'http://wiki.txtnation.com/wiki/JunglePay_Widget_Integration_Guide';

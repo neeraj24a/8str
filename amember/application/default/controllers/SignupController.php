@@ -6,6 +6,8 @@ class SignupController extends Am_Mvc_Controller
     protected $form;
     /** @var array */
     protected $vars;
+    
+    use Am_Mvc_Controller_User_Create;
 
     function init()
     {
@@ -90,14 +92,19 @@ class SignupController extends Am_Mvc_Controller
         }
 
         $this->loadForm();
-        $this->view->title = $this->record->title;
+        $this->view->title = ___($this->record->title);
         $this->form = new Am_Form_Signup();
         $this->form->setParentController($this);
 
         if (($h = $this->getDi()->request->getFiltered('order-data')) &&
             ($hdata = $this->getDi()->store->get('am-order-data-'.$h)))
         {
-            $this->form->getSessionContainer()->storeOpaque('am-order-data', json_decode($hdata, true));
+            $dhdata = json_decode($hdata, true);
+            if ($this->getDi()->auth->getUser() && isset($dhdata['redirect'])) {
+                $this->getDi()->store->delete('am-order-data-'.$h);
+                Am_Mvc_Response::redirectLocation($dhdata['redirect']);
+            }
+            $this->form->getSessionContainer()->storeOpaque('am-order-data', $dhdata);
         }
         $this->form->initFromSavedForm($this->record);
         try {
@@ -167,38 +174,23 @@ class SignupController extends Am_Mvc_Controller
 
         if (!$this->user)
         {
-            $this->user = $this->getDi()->userRecord;
-            $this->user->setForInsert($this->vars); // vars are filtered by the form !
+            $this->vars['saved_form_id'] = $this->record->pk();
 
-            if (empty($this->user->login))
-                $this->user->generateLogin();
+            $this->user = $this->createUser($this->vars);
 
-            if (empty($this->vars['pass'])) {
-                $this->user->generatePassword();
-            } else {
-                $this->user->setPass($this->vars['pass']);
-            }
-            if (empty($this->user->lang))
-                $this->user->lang = $this->getDi()->locale->getLanguage();
-
-            $this->user->saved_form_id = $this->record->pk();
-            $this->user->insert();
+            
             $this->getSession()->signup_member_id = $this->user->pk();
             $this->getSession()->signup_member_login = $this->user->login;
+            
             $this->autoLoginIfNecessary();
-            // user inserted
+            
             $this->getDi()->hook->call(Am_Event::SIGNUP_USER_ADDED, array(
                 'vars' => $this->vars,
                 'user' => $this->user,
                 'form' => $this->form,
                 'savedForm' => $this->record
             ));
-            if ($this->getDi()->config->get('registration_mail'))
-                $this->user->sendRegistrationEmail();
-            if ($this->getDi()->config->get('registration_mail_admin'))
-                $this->user->sendRegistrationToAdminEmail();
-            if(!$this->user->isApproved())
-                $this->user->sendNotApprovedEmail();
+            
         } else {
             if ($this->record->isCart()) {
                 $url = $this->getSession()->redirectUrl;
@@ -309,8 +301,12 @@ class SignupController extends Am_Mvc_Controller
         $invoice->calculate();
         $invoice->setPaysystem(isset($this->vars['paysys_id']) ? $this->vars['paysys_id'] : 'free');
         $err = $invoice->validate();
-        if ($err)
-            throw new Am_Exception_InputError($err[0]);
+        if ($err) {
+            $page = $this->form->getFirstPage();
+            $page->getForm()->setError($err[0]);
+            $page->handle('display');
+            return false;
+        }
 
         if (!empty($this->vars['coupon']) &&
             !(float)$invoice->first_discount &&

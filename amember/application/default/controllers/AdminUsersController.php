@@ -185,7 +185,7 @@ CUT
             $this->record->is_locked == 0 &&
             $this->record->disable_lock_until &&
             $this->record->disable_lock_until > Am_Di::getInstance()->sqlDateTime) {
-             $this->addStatic(null, array('class' => 'row-wide row-highlight'))
+             $this->addStatic(null, array('class' => 'am-row-wide am-row-highlight'))
                     ->setContent('<div style="text-align:center">' .
                         ___('Auto-locking for this customer is temporary disabled until %s',
                             amDatetime($this->record->disable_lock_until)) . '</span></div>');
@@ -197,7 +197,7 @@ CUT
                     'id' => $this->record->pk(),
                     'b' => $_SERVER['REQUEST_URI']
                     ));
-                $this->addStatic(null, array('class' => 'row-wide row-highlight'))
+                $this->addStatic(null, array('class' => 'am-row-wide am-row-highlight'))
                     ->setContent('<div style="text-align:center"><span class="red">' . ___('This user exceeded %sAccount Sharing Prevention%s limits and temporarily locked.', "<a href=\"$url\">", '</a>') . '</span> ' .
                         ___('You can temporary %sdisable auto-locking for this customer for 1 day%s and allow access for his account.',
                         "<a href=\"$url_disable\" target=\"_top\" class=\"link\">", '</a>') . '</span></div>');
@@ -207,7 +207,7 @@ CUT
         $fieldSet = $this->addFieldset('general', array('id'=>'general'))
             ->setLabel(___('General'));
 
-        $login = $fieldSet->addText('login', array('class' => 'el-wide'))
+        $login = $fieldSet->addText('login', array('class' => 'am-el-wide'))
             ->setLabel(___('Username'))
             ->setId('login');
         $login->addRule('required');
@@ -291,7 +291,7 @@ CUT
         $g = $fieldSet->addGroup(null, array('id' => 'comment'))
             ->setLabel(___("Comment\nfor admin reference"));
         $g->setSeparator(' ');
-        $g->addTextarea('comment', array('class' => 'el-wide', 'style' => "display:none"))
+        $g->addTextarea('comment', array('class' => 'am-el-wide', 'style' => "display:none"))
             ->setAttribute('rows', 2);
         $g->addHtml()
             ->setHtml(<<<CUT
@@ -331,7 +331,10 @@ CUT
         $nameField->addText('name_f', array('size'=>15));
         $nameField->addText('name_l', array('size'=>15));
 
-        $gr = $fieldSet->addGroup('', array('class' => 'row-required'))->setLabel(___('E-Mail Address'));
+        $gr = $fieldSet->addGroup('', array(
+            'class' => 'am-row-required',
+            'id'=>'user-email-group'))
+            ->setLabel(___('E-Mail Address'));
         $gr->setSeparator(' ');
         $gr->addText('email', array('size' => 30))->addRule('required');
         $gr->addRule('callback2', '-error-', array($this, 'checkUniqEmail'));
@@ -379,7 +382,7 @@ unsubscribe the customer from:
 * autoresponder messages,
 * subscription expiration notices"))
             ->loadOptions(array(
-                ''   => ___('No'),
+                '0'   => ___('No'),
                 '1'  => ___('Yes, do not e-mail this customer for any reasons'),
             ));
 
@@ -414,9 +417,9 @@ unsubscribe the customer from:
     {
         $fieldSet = $this->addAdvFieldset('address', array('id' => 'address_info'))
             ->setLabel(___('Address Info'));
-        $fieldSet->addText('street', array('class' => 'el-wide'))->setLabel(___('Street Address'));
-        $fieldSet->addText('street2', array('class' => 'el-wide'))->setLabel(___('Street Address (Second Line)'));
-        $fieldSet->addText('city', array('class' => 'el-wide'))->setLabel(___('City'));
+        $fieldSet->addText('street', array('class' => 'am-el-wide'))->setLabel(___('Street Address'));
+        $fieldSet->addText('street2', array('class' => 'am-el-wide'))->setLabel(___('Street Address (Second Line)'));
+        $fieldSet->addText('city', array('class' => 'am-el-wide'))->setLabel(___('City'));
         $fieldSet->addText('zip')->setLabel(___('ZIP Code'));
 
         $fieldSet->addSelect('country')->setLabel(___('Country'))
@@ -658,7 +661,7 @@ CUT
             $fs->addDate($id.'_dattm')
                 ->setLabel(___("Date Of Transaction"));
 
-            $this->form->addText($id.'_comment', array('class'=>'el-wide'))
+            $this->form->addText($id.'_comment', array('class'=>'am-el-wide'))
                 ->setLabel(___("Comment\nfor admin reference"));
 
             $this->form->addDataSource(new HTML_QuickForm2_DataSource_Array(array(
@@ -733,7 +736,7 @@ class Am_Grid_Action_Merge extends Am_Grid_Action_Abstract
         });
 CUT;
 
-        $form->addStatic('', array('class' => 'no-label row-highlight'))
+        $form->addStatic('', array('class' => 'am-no-label am-row-highlight'))
             ->setContent(
                 '<strong>' . ___("WARNING! Once [Merge] button clicked, all invoices, payments, logs\n".
                 "and other information regarding 'Source User' will be moved\n".
@@ -801,6 +804,9 @@ CUT;
         $this->getDi()->db->query('UPDATE ?_file_download SET user_id=? WHERE user_id=?',
             $target->pk(), $source->pk());
         $this->getDi()->db->query('UPDATE ?_upload SET user_id=? WHERE user_id=?',
+            $target->pk(), $source->pk());
+        
+        $this->getDi()->db->query('UPDATE ?_user_note SET user_id=? WHERE user_id=?',
             $target->pk(), $source->pk());
 
         $event = new Am_Event(Am_Event::USER_MERGE, array(
@@ -888,7 +894,7 @@ class Am_Grid_Filter_User extends Am_Grid_Filter_Abstract
         }
 
         $filter = parent::renderFilter();
-        $filter = preg_match('#(<div class="filter-wrap">)(.*)$#is', $filter, $matches);
+        $filter = preg_match('#(<div class="am-filter-wrap">)(.*)$#is', $filter, $matches);
         return $matches[1] . $title . $matches[2];
     }
 
@@ -965,6 +971,7 @@ class Am_Grid_Field_Decorator_Additional extends Am_Grid_Field_Decorator_Abstrac
 
 class AdminUsersController extends Am_Mvc_Controller_Grid
 {
+    use Am_PersonalData;
     public function checkAdminPermissions(Admin $admin)
     {
         return $admin->hasPermission('grid_u');
@@ -1123,8 +1130,9 @@ CUT
         $term = "%{$term}%";
 
         $q = new Am_Query($this->getDi()->userTable);
-        $q->addWhere('(t.login LIKE ?) OR (t.email LIKE ?) OR (t.name_f LIKE ?) OR (t.name_l LIKE ?)',
-            $term, $term, $term, $term);
+        $q->addWhere(
+        "(t.login LIKE ?) OR (t.email LIKE ?) OR (t.name_f LIKE ?) OR (t.name_l LIKE ?) OR (CONCAT(t.name_f, ' ', t.name_l) LIKE ?) OR (CONCAT(t.name_l, ' ', t.name_f) LIKE ?)",
+            $term, $term, $term, $term, $term, $term);
         $this->getDi()->hook->call(Am_Event::ADMIN_USERS_AUTOCOMPLETE, array(
             'query' => $q,
             'term' => $term
@@ -1211,6 +1219,17 @@ CUT
         $grid->actionAdd(new Am_Grid_Action_Merge());
         $grid->actionAdd(new Am_Grid_Action_Group_UserAssignGroup(false));
         $grid->actionAdd(new Am_Grid_Action_Group_UserAssignGroup(true));
+        if(in_array($this->getDi()->config->get('account-removal-method'), array('anonymize', 'delete-request')))
+        {
+            $grid->actionAdd(new Am_Grid_Action_Group_Callback('group-anonymize', ___("Anonymize Personal Data"), function($id, User $user){
+                $errors = $this->doAnonymize($user);
+                if(!empty($errors)){
+                    echo "<br/>".___("Unable to Delete Personal Data for user: %s", $user->login);
+                    echo "<ul>".implode("", array_map(function($v){return "<li>".$v."</li>";}, $errors))."</ul>";
+                }
+            }));
+            $grid->actionAdd(new Am_Grid_Action_Anonymize());
+        }
 
         $nc_count = $this->getDi()->cache->load('getNotConfirmedCount');
         if ($nc_count === false)
@@ -1525,10 +1544,9 @@ CUT;
             $icons .= $this->view->icon('user-not-approved', ___('User is not approved'));
         if ($icons) $icons = '<div style="float: right;">' . $icons . '</div>';
 
-        return $this->renderTd(sprintf('%s<a class="link" target="_top" href="%s" data-tooltip-url="%s">%s</a>',
+        return $this->renderTd(sprintf('%s<a class="link" target="_top" href="%s">%s</a>',
                 $icons,
                 $this->escape($this->grid->getActionUrl('edit', $record->user_id)),
-                $this->getDi()->url('admin-users/card', "id={$record->user_id}"),
                 $this->escape($record->login)), false);
     }
 

@@ -8,7 +8,7 @@
  *        Web: http://www.cgi-central.net
  *    Details: Admin Info /
  *    FileName $RCSfile$
- *    Release: 5.4.3 ($Revision$)
+ *    Release: 5.6.0 ($Revision$)
  *
  * Please direct bug reports,suggestions or feedback to the cgi-central forums.
  * http://www.cgi-central.net/forum/
@@ -43,17 +43,17 @@ class AdminRestoreController extends Am_Mvc_Controller
 <div class="am-form">
     <form action="' . $url . '" method="post" enctype="multipart/form-data"
     onsubmit="return confirm(\'' . ___('It will replace all your exising database with backup. Do you really want to proceed?') . '\')">
-    <div class="row">
-        <div class="element-title">
+    <div class="am-row">
+        <div class="am-element-title">
             <label>File</label>
         </div>
-        <div class="element">
+        <div class="am-element">
             <input type="file" name="file" class="styled">
         </div>
     </div>
-    <div class="row">
-        <div class="element-title"></div>
-        <div class="element">
+    <div class="am-row">
+        <div class="am-element-title"></div>
+        <div class="am-element">
             <input type="submit" value="'. ___('Restore') . '" />
         </div>
     </div>

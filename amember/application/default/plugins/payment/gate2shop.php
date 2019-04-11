@@ -12,7 +12,7 @@ class Am_Paysystem_Gate2shop extends Am_Paysystem_Abstract
 {
 
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Gate2Shop';
     protected $defaultDescription = 'Pay by credit card card';
@@ -28,7 +28,7 @@ class Am_Paysystem_Gate2shop extends Am_Paysystem_Abstract
         $form->addText("merchant_site_id")
             ->setLabel("Merchant Site ID\n" .
                 'Merchant web site unique identification number as provided by Gate2Shop');
-        $form->addSecretText("secret_key", array('class' => 'el-wide'))
+        $form->addSecretText("secret_key", array('class' => 'am-el-wide'))
             ->setLabel('Secret Key');
         $form->addAdvCheckbox("testing")->setLabel("Test Mode Enabled");
     }

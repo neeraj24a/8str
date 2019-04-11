@@ -37,12 +37,12 @@ class AdminBanController extends Am_Mvc_Controller_Pages
     {
         $id = substr($grid->getId(),1);
         $form = new Am_Form_Admin;
-        $form->addText('value', array('class' => 'el-wide'))
+        $form->addText('value', array('class' => 'am-el-wide'))
             ->setLabel(___("Value\nuse % as wildcard mask"))
             ->addRule('required');
         $form->addHidden('type')
             ->setValue($id);
-        $form->addText('comment', array('class' => 'el-wide'))
+        $form->addText('comment', array('class' => 'am-el-wide'))
             ->setLabel(___('Comment'));
         return $form;
     }

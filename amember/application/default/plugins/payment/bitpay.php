@@ -29,7 +29,7 @@ spl_autoload_register(function ($class)
 class Am_Paysystem_Bitpay extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'BitPay';
     protected $defaultDescription = 'Pay with BitCoins';
@@ -219,7 +219,7 @@ class Am_Paysystem_Bitpay extends Am_Paysystem_Abstract
         return $this->log;
     }
 
-	public function _process(Invoice $invoice, Am_Mvc_Request $request, Am_Paysystem_Result $result)
+	public function _process(Invoice $invoice, Am_Mvc_Request_Interface $request, Am_Paysystem_Result $result)
     {
 		$user = $invoice->getUser();
 
@@ -294,6 +294,9 @@ class Am_Paysystem_Bitpay extends Am_Paysystem_Abstract
                 'price' => $invoice->second_total,
                 'quantity' => '1'
             ));
+            $schedule->name = $invoice->getName();
+            $schedule->email = $invoice->getEmail();
+            
             try {
                 $client->createSchedule($schedule);
             } catch (\Exception $e) {

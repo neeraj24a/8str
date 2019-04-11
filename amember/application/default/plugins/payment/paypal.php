@@ -10,7 +10,7 @@
 class Am_Paysystem_Paypal extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     public $domain = "";
 
@@ -59,10 +59,10 @@ class Am_Paysystem_Paypal extends Am_Paysystem_Abstract
     jQuery(function(){
         jQuery('#paypal-is-business').change(function(){
             jQuery(this).closest('form').find(".paypal-business").toggle(this.checked);
-            jQuery(this).closest('form').find(".paypal-business").closest(".row").toggle(this.checked);
+            jQuery(this).closest('form').find(".paypal-business").closest(".am-row").toggle(this.checked);
         }).change();
         jQuery('#pdt-enabled').change(function(){
-            jQuery(this).closest('form').find('#pdt-token').closest('.row').toggle(this.checked);
+            jQuery(this).closest('form').find('#pdt-token').closest('.am-row').toggle(this.checked);
         }).change();
     });
 CUT
@@ -108,8 +108,22 @@ CUT
         $form->addAdvCheckbox('pdt', array('id'=>'pdt-enabled'))->setLabel("Enable PDT support\n"
             . "In most cases it is not required. Transaction will be activated from IPN message. \n"
             . "Could be useful  only if you are using Paypal in front of aMember signup flow");
-        $form->addText('pdt_token', array('class'=>'el-wide', 'id'=>'pdt-token'))->setLabel('PDT Identity Token');
+        $form->addText('pdt_token', array('class'=>'am-el-wide', 'id'=>'pdt-token'))->setLabel('PDT Identity Token');
+        $form->addElement('email_checkbox', 'subscr_failed_email')
+            ->setLabel("Failed Notification Email\nsend email to customer if <strong>subscr_failed</strong> notification is received");
         
+    }
+    
+    function onSetupEmailTemplateTypes(Am_Event $e)
+    {
+        $e->addReturn(array(
+            'id' => 'payment.paypal.subscr_failed_email',
+            'title' => 'Paypal Failed Notification Email',
+            'mailPeriodic' => Am_Mail::USER_REQUESTED,
+            'vars' => array(
+                'user',
+                'invoice'),
+            ), 'payment.paypal.subscr_failed_email');
     }
 
     function init()
@@ -158,7 +172,7 @@ CUT
         }
     }
 
-    function _process(Invoice $invoice, Am_Mvc_Request $request, Am_Paysystem_Result $result)
+    function _process(Invoice $invoice, Am_Mvc_Request_Interface $request, Am_Paysystem_Result $result)
     {
         if (!$this->getConfig('business'))
             throw new Am_Exception_Configuration("There is a configuration error in [paypal] plugin - no [business] e-mail configured");
@@ -179,7 +193,7 @@ CUT
         $a->last_name     = $invoice->getLastName();
         $a->address1      = $invoice->getStreet();
         $a->city          = $invoice->getCity();
-        $a->state         = $invoice->getState();
+        $a->state         = preg_replace('/^[A-Z]{2}-/', '', $invoice->getState());
         $a->zip           = $invoice->getZip();
         $a->country       = $invoice->getCountry();
         $a->charset       = 'utf-8';
@@ -345,7 +359,7 @@ class Am_Paysystem_Paypal_Transaction extends Am_Paysystem_Transaction_Paypal
         'country'   =>  'address_country_code',
         'city'      =>  'address_city',
         'user_external_id' => 'payer_id',
-        'invoice_external_id' => array('parent_txn_id', 'subscr_id', 'txn_id') ,
+        'invoice_external_id' => array('parent_txn_id', 'old_subscr_id', 'subscr_id', 'txn_id') ,
     );
 
     public function processValidated()
@@ -367,19 +381,53 @@ class Am_Paysystem_Paypal_Transaction extends Am_Paysystem_Transaction_Paypal
             case self::TXN_WEB_ACCEPT:
             case self::TXN_SUBSCR_PAYMENT:
             case self::TXN_CART:
-                switch ($this->request->payment_status)
+                if($this->plugin->getConfig('accept_pending_echeck') && $this->request->payment_type == 'echeck')
                 {
-                    case 'Completed':
-                        $this->invoice->addPayment($this);
-                        break;
-                    case 'Pending':
-                        if($this->plugin->getConfig('accept_pending_echeck') && $this->request->payment_type == 'echeck')
-                            $this->invoice->addPayment($this);
-                        break;
-                    default:
+                    switch ($this->request->payment_status)
+                    {
+                        case 'Completed':
+                            $accessAdded = $this->plugin->getDi()->accessTable->findFirstBy(
+                                [
+                                    'user_id' => $this->invoice->user_id,
+                                    'invoice_id' => $this->invoice->pk(), 
+                                    'transaction_id' => $this->getUniqId()
+                                ]
+                                );
+                            if($accessAdded)
+                            {
+                                $this->invoice->addPaymentWithoutAccessPeriod($this);
+                            }
+                            else
+                            {
+                                $this->invoice->addPayment($this);    
+                            }
+                        
+                            break;
+                        case 'Pending':
+                            $this->invoice->addAccessPeriod($this);
+                            break;
+                        case 'Failed' : 
+                            $this->invoice->stopAccess($this);
+                        default:
+                    }
+                    
                 }
+                else if($this->request->payment_status == 'Completed')
+                {
+                    $this->invoice->addPayment($this);    
+                }
+                
                 if($this->request->subscr_id)
                     $this->invoice->data()->set(Am_Paysystem_Paypal::PAYPAL_PROFILE_ID, $this->request->subscr_id)->update();
+                break;
+            case 'subscr_failed':
+                if($this->plugin->getConfig('subscr_failed_email'))
+                {
+                    $et = Am_Mail_Template::load('payment.paypal.subscr_failed_email');
+                    $et->setUser($this->invoice->getUser());
+                    $et->setInvoice($this->invoice);
+                    $et->send($this->invoice->getUser());
+                }
                 break;
         }
         switch($this->request->payment_status){

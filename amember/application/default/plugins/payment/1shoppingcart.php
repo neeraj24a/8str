@@ -13,7 +13,7 @@
 class Am_Paysystem_1shoppingcart extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     const URL = "http://www.marketerschoice.com/app/javanof.asp";
 
@@ -65,7 +65,7 @@ class Am_Paysystem_1shoppingcart extends Am_Paysystem_Abstract
         $a->MerchantID = $this->config['merchant_id'];
         $a->ProductID = $invoice->getItem(0)->getBillingPlanData('1shoppingcart_id');
         $a->AMemberID = $invoice->invoice_id;
-        $a->PostBackURL = $this->getDi()->url("payment/1shoppingcart/ipn",null,false,2);
+        $a->PostBackURL = $this->getDi()->surl("payment/1shoppingcart/ipn", false);
         $a->clear = 1;
         $a->filterEmpty();
         $result->setAction($a);
@@ -102,7 +102,7 @@ class Am_Paysystem_1shoppingcart extends Am_Paysystem_Abstract
 
     public function getReadme()
     {
-        $thanksURL = $this->getDi()->url('thanks',null,false,2);
+        $thanksURL = $this->getDi()->surl('thanks');
         return <<<CUT
 <b>1ShoppingCart payment plugin configuration</b>
 
@@ -139,7 +139,8 @@ class Am_Paysystem_1shoppingcart extends Am_Paysystem_Abstract
 CUT;
     }
 
-    function findOrder($order_id){
+    function findOrder($order_id)
+    {
         return $this->getDi()->invoicePaymentTable->findFirstBy(array('transaction_id' => $order_id, 'paysys_id' => $this->getId()));
     }
 }

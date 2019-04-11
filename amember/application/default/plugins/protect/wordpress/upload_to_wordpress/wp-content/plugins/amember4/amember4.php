@@ -19,7 +19,8 @@ if(!defined('DIRECTORY_SEPARATOR'))
 //register_activation_hook(AM4_PLUGIN_DIR."/amember4.php", "amember4_plugin_activated");
 //register_deactivation_hook(AM4_PLUGIN_DIR."/amember4.php", "amember4_plugin_deactivated");
 
-class am4PluginsManager {
+class am4PluginsManager
+{
     private static $__plugins = array();
     private static $cache = array();
     private static $api = null;
@@ -28,15 +29,19 @@ class am4PluginsManager {
      */
     private static $settings;
 
-    static function get($name){
+    static function get($name)
+    {
         if(array_key_exists($name, self::$__plugins)) return self::$__plugins[$name];
         return null;
     }
-    static function getPlugin($name){
+
+    static function getPlugin($name)
+    {
         return self::get($name);
     }
 
-    static function initPlugin($name){
+    static function initPlugin($name)
+    {
         // Check if plugin exists already;
         if(($plugin = self::get($name)) !== null) return $plugin;
         if(!class_exists($cname = "am4".ucfirst($name)) && is_file($plugin_file = dirname(__FILE__)."/".$name.".php")){
@@ -52,7 +57,8 @@ class am4PluginsManager {
         return null;
     }
 
-    static function includes(){
+    static function includes()
+    {
         include_once(AM4_INCLUDES . "/utils.php");
         include_once(AM4_INCLUDES . "/plugin.php");
         include_once(AM4_INCLUDES . "/controller.php");
@@ -89,14 +95,20 @@ class am4PluginsManager {
         }
         return true;
     }
-    static function createController($name, $is_ajax=false){
+
+    static function createController($name, $is_ajax=false)
+    {
         $f = function() use ($name, $is_ajax) {$class = new $name; $class->{'run' . ($is_ajax ? 'Ajax' : '')}();};
         return $f;
     }
-    static function runController($name, $is_ajax=false){
+
+    static function runController($name, $is_ajax=false)
+    {
         call_user_func(self::createController($name, $is_ajax));
     }
-    static function initAjaxActions(){
+
+    static function initAjaxActions()
+    {
         foreach(get_declared_classes() as $cname){
             if(is_subclass_of($cname, 'am4PageController')){
                 foreach(get_class_methods($cname) as $m){
@@ -109,24 +121,33 @@ class am4PluginsManager {
                 }
             }
         }
-
     }
 
-    static function getOption($option){
+    static function reloadOptions()
+    {
+        self::$settings = null;
+    }
 
+    static function getOption($option)
+    {
         if(empty(self::$settings))
-            self::$settings = new am4_Settings_Config ();
+            self::$settings = new am4_Settings_Config();
 
         return self::$settings->get($option);
     }
-    static function getAmemberPath(){
+
+    static function getAmemberPath()
+    {
         return self::getOption("path");
     }
-    static function getAmemberURL(){
+
+    static function getAmemberURL()
+    {
         return self::getOption("url");
     }
 
-    static function selfURL($encode = true){
+    static function selfURL($encode = true)
+    {
         if(defined('DOING_AJAX')){
             $url = $_SERVER['HTTP_REFERER'];
         }else{
@@ -143,7 +164,8 @@ class am4PluginsManager {
         return ($encode ? base64_encode($url) : $url);
     }
 
-    static function getLoginURL($redirect_back = true){
+    static function getLoginURL($redirect_back = true)
+    {
         if($redirect_back){
             $params = array(
                 '_amember_redirect_url' => self::selfURL()
@@ -151,10 +173,10 @@ class am4PluginsManager {
             $params = http_build_query($params, '', '&');
         }
         return self::getAPI()->getLoginURL().($params ? "?".$params : "");
-
     }
 
-    static function initAPI($path=''){
+    static function initAPI($path='')
+    {
         $path = $path ? $path : self::getAmemberPath();
         if($path === false) throw new Exception(__('aMember path is empty', 'am4-plugin'));
         if(!is_file($lite = $path.'/library/Am/Lite.php')) {
@@ -162,12 +184,12 @@ class am4PluginsManager {
         }
         if(!class_exists('Am_Lite'))require_once($lite);
     }
+
     /**
-     *
      * @return Am_Lite
      */
-    static function getAPI(){
-
+    static function getAPI()
+    {
         if(!self::$api){
             try{
                 self::initAPI();
@@ -175,18 +197,18 @@ class am4PluginsManager {
             }catch(Exception $e){
 				return false;
             }
-
         }
         return self::$api;
     }
 
-    static function isConfigured(){
+    static function isConfigured()
+    {
         if(!self::getAPI()) return false;
         else return true;
-
     }
-    static function getAMProducts(){
 
+    static function getAMProducts()
+    {
         if(!array_key_exists("products", self::$cache)){
             self::$cache['products'] = self::getAPI()->getProducts(false);
             foreach (self::$cache['products'] as $id => $title)
@@ -195,15 +217,16 @@ class am4PluginsManager {
         return self::$cache['products'];
     }
 
-    static function getAMCategories(){
+    static function getAMCategories()
+    {
         if(!array_key_exists("categories", self::$cache)){
             self::$cache['categories'] = self::getAPI()->getCategories();
         }
         return self::$cache['categories'];
-
     }
 
-    static function getWpRoles($skip_admin=false){
+    static function getWpRoles($skip_admin=false)
+    {
         $roles = new WP_Roles;
         $ret = array();
         foreach($roles->roles as $k=>$v){
@@ -213,7 +236,8 @@ class am4PluginsManager {
         return $ret;
     }
 
-    static function  skipProtection(){
+    static function skipProtection()
+    {
         // Fix for NextGen plugin
         if(!function_exists('wp_get_current_user')) return false;
         $current_user = wp_get_current_user();
@@ -224,7 +248,6 @@ class am4PluginsManager {
         if(array_intersect($master_roles, $current_user->roles))
             return true;
         return false;
-
     }
 }
 

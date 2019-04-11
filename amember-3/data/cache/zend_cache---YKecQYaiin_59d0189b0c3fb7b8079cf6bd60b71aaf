@@ -1,0 +1,85 @@
+a:4:{s:4:"data";s:4579:"s:4569:"<h2>Today<span class="widget-title-info"> &middot;
+            03/31/19    </span></h2>
+<div class="admin-dashboard-wrapper">
+<table class="admin-dashboard">
+    <tr>
+        <td class="first">
+                        <dl>
+                <dt>Sales</dt>
+                <dd>
+                                            <a class="link" href="/amember/default/admin-payments/p/index/index?_payment_filter%5Bdatf%5D=dattm&amp;_payment_filter%5Bdat1%5D=03%2F31%2F19&amp;_payment_filter%5Bdat2%5D=03%2F31%2F19">20 / $265.80</a>
+                                    </dd>
+            </dl>
+                        <dl>
+                <dt>Refunds</dt>
+                <dd>
+                                            0
+                                    </dd>
+            </dl>
+                        </td>
+            <td>
+                <dl>
+                    <dt>Registrations</dt>
+                                        <dd>
+                                                    <a class="link" href="/amember/admin-users/index?_u_search%5Badded-between%5D%5Bstart%5D=03%2F31%2F19&amp;_u_search%5Badded-between%5D%5Bstop%5D=03%2F31%2F19">5</a>
+                                            </dd>
+                </dl>
+                <dl>
+                    <dt>Cancellations</dt>
+                                        <dd>
+                                                    <a class="link" href="/amember/default/admin-payments/p/invoices/index?_invoice_filter%5Bdatf%5D=tm_cancelled&amp;_invoice_filter%5Bdat1%5D=03%2F31%2F19&amp;_invoice_filter%5Bdat2%5D=03%2F31%2F19">1</a>
+                                            </dd>
+                </dl>
+                                <dl>
+                    <dt>Rebills (<small title="03/31/19&ndash;04/30/19">next 30 days</small>)</dt>
+                                        <dd>
+                                                    <a class="link" href="/amember/default/admin-payments/p/invoices/index?_invoice_filter%5Bdatf%5D=rebill_date&amp;_invoice_filter%5Bdat1%5D=03%2F31%2F19&amp;_invoice_filter%5Bdat2%5D=04%2F30%2F19&amp;_invoice_sort=rebill_date">
+                            2217 / $37,636.83</a>
+                                            </dd>
+            </dl>
+        </td>
+    </tr>
+</table>
+</div><h2>This Week (Sun-Sat)<span class="widget-title-info"> &middot;
+            03/31/19&ndash;04/06/19    </span></h2>
+<div class="admin-dashboard-wrapper">
+<table class="admin-dashboard">
+    <tr>
+        <td class="first">
+                        <dl>
+                <dt>Sales</dt>
+                <dd>
+                                            <a class="link" href="/amember/default/admin-payments/p/index/index?_payment_filter%5Bdatf%5D=dattm&amp;_payment_filter%5Bdat1%5D=03%2F31%2F19&amp;_payment_filter%5Bdat2%5D=04%2F06%2F19">20 / $265.80</a>
+                                    </dd>
+            </dl>
+                        <dl>
+                <dt>Refunds</dt>
+                <dd>
+                                            0
+                                    </dd>
+            </dl>
+                        </td>
+            <td>
+                <dl>
+                    <dt>Registrations</dt>
+                                        <dd>
+                                                    <a class="link" href="/amember/admin-users/index?_u_search%5Badded-between%5D%5Bstart%5D=03%2F31%2F19&amp;_u_search%5Badded-between%5D%5Bstop%5D=04%2F06%2F19">5</a>
+                                            </dd>
+                </dl>
+                <dl>
+                    <dt>Cancellations</dt>
+                                        <dd>
+                                                    <a class="link" href="/amember/default/admin-payments/p/invoices/index?_invoice_filter%5Bdatf%5D=tm_cancelled&amp;_invoice_filter%5Bdat1%5D=03%2F31%2F19&amp;_invoice_filter%5Bdat2%5D=04%2F06%2F19">1</a>
+                                            </dd>
+                </dl>
+                                <dl>
+                    <dt>Rebills (<small title="03/31/19&ndash;04/30/19">next 30 days</small>)</dt>
+                                        <dd>
+                                                    <a class="link" href="/amember/default/admin-payments/p/invoices/index?_invoice_filter%5Bdatf%5D=rebill_date&amp;_invoice_filter%5Bdat1%5D=03%2F31%2F19&amp;_invoice_filter%5Bdat2%5D=04%2F30%2F19&amp;_invoice_sort=rebill_date">
+                            2217 / $37,636.83</a>
+                                            </dd>
+            </dl>
+        </td>
+    </tr>
+</table>
+</div>";";s:8:"lifetime";i:2592000;s:6:"expire";i:1556640012;s:8:"priority";i:8;}

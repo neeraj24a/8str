@@ -1,0 +1,33 @@
+a:4:{s:4:"data";s:3700:"s:3690:"<div class="widget-quickstart">
+    <div class="widget-quickstart-content">
+        <div class="widget-quickstart-disable">
+            <a href="/amember-2/admin/disable-quickstart" class="link">do not show this again</a>
+        </div>
+        <h2>Thank you for choosing aMember Pro software! This guide was designed to help you start using it.</h2>
+        <ul>
+            <li><img src="/amember-2/application/default/views/public/img/admin/quickstart/currency.png" width="24" height="24" />
+                <a class="link" target="_blank" href="/amember-2/admin-setup">Choose base currency</a> for your installation, it is not possible to change base currency once you get first payment            </li>
+            <li><img src="/amember-2/application/default/views/public/img/admin/quickstart/theme.png" width="24" height="24" />
+                Upload Logo image in Default Theme <a class="link" target="_blank" href="/amember-2/admin-setup/themes-default">configuration page</a> or enable usage of WordPress theme if you use WordPress integration.            </li>
+            <li><img src="/amember-2/application/default/views/public/img/admin/quickstart/settings.png" width="24" height="24" />
+                Visit <a class="link" target="_blank" href="/amember-2/admin-setup/plugins">Setup</a> and enable all necessary modules and plugins.
+                Press SAVE. When you did it, choose newly enable plugins at the top of the setup page and configure each of them.            </li>
+            <li><img src="/amember-2/application/default/views/public/img/admin/quickstart/product.png" width="24" height="24" />
+                Visit <a class="link" target="_blank" href="/amember-2/admin-products">Products Manager</a> to add new products - subscription types. You can also define product
+                categories to group products.            </li>
+            <li><img src="/amember-2/application/default/views/public/img/admin/quickstart/content.png" width="24" height="24" />
+                Visit <a class="link" target="_blank" href="/amember-2/admin-content">Content Manager</a> to protect site folders, upload members-only files and pages.            </li>
+            <li><img src="/amember-2/application/default/views/public/img/admin/quickstart/user.png" width="24" height="24" />
+                You can add additional fields to user profile if necessary in section <a class="link" target="_blank" href="/amember-2/admin-fields">Add User Fields</a>            </li>
+            <li><img src="/amember-2/application/default/views/public/img/admin/quickstart/form.png" width="24" height="24" />
+                Configure your Signup Form in <a class="link" target="_blank" href="/amember-2/admin-saved-form">Drag & Drop Forms Editor</a>            </li>
+            <li><img src="/amember-2/application/default/views/public/img/admin/quickstart/signup.png" width="24" height="24" />
+                Try to start new <a class="link" target="_blank" href="/amember-2/signup">sign up</a>. On success, you should receive an e-mail
+                message from aMember, and get access to configured files and folders.           </li>
+            <li><img src="/amember-2/application/default/views/public/img/admin/quickstart/login.png" width="24" height="24" />
+                Try to <a class="link" target="_blank" href="/amember-2/member">log in</a> as the new customer. If all handled correctly, you should get access
+                to configured protected content. If not, visit <a class="link" target="_blank" href="/amember-2/admin-logs">logs section</a> to find idea why something
+                went wrong.           </li>
+        </ul>
+    </div>
+</div>";";s:8:"lifetime";i:2592000;s:6:"expire";i:1556650208;s:8:"priority";i:8;}

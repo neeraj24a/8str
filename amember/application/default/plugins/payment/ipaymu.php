@@ -10,7 +10,7 @@
 class Am_Paysystem_Ipaymu extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     const URL = "https://my.ipaymu.com/payment.htm";
 
@@ -36,7 +36,7 @@ class Am_Paysystem_Ipaymu extends Am_Paysystem_Abstract
 
     public function _initSetupForm(Am_Form_Setup $form)
     {
-        $form->addSecretText('key', array('class' => 'el-wide'))->setLabel('Your API Key');
+        $form->addSecretText('key', array('class' => 'am-el-wide'))->setLabel('Your API Key');
     }
 
     public function _process(Invoice $invoice, Am_Mvc_Request $request, Am_Paysystem_Result $result)

@@ -61,7 +61,7 @@ class Am_Paysystem_Gocardless extends Am_Paysystem_Abstract
         $form->addAdvCheckbox("testing")
              ->setLabel("Is it a Sandbox(Testing) Account?");
 
-        $form->addTextarea("html", array('class' => 'el-wide', "rows"=>20))->setLabel(
+        $form->addTextarea("html", array('class' => 'am-el-wide', "rows"=>20))->setLabel(
             ___("Payment Instructions for customer\n".
             "you can enter any HTML here, it will be displayed to\n".
             "customer when they set up a direct debit using this payment system\n".

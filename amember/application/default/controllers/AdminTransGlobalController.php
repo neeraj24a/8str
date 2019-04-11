@@ -69,6 +69,11 @@ abstract class TranslationDataSource_Abstract
                         $translationData[$k] = $custom[$k];
                     }
                 }
+                foreach ($custom as $k => $v) {
+                    if (!isset($translationData[$k])) {
+                        $translationData[$k] = $custom[$k];
+                    }
+                }
             }
         }
         return $translationData;
@@ -279,6 +284,10 @@ class TranslationDataSource_DB extends TranslationDataSource_Abstract
             $result[ $field['title'] ] = "";
             $result[ $field['description'] ] = "";
         }
+        foreach ((array)Am_Di::getInstance()->config->get('helpdesk_ticket_fields') as $field) {
+            $result[ $field['title'] ] = "";
+            $result[ $field['description'] ] = "";
+        }
         foreach (Am_Di::getInstance()->db->select("SELECT title, `desc` FROM ?_folder") as $r) {
             $result[ $r['title'] ] = "";
             $result[ $r['desc'] ] = "";
@@ -299,9 +308,12 @@ class TranslationDataSource_DB extends TranslationDataSource_Abstract
             $result[ $r['title'] ] = "";
             $result[ $r['desc'] ] = "";
         }
-        foreach (Am_Di::getInstance()->db->select("SELECT title FROM ?_resource_category") as $r) {
+        foreach (Am_Di::getInstance()->db->select("SELECT title, description FROM ?_resource_category") as $r) {
             $result[ $r['title'] ] = "";
             $result[ $r['description'] ] = "";
+        }
+        foreach (Am_Di::getInstance()->db->select("SELECT title FROM ?_saved_form") as $r) {
+            $result[ $r['title'] ] = "";
         }
         foreach (Am_Di::getInstance()->db->select("SELECT title FROM ?_user_group") as $r) {
             $result[ $r['title'] ] = "";
@@ -357,19 +369,6 @@ class Am_Grid_DataSource_Array_Trans extends Am_Grid_DataSource_Array
     public function getTDataSource()
     {
         return $this->tDataSource;
-    }
-
-    public function setOrder($fieldNameOrRaw, $desc=null)
-    {
-        $this->_order_f = $fieldNameOrRaw;
-        $this->_order_d = $desc;
-        return parent::setOrder($fieldNameOrRaw, $desc);
-    }
-
-    //this method is only for use in Am_Grid_Filter
-    public function _friendGetOrder()
-    {
-        return array($this->_order_f, $this->_order_d);
     }
 
     protected function createTDataSource()
@@ -551,7 +550,7 @@ class AdminTransGlobalController extends Am_Mvc_Controller_Grid
     {
         $this->getView()->headScript()->appendScript($this->getJs());
 
-        $enabled = $this->getDi()->config->get('lang.enabled', array($this->getDi()->config->get('lang.default', 'en')));
+        $enabled = $this->getDi()->getLangEnabled();
         $locale = $this->getDi()->locale->getId();
         $lang = $this->getDi()->locale->getLanguage();
         $this->language = $this->getParam('language') ?: (in_array($locale, $enabled) ? $locale : $lang);
@@ -605,7 +604,7 @@ class AdminTransGlobalController extends Am_Mvc_Controller_Grid
                 $out .= sprintf('<input type="hidden" name="%s" value="%s">', $this->grid->getId() . '_' . $var, $val);
             }
         }
-        $out .= '<div class="group-wrap"><input type="submit" name="submit" value="Save"></div>'
+        $out .= '<div class="am-group-wrap"><input type="submit" name="submit" value="Save"></div>'
                 . '</form>';
     }
 
@@ -686,7 +685,7 @@ CUT
         }
         $url = $this->getDi()->url('admin-setup/language');
         $icon = $this->view->icon('plus');
-        return sprintf("<div class='filter-wrap'><form class='filter' method='get' action='%s'>\n",
+        return sprintf("<div class='am-filter-wrap'><form class='filter' method='get' action='%s'>\n",
                 $this->escape($this->getUrl(null, 'index'))) .
                 $filter .
                 " <a href=\"$url\" target=\"_top\" style=\"display:inline-block; vertical-align:middle\">$icon</a></form></div>\n" ;
@@ -695,7 +694,7 @@ CUT
     protected function getLanguageOptions()
     {
         $op =  $this->getDi()->languagesListUser;
-        $enabled = $this->getDi()->config->get('lang.enabled', array($this->getDi()->config->get('lang.default', 'en')));
+        $enabled = $this->getDi()->getLangEnabled();
         $_ = array();
         foreach ($enabled as $k) {
             $_[$k] = $op[$k];

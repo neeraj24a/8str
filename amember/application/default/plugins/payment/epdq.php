@@ -10,7 +10,7 @@
 class Am_Paysystem_Epdq extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     const ACTION_URL_TEST = 'https://mdepayments.epdq.co.uk/ncol/test/orderstandard.asp';
     const ACTION_URL_PROD = 'https://payments.epdq.co.uk/ncol/prod/orderstandard.asp';
@@ -37,10 +37,10 @@ class Am_Paysystem_Epdq extends Am_Paysystem_Abstract
     {
         $form->addText('pspid')
             ->setLabel('Your affiliation name in ePDQ');
-        $form->addSecretText('shain', array('class' => 'el-wide'))
+        $form->addSecretText('shain', array('class' => 'am-el-wide'))
             ->setLabel("SHA IN Pass Phrase\n" .
                 "can be found on page Configuration -> Technical Information -> Data and origin verification in your ePDQ account");
-        $form->addSecretText('shaout', array('class' => 'el-wide'))
+        $form->addSecretText('shaout', array('class' => 'am-el-wide'))
             ->setLabel("SHA OUT Pass Phrase\n" .
                 "can be found on page Configuration -> Technical Information -> Transaction Feedback in your ePDQ account");
         $form->addAdvCheckbox('testing')

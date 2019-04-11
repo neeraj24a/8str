@@ -3,7 +3,7 @@
 class Am_Plugin_ConversionTrack extends Am_Plugin
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.5.3';
+    const PLUGIN_REVISION = '5.6.0';
     const TRACKED_DATA_KEY = 'conversion-track-done';
 
     protected $_configPrefix = 'misc.';
@@ -25,7 +25,7 @@ class Am_Plugin_ConversionTrack extends Am_Plugin
 
     function _initSetupForm(Am_Form_Setup $form)
     {
-        $form->addTextarea('sale', 'rows=10 class=el-wide')
+        $form->addTextarea('sale', 'rows=10 class=am-el-wide')
              ->setLabel("Sale Tracking Code\n" .
                    "The following variables will be automatically replaced:<br>"
                  . "%payment.tax%<br>"
@@ -40,7 +40,7 @@ class Am_Plugin_ConversionTrack extends Am_Plugin
                  . "to run cycle for all items in invoice, you may use %item.item_title% %item.qty%"
                  . " %item.first_total% %item.item_id% and similar variables inside"
         );
-        $form->addTextarea('sale_first', 'rows=10 class=el-wide')
+        $form->addTextarea('sale_first', 'rows=10 class=am-el-wide')
              ->setLabel("First Sale Tracking Code (optional)\n" .
                    "The following variables will be automatically replaced:<br>"
                  . "%payment.tax%<br>"
@@ -55,25 +55,25 @@ class Am_Plugin_ConversionTrack extends Am_Plugin
                  . "to run cycle for all items in invoice, you may use %item.item_title% %item.qty%"
                  . " %item.first_total% %item.item_id% and similar variables inside"
         );
-        $form->addTextarea('free', 'rows=10 class=el-wide')
+        $form->addTextarea('free', 'rows=10 class=am-el-wide')
             ->setLabel("Free Signup (optional)\n" .
                 "will be displayed once customer finish "
                 . "signup for free products (without a payment)");
 
-        $form->addTextarea('signup', 'rows=10 class=el-wide')
+        $form->addTextarea('signup', 'rows=10 class=am-el-wide')
             ->setLabel("Signup Tracking Code\n" .
                 "will be included once customer visits signup page "
                 . "(note - each time when visits, not when signup form is submitted!)");
 
-        $form->addTextarea('tracking', 'rows=10 class=el-wide')
+        $form->addTextarea('tracking', 'rows=10 class=am-el-wide')
             ->setLabel("Tracking Code (optional)\n" .
                 "will be used each time when customer visits an aMember page");
 
-        $form->addTextarea('header', 'rows=10 class=el-wide')
+        $form->addTextarea('header', 'rows=10 class=am-el-wide')
             ->setLabel("Header (optional)\n" .
                 "if specified, this code will be included once before other tracking codes");
 
-        $form->addTextarea('footer', 'rows=10 class=el-wide')
+        $form->addTextarea('footer', 'rows=10 class=am-el-wide')
             ->setLabel("Footer (optional)\n" .
                 "if specified, this code will be included once after other tracking codes");
 

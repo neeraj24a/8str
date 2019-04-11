@@ -35,13 +35,26 @@ $this->params['breadcrumbs'][] = $this->title;
                         DetailView::widget([
                             'model' => $model,
                             'attributes' => [
+								[
+                                    'attribute' => 'is_guest',
+                                    'value' => function($model) {
+										if($model->is_guest == 0)
+											return 'No';
+										else
+											return 'Yes';
+                                    }
+                                ],
                                 [
                                     'attribute' => 'customer',
                                     'value' => function($model) {
-                                        return \backend\models\Users::findOne($model->customer)->username;
+										if($model->is_guest == 0)
+											return \backend\models\Users::findOne($model->customer)->username;
+										else
+											return \backend\models\Guests::findOne($model->customer)->email;
                                     }
                                 ],
                                 'order_number',
+								'printful_order',
                                 [
                                     'attribute' => 'order_amount',
                                     'value' => function($model) {
@@ -160,20 +173,24 @@ $this->params['breadcrumbs'][] = $this->title;
                         <table class='table'>
                             <thead>
                                 <tr>
-                                    <th>Address Line 1</th>
+                                    <th>Name</th>
+									<th>Address Line 1</th>
                                     <th>Address Line 2</th>
                                     <th>City</th>
                                     <th>State</th>
                                     <th>Zip</th>
+									<th>Contact</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><?php echo $billing->address_line_1; ?></td>
+                                    <td><?php echo $billing->first_name.' '.$billing->last_name; ?></td>
+									<td><?php echo $billing->address_line_1; ?></td>
                                     <td><?php echo $billing->address_line_2; ?></td>
                                     <td><?php echo $billing->city; ?></td>
                                     <td><?php echo $billing->state; ?></td>
                                     <td><?php echo $billing->zip; ?></td>
+									<td><?php echo $billing->contact; ?></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -197,20 +214,24 @@ $this->params['breadcrumbs'][] = $this->title;
                         <table class='table'>
                             <thead>
                                 <tr>
-                                    <th>Address Line 1</th>
+                                    <th>Name</th>
+									<th>Address Line 1</th>
                                     <th>Address Line 2</th>
                                     <th>City</th>
                                     <th>State</th>
                                     <th>Zip</th>
+									<th>Contact</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
+									<td><?php echo $shipping->first_name.' '.$shipping->last_name; ?></td>
                                     <td><?php echo $shipping->address_line_1; ?></td>
                                     <td><?php echo $shipping->address_line_2; ?></td>
                                     <td><?php echo $shipping->city; ?></td>
                                     <td><?php echo $shipping->state; ?></td>
                                     <td><?php echo $shipping->zip; ?></td>
+									<td><?php echo $shipping->contact; ?></td>
                                 </tr>
                             </tbody>
                         </table>

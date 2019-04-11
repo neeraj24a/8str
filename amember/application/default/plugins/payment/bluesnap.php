@@ -13,7 +13,7 @@
 class Am_Paysystem_Bluesnap extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_PRODUCTION;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'BlueSnap';
     protected $defaultDescription = 'Credit Card Payment';
@@ -69,7 +69,7 @@ class Am_Paysystem_Bluesnap extends Am_Paysystem_Abstract
     function _processHosted(Invoice $invoice, Am_Mvc_Request $request, Am_Paysystem_Result $result)
     {
         $a = new Am_Paysystem_Action_Form(
-            $this->getConfig('testing') ? "https://sandbox.bluesnap.com/buynow/checkout" : "https://www.bluesnap.com/buynow/checkout"
+            $this->getConfig('testing')==self::MODE_LIVE ? "https://www.bluesnap.com/buynow/checkout" : "https://sandbox.bluesnap.com/buynow/checkout"
             );
         $a->merchantid=$this->getConfig('merchantid');
         $a->amount = $invoice->first_total;

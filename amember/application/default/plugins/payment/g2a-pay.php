@@ -12,7 +12,7 @@ class Am_Paysystem_G2aPay extends Am_Paysystem_Abstract
 
     const
         PLUGIN_STATUS = self::STATUS_BETA,
-        PLUGIN_REVISION = '5.5.0',
+        PLUGIN_REVISION = '5.6.0',
         CREATE_URL = 'https://checkout.pay.g2a.com/index/createQuote',
         TEST_CREATE_URL = 'https://checkout.test.pay.g2a.com/index/createQuote',
         GATEWAY_URL = 'https://checkout.pay.g2a.com/index/gateway',
@@ -31,16 +31,16 @@ class Am_Paysystem_G2aPay extends Am_Paysystem_Abstract
     function _initSetupForm(\Am_Form_Setup $form)
     {
         $form
-            ->addText('api_hash', 'class="el-wide"')
+            ->addText('api_hash', 'class="am-el-wide"')
             ->setLabel(___("API Hash\n"
                     . "this is your store API Hash from merchant panel"));
 
         $form
-            ->addSecretText('api_secret', 'class="el-wide"')
+            ->addSecretText('api_secret', 'class="am-el-wide"')
             ->setLabel(___('API Secret'));
 
         $form
-            ->addText('merchant_email', 'class="el-wide"')
+            ->addText('merchant_email', 'class="am-el-wide"')
             ->setLabel(___("Merchant Email\n"
                     . "G2A account name"));
         $form->addAdvCheckbox('test_mode')->setLabel(___('Test Mode'));

@@ -248,7 +248,8 @@ class Upload extends Am_Record_WithData
              "htm" => "text/html",
              "html" => "text/html",
              "shtml" => "text/html",
-             "csv" => "text/csv"
+             "csv" => "text/csv",
+             "svg" => "image/svg+xml"
         );
         $ext = explode('.', $filename);
         $ext = strtolower(array_pop($ext));

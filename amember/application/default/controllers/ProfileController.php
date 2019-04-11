@@ -2,14 +2,13 @@
 
 class ProfileController extends Am_Mvc_Controller
 {
+    use Am_Mvc_Controller_User_Update;
+    
     /** @var int */
     protected $user_id;
     /** @var User */
     protected $user;
 
-    const SECURITY_CODE_STORE_PREFIX ='member-verify-email-profile-';
-    const SECURITY_CODE_EXPIRE = 48; //hrs
-    const EMAIL_CODE_LEN = 10;
 
     function init()
     {
@@ -31,31 +30,6 @@ class ProfileController extends Am_Mvc_Controller
             $this->view->assign('user', $this->user->toArray());
             $this->user_id = $this->user->user_id;
         }
-    }
-
-    function emailChangesToAdmin()
-    {
-        if(!$this->getDi()->config->get('profile_changed')) {
-            return;
-        }
-        $changes = '';
-        $olduser = $this->getDi()->userTable->load($this->user->user_id)->toArray();
-        foreach($this->user->toArray() as $k => $v){
-            if($k=='pass') continue;
-            if(($o=$olduser[$k])!=$v) {
-                is_scalar($o) || ($o = serialize($o));
-                is_scalar($v) || ($v = serialize($v));
-                $changes.="- $k: $o\n";
-                $changes.="+ $k: $v\n";
-            }
-        }
-        if(!strlen($changes)) {
-            return;
-        }
-        $et = Am_Mail_Template::load('profile_changed');
-        $et->setChanges($changes);
-        $et->setUser($this->user);
-        $et->sendAdmin();
     }
 
     function indexAction()
@@ -109,36 +83,18 @@ class ProfileController extends Am_Mvc_Controller
 
         if ($this->form->isSubmitted() && $this->form->validate())
         {
-            $oldUser = clone $this->user;
-            $oldUser->toggleFrozen(true);
-
             $vars = $this->form->getValue();
-            unset($vars['user_id']);
-            if (!empty($vars['pass']))
-                $this->user->setPass($vars['pass']);
-            unset($vars['pass']);
-
-            $ve = $this->handleEmail($record, $vars) ? 1 : 0;
-
-            $u = $this->user->setForUpdate($vars);
-            $this->emailChangesToAdmin();
-            $u->update();
-            $this->getDi()->hook->call(Am_Event::PROFILE_USER_UPDATED, array(
-                'vars' => $vars,
-                'oldUser' => $oldUser,
-                'user' => $u,
-                'form' => $this->form,
-                'savedForm' => $record
-            ));
-
+            
+            $u = $this->updateUser($this->user, $vars, $this->form);
+            
             $this->getDi()->auth->setUser($u);
-            $msg = $ve ? ___('Verification email has been sent to your address.
+            $msg = $this->isVerifyEmailState($u) ? ___('Verification email has been sent to your address.
                     E-mail will be changed in your account after confirmation') :
                     ___('Your profile has been updated successfully');
             return $this->_response->redirectLocation($this->_request->assembleUrl(false,true) . '?_msg='.  urlencode($msg));
         }
 
-        $this->view->title = $record->title;
+        $this->view->title = ___($record->title);
         $this->view->form = $this->form;
         $this->view->display('member/profile.phtml');
     }
@@ -153,7 +109,7 @@ class ProfileController extends Am_Mvc_Controller
             throw new Am_Exception_InputError(___('Link is either expired or invalid'));
         }
 
-        $data = $this->getDi()->store->getBlob(self::SECURITY_CODE_STORE_PREFIX . $user_id);
+        $data = $this->getDi()->store->getBlob('member-verify-email-profile-' . $user_id);
         if (!$data) {
             throw new Am_Exception_InputError(___('Security code is invalid'));
         }
@@ -199,7 +155,7 @@ class ProfileController extends Am_Mvc_Controller
                 $user->email = $data['email'];
                 $user->save();
 
-                $this->getDi()->store->delete(self::SECURITY_CODE_STORE_PREFIX . $user_id);
+                $this->getDi()->store->delete('member-verify-email-profile-' . $user_id);
 
                 $url = $this->getUrl('member', 'index');
                 $this->_response->redirectLocation($url);
@@ -214,51 +170,4 @@ class ProfileController extends Am_Mvc_Controller
         }
     }
 
-    protected function handleEmail(SavedForm $form, & $vars)
-    {
-        /* @var $user User */
-        $user = $this->user;
-        $bricks = $form->getBricks();
-        foreach ($bricks as $brick) {
-            if ($brick->getClass() == 'email'
-                    && $brick->getConfig('validate')
-                    && $vars['email'] != $user->email) {
-
-                $code = $this->getDi()->security->randomString(self::EMAIL_CODE_LEN);
-
-                $data = array(
-                    'security_code' => $code,
-                    'email' => $vars['email']
-                );
-
-                $this->getDi()->store->setBlob(
-                    self::SECURITY_CODE_STORE_PREFIX . $this->user_id,
-                    serialize($data),
-                    sqlTime(Am_Di::getInstance()->time + self::SECURITY_CODE_EXPIRE * 3600)
-                );
-
-                $tpl = Am_Mail_Template::load('verify_email_profile', get_first($user->lang,
-                    Am_Di::getInstance()->app->getDefaultLocale(false)), true);
-
-                $cur_email = $user->email;
-                $user->email = $vars['email'];
-
-                $tpl->setUser($user);
-                $tpl->setCode($code);
-                $tpl->setUrl(
-                    $this->getDi()->url('profile/confirm-email',
-                        array('em'=>$this->getDi()->security->obfuscate($user->pk()) . '-' . $code)
-                    , false, true)
-                );
-                $tpl->send($user);
-
-                $user->email = $cur_email;
-
-                unset($vars['email']);
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

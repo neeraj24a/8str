@@ -9,7 +9,7 @@
 class Am_Paysystem_Ogone extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     const LIVE_URL = "https://secure.ogone.com/ncol/prod/orderstandard";
     const SANDBOX_URL = "https://secure.ogone.com/ncol/test/orderstandard";
@@ -32,9 +32,9 @@ class Am_Paysystem_Ogone extends Am_Paysystem_Abstract
         $form->addText('merchant_id', array('size' => 20))->setLabel('Your Merchant ID');
         $form->addSelect('hashing_method')->setLabel('Hashing Method')
             ->loadOptions(array(0 => 'Main parameters only', 1 => 'Each parameter followed by the pass phrase'));
-        $form->addSecretText('secret', array('class' => 'el-wide'))->setLabel('SHA-IN Signature');
-        $form->addSecretText('secret_ipn', array('class' => 'el-wide'))->setLabel('SHA-OUT Signature');
-        $form->addText('alias_usage', array('class' => 'el-wide'))->setLabel("Alias usage\n" .
+        $form->addSecretText('secret', array('class' => 'am-el-wide'))->setLabel('SHA-IN Signature');
+        $form->addSecretText('secret_ipn', array('class' => 'am-el-wide'))->setLabel('SHA-OUT Signature');
+        $form->addText('alias_usage', array('class' => 'am-el-wide'))->setLabel("Alias usage\n" .
             'required for recurring only');
         $form->addAdvcheckbox('testing')->setLabel('Testing mode');
     }

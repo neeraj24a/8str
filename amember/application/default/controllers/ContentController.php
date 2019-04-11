@@ -2,13 +2,6 @@
 
 class ContentController extends Am_Mvc_Controller
 {
-    function preDispatch()
-    {
-        if ($uid = $this->getDi()->auth->getUserId()) {
-            $this->getDi()->accessLogTable->logOnce($uid);
-        }
-    }
-
     /** @access private for unit testing */
     public function _setHelper($v)
     {

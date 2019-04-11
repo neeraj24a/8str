@@ -3,7 +3,7 @@
 abstract class Am_Paysystem_Myshortcart_Base extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
 	
 	const METHOD_DOKU = 2;
 	const METHOD_ALFA = 4;

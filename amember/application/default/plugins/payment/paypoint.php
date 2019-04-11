@@ -11,7 +11,7 @@ class Am_Paysystem_Paypoint extends Am_Paysystem_Abstract
 {
 
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
     const URL = "https://www.secpay.com/java-bin/ValCard";
     const PAYPOINT_DIGEST = 'paypoint_digest';
 

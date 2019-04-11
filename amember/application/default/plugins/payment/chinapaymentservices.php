@@ -10,7 +10,7 @@
 class Am_Paysystem_Chinapaymentservices extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.4.3';
+    const PLUGIN_REVISION = '5.6.0';
     const LIVE_URL = 'https://sales.chinapaymentservices.com/hosted/index/';
 
     protected $defaultTitle = 'ChinaPaymentServices';

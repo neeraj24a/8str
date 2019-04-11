@@ -9,7 +9,7 @@
  */
 class Am_Paysystem_Fasapay extends Am_Paysystem_Abstract{
     const PLUGIN_STATUS     = self::STATUS_BETA;
-    const PLUGIN_REVISION   = '5.5.0';
+    const PLUGIN_REVISION   = '5.6.0';
 
     protected $defaultTitle         = 'Fasapay';
     protected $defaultDescription   = '';
@@ -34,7 +34,7 @@ class Am_Paysystem_Fasapay extends Am_Paysystem_Abstract{
             ->setLabel('FasaPay Store Name')
             ->addRule('required');
 
-        $form->addSecretText('security_word', array('class' => 'el-wide'))
+        $form->addSecretText('security_word', array('class' => 'am-el-wide'))
             ->setLabel('FasaPay Store Security Word')
             ->addRule('required');
 

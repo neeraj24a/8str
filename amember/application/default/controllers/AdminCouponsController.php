@@ -8,7 +8,7 @@
 *    Web: http://www.cgi-central.net
 *    Details: Coupons management
 *    FileName $RCSfile$
-*    Release: 5.4.3 ($Revision$)
+*    Release: 5.6.0 ($Revision$)
 *
 * Please direct bug reports,suggestions or feedback to the cgi-central forums.
 * http://www.cgi-central.net/forum/
@@ -56,7 +56,7 @@ class Am_Form_Admin_CouponBatch extends Am_Form_Admin
                 Coupon::DISCOUNT_NUMBER  => Am_Currency::getDefault()
             ));
 
-        $this->addTextarea('comment', array('class' => 'el-wide'))
+        $this->addTextarea('comment', array('class' => 'am-el-wide'))
             ->setLabel(___("Comment\nfor admin reference"));
 
         if (!$this->record->isLoaded()) {
@@ -96,9 +96,9 @@ class Am_Form_Admin_CouponBatch extends Am_Form_Admin
             $this->addScript()
                 ->setScript(<<<CUT
 jQuery('[name=_source]').change(function(){
-    jQuery('[rel=source-generate]').closest('.row').toggle(jQuery('[name=_source]:checked').val() == $s_generate);
-    jQuery('[rel=source-file]').closest('.row').toggle(jQuery('[name=_source]:checked').val() == $s_file);
-    jQuery('[rel=source-input]').closest('.row').toggle(jQuery('[name=_source]:checked').val() == $s_input);
+    jQuery('[rel=source-generate]').closest('.am-row').toggle(jQuery('[name=_source]:checked').val() == $s_generate);
+    jQuery('[rel=source-file]').closest('.am-row').toggle(jQuery('[name=_source]:checked').val() == $s_file);
+    jQuery('[rel=source-input]').closest('.am-row').toggle(jQuery('[name=_source]:checked').val() == $s_input);
 }).change();
 CUT
                 );
@@ -208,6 +208,8 @@ CUT;
 
 class Am_Grid_Filter_Coupon extends Am_Grid_Filter_Abstract
 {
+    protected $varList = array('filter', 'pid');
+
     public function getTitle()
     {
         return '&nbsp;';
@@ -217,9 +219,27 @@ class Am_Grid_Filter_Coupon extends Am_Grid_Filter_Abstract
     {
         if ($this->isFiltered()) {
             $q = $this->grid->getDataSource();
-            /* @var $q Am_Query */
-            $q->leftJoin('?_coupon', 'cc')
-              ->addWhere('cc.code=?', $this->vars['filter']);
+            if ($f = $this->getParam('filter')) {
+                /* @var $q Am_Query */
+                $q->leftJoin('?_coupon', 'cc')
+                  ->addWhere('cc.code=?', $f);
+            }
+            if ($pid = $this->getParam('pid')) {
+                /* @var $p Product */
+                $p = $this->grid->getDi()->productTable->load($pid);
+                $_ = array($pid);
+                foreach ($p->getBillingPlans() as $bp) {
+                    $_[] = "BP-{$bp->pk()}";
+                }
+                foreach ($p->getCategories() as $cid) {
+                    $_[] = "CATEGORY-{$cid}";
+                }
+                $_ = array_map(function($el) {
+                    return "CONCAT(',', product_ids, ',') LIKE " . $this->grid->getDi()->db->escape("%,{$el},%");
+                }, $_);
+                $_ = implode(" OR ", $_);
+                $q->addWhere("product_ids = '' OR product_ids IS NULL OR $_");
+            }
         }
     }
 
@@ -227,7 +247,7 @@ class Am_Grid_Filter_Coupon extends Am_Grid_Filter_Abstract
     {
         return $this->renderInputText(array(
             'placeholder' => ___('Coupon Code')
-        ));
+        )) .' '. $this->renderInputSelect('pid', array('' => ___('-- Product')) + $this->grid->getDi()->productTable->getOptions());
     }
 }
 
@@ -273,6 +293,7 @@ class AdminCouponsController extends Am_Mvc_Controller_Grid
         $grid->actionAdd(new Am_Grid_Action_Url('export', ___('Export'), $url))->setTarget('_top');
         $grid->actionAdd(new Am_Grid_Action_LiveEdit('comment'));
         $grid->actionAdd(new Am_Grid_Action_LiveCheckbox('is_recurring'));
+        $grid->actionAdd(new Am_Grid_Action_Group_Delete);
         $grid->setFormValueCallback('product_ids', array('RECORD', 'unserializeList'), array('RECORD', 'serializeList'));
         $grid->setFormValueCallback('require_product', array('RECORD', 'unserializeList'),  array('RECORD', 'serializeList'));
         $grid->setFormValueCallback('prevent_if_product', array('RECORD', 'unserializeList'),  array('RECORD', 'serializeList'));
@@ -327,7 +348,7 @@ function amOpenCoupons(id)
                 ,title: "$couponsTitle"
                 ,modal: true
             });
-            jQuery("#coupons .grid-wrap").ngrid();
+            jQuery("#coupons .am-grid-wrap").ngrid();
         }
     );
 }
@@ -502,7 +523,9 @@ CUT
         $grid->setPermissionId('grid_coupon');
         $grid->setEventId('gridCoupon');
         $grid->actionsClear();
-        $grid->actionAdd(new Am_Grid_Action_Insert)->setTarget(null);
+        $grid->actionAdd(new Am_Grid_Action_Insert)
+            ->setTarget(null);
+        $grid->actionAdd(new Am_Grid_Action_Group_Delete);
         $grid->addField('code', ___('Code'), true, null);
         $grid->addField(new Am_Grid_Field_Expandable('used_count', ___('Used For'), false))
             ->setGetFunction(array($this, 'getUsedCount'))
@@ -593,12 +616,12 @@ CUT;
 
         $out = '';
         $wrap = '<strong>' . ___('Transactions with this coupon:') . '</strong>' .
-                '<div><table class="grid">' .
+                '<div><table class="am-grid">' .
                 '<tr><th>' . ___('User') . '</th><th>' . ___('Invoice') . '</th><th>' .
                 ___('Date/Time') . '</th><th>' . ___('Receipt#') . '</th><th>' .
                 ___('Amount') . '</th><th>' . ___('Discount') . '</th></tr>' .
                 '%s</table></div>';
-        $tpl = '<tr class="grid-row"><td><a href="%s" target="_top" class="link">%s (%s)</a></td><td><a href="%s" target="_top" class="link">%d/%s</a></td><td>%s</td><td>%s</td><td align="right">%s</td><td align="right"><strong>%s</strong></td></tr>';
+        $tpl = '<tr class="am-grid-row"><td><a href="%s" target="_top" class="link">%s (%s)</a></td><td><a href="%s" target="_top" class="link">%d/%s</a></td><td>%s</td><td>%s</td><td align="right">%s</td><td align="right"><strong>%s</strong></td></tr>';
         foreach ($invoices as $invoice) {
             if ($invoice->getStatus() == Invoice::PENDING) continue;
             $payments = $this->getDi()->invoicePaymentTable->findBy(array(

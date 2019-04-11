@@ -14,7 +14,7 @@
 class Am_Paysystem_Paytrail extends Am_Paysystem_Abstract
 {
     const PLUGIN_STATUS = self::STATUS_BETA;
-    const PLUGIN_REVISION = '5.5.0';
+    const PLUGIN_REVISION = '5.6.0';
 
     protected $defaultTitle = 'Paytrail';
     protected $defaultDescription = 'Pay via Paytrail';

@@ -53,11 +53,11 @@ jQuery(function() {
 
     function toggle_do_not_generate_products() {
         if (jQuery('input[name=do_not_generate_products]').prop('checked')) {
-            jQuery('#form-products-count').parents('.row').hide();
-            jQuery('#form-product_ids').parents('.row').show();
+            jQuery('#form-products-count').parents('.am-row').hide();
+            jQuery('#form-product_ids').parents('.am-row').show();
         } else {
-            jQuery('#form-products-count').parents('.row').show();
-            jQuery('#form-product_ids').parents('.row').hide();
+            jQuery('#form-products-count').parents('.am-row').show();
+            jQuery('#form-product_ids').parents('.am-row').hide();
         }
     }
 

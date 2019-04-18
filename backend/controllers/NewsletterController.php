@@ -3,6 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
+use yii\helpers\Url;
+use yii\web\BadRequestHttpException;
 use backend\models\Newsletter;
 use backend\models\NewsletterSearch;
 use yii\web\Controller;

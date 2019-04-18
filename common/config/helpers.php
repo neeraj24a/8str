@@ -22,6 +22,22 @@ function getParams($key) {
 	return Yii::$app->params[$key];
 }
 
+function getOrderDetails($detail){
+	$detail = unserialize($detail);
+	$text = '';
+	while ($a = current($detail)) {
+    		if ($a == $detail[0]) {
+        		$text = $text.'Color: '.key($detail);
+		}
+    	}
+	while ($b = current($detail[0])) {
+    		if ($b == $detail[0][0]) {
+        		$text = $text.' Size: '.key($detail[0]);
+		}
+    	}
+	return $text;
+}
+
 function getUtubeId($url) {
     /*$video_id = explode("?v=", $link); // For videos like http://www.youtube.com/watch?v=...
     if (empty($video_id[1]))

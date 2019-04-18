@@ -133,6 +133,14 @@ use yii\helpers\Url;
                     <span data-localize="sidebar.nav.element.ELEMENTS">Orders</span>
                 </a>
             </li>
+	    <li class="nav-item  <?php if ($active == "newsletter") {
+                            echo 'active';
+                        } ?>">
+                <a class="nav-link" href="<?php echo Url::toRoute("/newsletter"); ?>" title="Users">
+                    <i class="material-icons">person</i>
+                    <span data-localize="sidebar.nav.element.ELEMENTS">Newsletter</span>
+                </a>
+            </li>
         </ul>
     </div>
 </div>

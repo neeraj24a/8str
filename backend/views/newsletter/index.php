@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <h4 class="card-title"><?= Html::encode($this->title) ?></h4>
                     
                     <div class="col-lg-6 pull-right">
-                        <?= Html::a('Export', '#'), ['class' => 'mb-sm btn btn-info ml-10 pull-right', 'id' => 'export']) ?>
+                        <?= Html::a('Export', ['export']), ['class' => 'mb-sm btn btn-info ml-10 pull-right', 'data-pjax' => 0, 'target' => '_blank']) ?>
                         <?= Html::a('Add Email', ['create'], ['class' => 'mb-sm btn btn-success ml-10 pull-right']) ?>
                         <?= Html::a('Reset', ['/newsletter'], ['class' => 'mb-sm btn btn-warning ml-10 pull-right']) ?>
                     </div>
@@ -89,12 +89,3 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 </div>
-<?php
-$this->registerJs("
-    $(document).ready(function(){
-        $('#export').click(function(){
-            var url = https://www.8thwonderpromos.com/admin/newsletter/export;
-            window.location = url;
-        });
-    });
-"); ?>

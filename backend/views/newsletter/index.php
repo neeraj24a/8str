@@ -93,8 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerJs("
     $(document).ready(function(){
         $('#export').click(function(){
-            var url = window.location.href;
-            url+'?export=excel';
+            var url = https://www.8thwonderpromos.com/admin/newsletter/export;
             window.location = url;
         });
     });

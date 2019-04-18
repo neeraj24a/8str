@@ -55,7 +55,7 @@ class NewsletterController extends Controller
         ]);
     }
     
-    public actionExport()
+    public function actionExport()
     {
         $letters = Newsletter::findAll();
         $records = [];

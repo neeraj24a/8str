@@ -57,7 +57,7 @@ class NewsletterController extends Controller
     
     public function actionExport()
     {
-        $letters = Newsletter::findAll();
+        $letters = Newsletter::find()->all();
         $records = [];
         foreach($letters as $letter){
             $row['Email'] = $letter->email;

@@ -116,6 +116,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     <th>Type</th>
                                     <th>Quantity</th>
                                     <th>Description</th>
+				    <th>Details</th>
                                     <th>Price</th>
                                     <th>Purchased Price</th>
                                     <th>Total</th>
@@ -137,6 +138,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         </td>
                                         <td><?php echo $detail->quantity; ?></td>
                                         <td><?php echo $detail->description; ?></td>
+					<td><?php print_r(unserialize($detail->quantity_details)); ?></td>
                                         <td>$<?php echo $detail->product_price; ?></td>
                                         <td>$<?php echo $detail->purchased_price; ?></td>
                                         <td>$<?php echo $detail->purchased_price * $detail->quantity; ?></td>
@@ -145,6 +147,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         <td>Shop</td>
                                         <td><?php echo $detail->quantity; ?></td>
                                         <td><?php echo $detail->description; ?></td>
+					<td><?php print_r(unserialize($detail->quantity_details)); ?></td>
                                         <td>$<?php echo $detail->product_price; ?></td>
                                         <td>$<?php echo $detail->purchased_price; ?></td>
                                         <td>$<?php echo $detail->purchased_price * $detail->quantity; ?></td>

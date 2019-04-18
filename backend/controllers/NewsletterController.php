@@ -54,6 +54,31 @@ class NewsletterController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+    
+    public actionExport()
+    {
+        $letters = Newsletter::findAll();
+        $records = [];
+        foreach($letters as $letter){
+            $row['Email'] = $letter->email;
+            array_push($records, $row);
+        }
+        $filename = "newsletters.xls";	 
+        header("Content-Type: application/vnd.ms-excel");
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+        $heading = false;
+		if(!empty($records))
+	        foreach($records as $row) {
+		        if(!$heading) {
+	                // display field/column names as a first row
+	                echo implode("\t", array_keys($row)) . "\n";
+	                $heading = true;
+		        }
+		        echo implode("\t", array_values($row)) . "\n";
+	        }
+		exit;
+        exit();
+    }
 
     /**
      * Displays a single Newsletter model.

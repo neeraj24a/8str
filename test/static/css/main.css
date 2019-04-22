@@ -49,8 +49,8 @@ header.fixed-header .e-logo { margin: 10px 0 10px 63px;}
 .e-video-box:nth-child(5n) { margin-right: 0;}
 .videoPlay-box{height: 155px;position: relative;}
 .videoPlay-box a img { position: absolute; top: 50%; left: 50%; width: 38px; height: 39px; margin: -19px 0 0 -19px;}
-.e-video-box h3 { padding: 23px 0 3px 24px; font-size: 16px; color: #000; font-family: 'proxima_novasemibold'; float: left; width: calc(100% - 22px);}	
-.e-video-box p {font-size: 14px; color: #9d9d9d; padding: 22px 0 0 24px;}
+.e-video-box h3 { padding: 23px 12px 3px 12px; font-size: 16px; color: #000; font-family: 'proxima_novasemibold'; float: left; width: calc(100% - 22px);}	
+.e-video-box p {font-size: 14px; color: #9d9d9d; padding: 22px 12px 0 12px;}
 .e-more-videos{ text-align:center; margin:50px auto auto;}
 .e-more-videos a{background:#000; width:205px; height:62px; line-height:62px; float: none; display: inline-block; color:#fff;}
 	
@@ -150,3 +150,5 @@ footer ul li { display: inline-block; margin: 0 2px 35px;}
 
 .e-home-banner a.e-signup:hover{ color:#000; background:#cecece;}
 .e-home-content .sim-button:hover{ color:#000; background:#cecece;}
+
+/*Jplayer URL https://cdn.prahec.com/project/flatie-jplayer-skin*/

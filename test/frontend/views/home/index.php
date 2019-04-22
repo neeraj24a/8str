@@ -25,7 +25,7 @@ use common\widgets\Alert;
 		<div class="e-video-box" data-aos="fade-up" data-aos-delay="200" data-aos-once="true">
 			<div class="videoPlay-box ui-full postionR">
 				<figure><img src="static/images/video<?php echo$j; ?>.jpg" width="223" height="156" alt="video"></figure> 
-				<a href="javascript:void(0);"><img src="static/images/play.png" width="39" height="38" alt="play"></a>
+				<a href="javascript:void(0);"><img src="static/images/thumb.png" width="39" height="38" alt="play"></a>
 			</div>
 			<h3 title="<?php echo $v->title; ?>"><?php echo excerpt($v->title, 40); ?></h3>
 			<p title="<?php echo $v->artist; ?>"><?php echo excerpt($v->artist, 25); ?></p>

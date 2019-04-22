@@ -18,7 +18,16 @@ class HomeController extends Controller {
      */
     public function actionIndex()
     {
-        $banners = Banners::find()->all();
+		$trending = [];
+		$audioUrl = 'https://pool.8thwonderpromos.com/day-trending?search[query][type]=audio&search[query][sort]=createdAt%20DESC';
+		$resp = file_get_contents($audioUrl);
+		$resp = json_decode($resp);
+		$trending['audio'] = $resp;
+		$videoUrl = 'https://pool.8thwonderpromos.com/day-trending?search[query][type]=video&search[query][sort]=createdAt%20DESC';
+		$videoResp = file_get_contents($videoUrl);
+		$videoResp = json_decode($videoResp);
+		$trending['video'] = $videoResp;
+		$banners = Banners::find()->all();
         $products = Products::find()->where('is_featured = :featured',[':featured' => 1])->orderBy(['date_entered' => 'DESC'])->limit(5)->all();
         $drops = Drops::find()->orderBy(['date_entered' => 'DESC'])->limit(5)->all();
         $model = new SubscribeForm();

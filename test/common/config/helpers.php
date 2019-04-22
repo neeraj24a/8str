@@ -22,6 +22,20 @@ function getParams($key) {
 	return Yii::$app->params[$key];
 }
 
+function excerpt($str, $len = 25) {
+	if (strlen($str) < $len) {
+		return $str;
+	} else {
+
+	   $new = wordwrap($str, $len - 2);
+	   $new = explode("\n", $new);
+
+	   $new = $new[0] . '...';
+
+	   return $new;
+	}
+}
+
 function getUtubeId($url) {
     /*$video_id = explode("?v=", $link); // For videos like http://www.youtube.com/watch?v=...
     if (empty($video_id[1]))

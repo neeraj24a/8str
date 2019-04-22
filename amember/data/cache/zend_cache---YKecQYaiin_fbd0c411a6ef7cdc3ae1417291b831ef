@@ -1,92 +1,88 @@
-a:4:{s:4:"data";s:7398:"s:7388:"<div class="admin-last admin-activity">
+a:4:{s:4:"data";s:6822:"s:6812:"<div class="admin-last admin-activity">
     <h2>Recent Activity</h2>
     <div class="am-grid-container">
         <table class="am-grid grid-no-highlight">
                         <tr
                 class="am-grid-row even admin-activity_event admin-activity_event-signin">
                 <td>
-                                                    <strong>Martin Luther</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=7655" data-tooltip-url="/amember/admin-users/card?id=7655">shotiime</a>)<!--
-    --> logged in from 172.58.4.254                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-04-11T16:40:26-04:00" title="04/11/19, 04:40 PM">&#x1f550; 16 min ago</time>                                    </td>
+                                                    <strong>Darrell Felix</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15520" data-tooltip-url="/amember/admin-users/card?id=15520">deejayrolo</a>)<!--
+    --> logged in from 104.48.190.34                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-04-21T18:25:18-04:00" title="04/21/19, 06:25 PM">&#x1f550; 19 min ago</time>                                    </td>
             </tr>
                         <tr
                 class="am-grid-row odd admin-activity_event admin-activity_event-signin">
                 <td>
-                                                    <strong>Danilo Cajamarca</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=10706" data-tooltip-url="/amember/admin-users/card?id=10706">dj danilo</a>)<!--
-    --> logged in from 66.65.29.62                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-04-11T16:11:46-04:00" title="04/11/19, 04:11 PM">&#x1f550; 45 min ago</time>                                    </td>
-            </tr>
-                        <tr
-                class="am-grid-row even admin-activity_event admin-activity_event-signin">
-                <td>
-                                                    <strong>Chad Wildrick</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=6871" data-tooltip-url="/amember/admin-users/card?id=6871">chadallac32</a>)<!--
-    --> logged in from 99.203.143.90                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-04-11T16:02:55-04:00" title="04/11/19, 04:02 PM">&#x1f550; 54 min ago</time>                                    </td>
-            </tr>
-                        <tr
-                class="am-grid-row odd admin-activity_event admin-activity_event-signin">
-                <td>
-                                                    <strong>Juan Bravo</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15264" data-tooltip-url="/amember/admin-users/card?id=15264">djqemist</a>)<!--
-    --> logged in from 189.225.205.66                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-04-11T15:55:28-04:00" title="04/11/19, 03:55 PM">&#x1f550; 1 hrs ago</time>                                    </td>
-            </tr>
-                        <tr
-                class="am-grid-row even admin-activity_event admin-activity_event-payment">
-                <td>
-                                        <strong class="admin-activity_payment-amount"><span class="admin-activity_payment-amount-sign">&plus;</span> <span>$9.99</span></strong><br />
-                        Payment from         <strong>A Caldwell</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15502" data-tooltip-url="/amember/admin-users/card?id=15502">djtop1</a>)<!--
-    -->,
-                        <a class="link" href="/amember/admin-user-payments/index/user_id/15502#invoice-9612" data-tooltip-url="/amember/admin-payments/invoice-card?id=9612">9612/DHXQD</a>
-                        &ndash; 8th Wonder Promos Monthly Membership (First Month $9.99 then $19.99 Monthly)                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-04-11T15:49:50-04:00" title="04/11/19, 03:49 PM">&#x1f550; 1 hrs ago</time><small class="admin-activity_event-extra">, stripe</small>
-                                    </td>
-            </tr>
-                        <tr
-                class="am-grid-row odd admin-activity_event admin-activity_event-signin">
-                <td>
-                                                    <strong>A Caldwell</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15502" data-tooltip-url="/amember/admin-users/card?id=15502">djtop1</a>)<!--
-    --> logged in from 107.77.249.2                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-04-11T15:48:36-04:00" title="04/11/19, 03:48 PM">&#x1f550; 1 hrs ago</time>                                    </td>
+                                                    <strong>Tracey Farrar</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15603" data-tooltip-url="/amember/admin-users/card?id=15603">djtsmooth</a>)<!--
+    --> logged in from 66.87.85.197                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-04-21T17:16:16-04:00" title="04/21/19, 05:16 PM">&#x1f550; 1 hrs ago</time>                                    </td>
             </tr>
                         <tr
                 class="am-grid-row even admin-activity_event admin-activity_event-signup">
                 <td>
-                                                    <strong>A Caldwell</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15502" data-tooltip-url="/amember/admin-users/card?id=15502">djtop1</a>)<!--
-    --> registered a new account from 107.77.249.2                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-04-11T15:48:34-04:00" title="04/11/19, 03:48 PM">&#x1f550; 1 hrs ago</time><small class="admin-activity_event-extra">, 8th Wonder Promos Sign Up Form</small>                                    </td>
+                                                    <strong>Tracey Farrar</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15603" data-tooltip-url="/amember/admin-users/card?id=15603">djtsmooth</a>)<!--
+    --> registered a new account from 66.87.85.197                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-04-21T17:16:09-04:00" title="04/21/19, 05:16 PM">&#x1f550; 1 hrs ago</time><small class="admin-activity_event-extra">, 8th Wonder Promos Sign Up Form</small>                                    </td>
             </tr>
                         <tr
                 class="am-grid-row odd admin-activity_event admin-activity_event-signin">
                 <td>
-                                                    <strong>Jax Martinez</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15463" data-tooltip-url="/amember/admin-users/card?id=15463">jaxstone23</a>)<!--
-    --> logged in from 130.105.204.24                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-04-11T15:37:01-04:00" title="04/11/19, 03:37 PM">&#x1f550; 1 hrs ago</time>                                    </td>
+                                                    <strong>Fabian Betancourt</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15546" data-tooltip-url="/amember/admin-users/card?id=15546">fabianpamela13</a>)<!--
+    --> logged in from 24.181.89.164                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-04-21T17:07:28-04:00" title="04/21/19, 05:07 PM">&#x1f550; 1 hrs ago</time>                                    </td>
             </tr>
                         <tr
                 class="am-grid-row even admin-activity_event admin-activity_event-signin">
                 <td>
-                                                    <strong>Bob Settell</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15500" data-tooltip-url="/amember/admin-users/card?id=15500">bwillch75</a>)<!--
-    --> logged in from 72.46.55.197                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-04-11T15:33:57-04:00" title="04/11/19, 03:33 PM">&#x1f550; 1 hrs ago</time>                                    </td>
+                                                    <strong>Kenny Whitehead</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15534" data-tooltip-url="/amember/admin-users/card?id=15534">djchino</a>)<!--
+    --> logged in from 108.233.92.181                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-04-21T16:33:52-04:00" title="04/21/19, 04:33 PM">&#x1f550; 2 hrs ago</time>                                    </td>
             </tr>
                         <tr
-                class="am-grid-row odd admin-activity_event admin-activity_event-signup">
+                class="am-grid-row odd admin-activity_event admin-activity_event-signin">
                 <td>
-                                                    <strong>Bob Settell</strong>
-        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15500" data-tooltip-url="/amember/admin-users/card?id=15500">bwillch75</a>)<!--
-    --> registered a new account from 72.46.55.197                        <br />
-                        <time class="admin-activity_event-time" datetime="2019-04-11T15:33:54-04:00" title="04/11/19, 03:33 PM">&#x1f550; 1 hrs ago</time><small class="admin-activity_event-extra">, 8th Wonder Promos Sign Up Form</small>                                    </td>
+                                                    <strong>Jose A</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=15178" data-tooltip-url="/amember/admin-users/card?id=15178">dvjmando79</a>)<!--
+    --> logged in from 172.56.16.86                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-04-21T15:37:29-04:00" title="04/21/19, 03:37 PM">&#x1f550; 3 hrs ago</time>                                    </td>
+            </tr>
+                        <tr
+                class="am-grid-row even admin-activity_event admin-activity_event-signin">
+                <td>
+                                                    <strong>Moraci DJ</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=657" data-tooltip-url="/amember/admin-users/card?id=657">moracidj</a>)<!--
+    --> logged in from 186.205.122.168                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-04-21T15:24:57-04:00" title="04/21/19, 03:24 PM">&#x1f550; 3 hrs ago</time>                                    </td>
+            </tr>
+                        <tr
+                class="am-grid-row odd admin-activity_event admin-activity_event-signin">
+                <td>
+                                                    <strong>carlos Charlies</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=14141" data-tooltip-url="/amember/admin-users/card?id=14141">cncharlies</a>)<!--
+    --> logged in from 189.221.36.72                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-04-21T15:24:14-04:00" title="04/21/19, 03:24 PM">&#x1f550; 3 hrs ago</time>                                    </td>
+            </tr>
+                        <tr
+                class="am-grid-row even admin-activity_event admin-activity_event-signin">
+                <td>
+                                                    <strong>willie c byrd</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=1393" data-tooltip-url="/amember/admin-users/card?id=1393">wildel</a>)<!--
+    --> logged in from 173.63.254.226                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-04-21T13:16:01-04:00" title="04/21/19, 01:16 PM">&#x1f550; 5 hrs ago</time>                                    </td>
+            </tr>
+                        <tr
+                class="am-grid-row odd admin-activity_event admin-activity_event-signin">
+                <td>
+                                                    <strong>Chris Jean Baptiste</strong>
+        (<a class="link" href="/amember/admin-users?_u_a=edit&_u_id=6421" data-tooltip-url="/amember/admin-users/card?id=6421">djchrisz</a>)<!--
+    --> logged in from 144.178.5.132                        <br />
+                        <time class="admin-activity_event-time" datetime="2019-04-21T11:25:06-04:00" title="04/21/19, 11:25 AM">&#x1f550; 7 hrs ago</time>                                    </td>
             </tr>
                     </table>
     </div>
 </div>
-";";s:8:"lifetime";i:2592000;s:6:"expire";i:1557608228;s:8:"priority";i:8;}
+";";s:8:"lifetime";i:2592000;s:6:"expire";i:1558478713;s:8:"priority";i:8;}

@@ -10,291 +10,195 @@ use common\widgets\Alert;
 /* @var $model backend\models\Banners */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-<div class="shopify-section index-section index-section--flush">
-    <div data-section-id="slideshow" data-section-type="slideshow-section">
-        <div class="slideshow-wrapper">
-            <div class="flexslider">
-                <ul class="slides">
-                    <?php foreach($banners as $b): ?>
-                        <li>
-                            <?php if($b->url != '' || $b->url != null): ?>
-                            <a href="<?php echo $b->url; ?>">
-                                <img src="<?php echo str_replace('../assets', 'assets', $b->image); ?>" />
-                            </a>
-                            <?php else: ?>
-                                <img src="<?php echo str_replace('../assets', 'assets', $b->image); ?>" />
-                            <?php endif; ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        </div>
-    </div>
+<div class="e-top-video-download ui-full e-pdngTop158">
+	<h2 data-aos="fade-up" data-aos-once="true">Top Video downloads</h2>
+	<i data-aos="fade-up" data-aos-delay="200" data-aos-once="true" class="wave"><img src="static/images/wave-b.png" width="98" height="14" alt="wave"></i>
+	
+	<section class="ui-inner">
+		<?php
+		$j = 1;
+		foreach($trending['video']->tracks as $v): 
+			if($j == 11){
+				break;
+			}
+		?>
+		<div class="e-video-box" data-aos="fade-up" data-aos-delay="200" data-aos-once="true">
+			<div class="videoPlay-box ui-full postionR">
+				<figure><img src="static/images/video<?php echo$j; ?>.jpg" width="223" height="156" alt="video"></figure> 
+				<a href="javascript:void(0);"><img src="static/images/play.png" width="39" height="38" alt="play"></a>
+			</div>
+			<h3 title="<?php echo $v->title; ?>"><?php echo excerpt($v->title, 40); ?></h3>
+			<p title="<?php echo $v->artist; ?>"><?php echo excerpt($v->artist, 25); ?></p>
+		</div>
+		<?php
+		$j++;
+		endforeach; ?>
+	</section>    
+	<div class="e-more-videos ui-full">
+		<a href="https://pool.8thwonderpromos.com" data-text="more videos" class="sim-button button3 btn">more videos</a>
+	</div>
+<!--/e-top-video-download -->
 </div>
-<div class="shopify-section">
-	<div class="page-width">
-		<div class="grid--uniform grid--view-items">
-			<div class="home_bnnr_content">
-				<div class="container">
-					<div class="bnnr_content">
-						<h1>JOIN THE NUMBER #1 DJ POOL</h1>
-						<div class="left">
-							<h5>
-								High Quality Audio &amp; Video <br>
-								Classics Avialble in Audio &amp; Video <br>
-								All Versions Available <br>
-								Easy Desktop Downloader <br>
-								Fast Downloads <br>
-								Affordable Membership Pricing
-							</h5>
-							<p></p>
-						</div>
-						<div class="right">
-							<h5>
-								All The Newest Tracks First <br>
-								Upload over 200 Tracks a Week <br>
-								The most Video Edits in the World <br>
-								Unlimited Downloads <br>
-								Dropbox Feature <br>
-								User Freindly
-							</h5>
-							<p></p>
-						</div>
-						<p></p>
-					</div>
-					<p></p>
-				</div>
-				<p></p>
+<div class="ui-full e-audio-download e-pdngTop158">
+	<h2 data-aos="fade-up" data-aos-once="true">Top Audio downloads
+	<i data-aos="fade-up" data-aos-delay="200" data-aos-once="true" class="wave"><img src="static/images/wave.png" width="98" height="14" alt="wave"></i>
+	</h2>
+	
+	<section class="e-audio-listen">
+		<div class="e-audio-listen-border" data-aos="fade-up" data-aos-delay="200" data-aos-once="true">
+			<div class="e-audio-listen-inner">
+				<ul>
+					<?php
+					$k = 1;
+					foreach($trending['audio']->tracks as $a): 
+						if($k == 11){
+							break;
+						}
+					?>
+						<li>
+							<div class="e-audio-left">
+								<i class="icon-play"><img src="static/images/audio-play.png" width="10" height="13" alt="play"></i>
+								<h4><?php echo $a->title; ?></h4>
+							  <span><?php echo $a->artist; ?></span>
+							</div>
+							<div class="e-audio-right">
+								<a href="javascript:void(0);"><?php echo $a->genre; ?></a>
+								<a href="javascript:void(0);"><?php echo $a->subgenre; ?></a>
+								<small><?php echo $a->bpm; ?></small>
+								<small><?php echo $a->key; ?></small>
+							</div>
+						</li>
+					<?php
+					$k++;
+					endforeach; ?>
+				</ul>
 			</div>
 		</div>
-	</div>
+	</section>
+	
+<!--/e-audio-download -->
 </div>
-<div class="shopify-section index-section">
-    <div class="page-width">
-        <div class="section-header text-center">
-            <h2>POOL MEMBERSHIP PLANS</h2>
-        </div>
-        <div class="grid--uniform grid--view-items">
-			<section id="pricing-table">
-				<div class="container">
-					<div class="row">
-						<div class="pricing">
-							<div class="pull-left one-third small--one-whole pad-2p">
-								<div class="type">
-									<p>Monthly Bronze</p>
-								</div>
-								<div class="plan">
-									<div class="header">
-										<span>$</span>9<sup>.99*</sup>
-										<p class="month">For 1st month then $19.99/Mo. </p>
-									</div>
-									<div class="content">
-										<ul>
-											<li>No Discount On Membership</li>
-											<li>10% Off On Store</li>
-											<li>No Free 8th T-Shirt</li>
-											<li>Unlimited Downloads Audio & Video</li>
-											<li>All content id3 Tagged</li>
-											<li>Serato Ready Cue Points</li>
-											<li>Fast Downloads</li>
-											<li>Trending Charts</li>
-											<li>Desktop Application</li>
-											<li>High Quality 320kbps Files</li>
-											<li>Exclusive Remix Video Edits</li>
-											<li>Multiple Versions Available</li>
-										</ul>
-									</div>		
-									<div class="price">
-										<a href="https://www.8thwonderpromos.com/amember/signup/monthly" target="_blank" class="bottom">
-											<p class="cart">Subscribe</p>
-										</a>
-									</div>
-								</div>
-							</div>
-							<div class="pull-left one-third small--one-whole pad-2p">
-								<div class="type standard">
-									<p>Annual Platinum</p>
-								</div>
-								<div class="plan">
-									<div class="header">
-										<span>$</span>174<sup>.99</sup>
-										<p class="month">per year</p>
-									</div>
-									<div class="content">
-										<ul>
-											<li>25% Off On Membership</li>
-											<li>30% Off On Store</li>
-											<li>No Free 8th T-Shirt</li>
-											<li>Unlimited Downloads Audio & Video</li>
-											<li>All content id3 Tagged</li>
-											<li>Serato Ready Cue Points</li>
-											<li>Fast Downloads</li>
-											<li>Trending Charts</li>
-											<li>Desktop Application</li>
-											<li>High Quality 320kbps Files</li>
-											<li>Exclusive Remix Video Edits</li>
-											<li>Multiple Versions Available</li>
-										</ul>
-									</div>
-									<div class="price">
-										<a href="https://www.8thwonderpromos.com/amember/signup/yearly" target="_blank" class="bottom">
-											<p class="cart">Subscribe</p>
-										</a>
-									</div>
-								</div>
-							</div>
-
-							<div class="pull-left one-third small--one-whole pad-2p">
-								<div class="type ultimate">
-									<p>Quarterly Gold</p>
-								</div>
-								<div class="plan">
-									<div class="header">
-										<span>$</span>54<sup>.99</sup>
-										<p class="month">per 3 months</p>
-									</div>
-									<div class="content">
-										<ul>
-											<li>10% Off On Membership</li>
-											<li>20% Off On Store</li>
-											<li>No Free 8th T-Shirt</li>
-											<li>Unlimited Downloads Audio & Video</li>
-											<li>All content id3 Tagged</li>
-											<li>Serato Ready Cue Points</li>
-											<li>Fast Downloads</li>
-											<li>Trending Charts</li>
-											<li>Desktop Application</li>
-											<li>High Quality 320kbps Files</li>
-											<li>Exclusive Remix Video Edits</li>
-											<li>Multiple Versions Available</li>
-										</ul>
-									</div>
-									<div class="price">
-										<a href="https://www.8thwonderpromos.com/amember/signup/quaterly" target="_blank" class="bottom">
-											<p class="cart">Subscribe</p>
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+<div class="e-pool-plans ui-full e-pdngTop158">
+	<h2 data-aos="fade-up" data-aos-once="true">pool membership plans</h2>
+	<i data-aos="fade-up" data-aos-delay="200" data-aos-once="true" class="wave"><img src="static/images/wave-b.png" width="98" height="14" alt="wave"></i>
+	
+	<section class="ui-inner">
+		<div class="e-membership-plan" data-aos="fade-up" data-aos-delay="200" data-aos-once="true">
+			<section>
+			<h6>monthly bronze</h6>
+			<img src="static/images/plan-sep.jpg" width="37" height="3" alt="sep">
+			<label><sup>$</sup>9.99<sup>*</sup></label>
+			<small class="desc">For 1st month then $19.99/Mo.</small>
 			</section>
+			<ul>
+			<li>No Discount On Membership</li>
+			<li>10% Off On Store</li>
+			<li>No Free 8th T-Shirt</li>
+			<li>Unlimited Downloads Audio &amp; Video</li>
+			<li>All content id3 Tagged</li>
+			<li>Serato Ready Cue Points</li>
+			<li>Fast Downloads</li>
+			<li>Trending Charts</li>
+			<li>Desktop Application</li>
+			<li>High Quality 320kbps Files</li>
+			<li>Exclusive Remix Video Edits</li>
+			<li>Multiple Versions Available</li>
+			</ul>
+			<div class="center"><a href="https://www.8thwonderpromos.com/amember/signup" data-text="subscribe" class="sim-button button3">subscribe</a></div>
 		</div>
-	</div>
+		<div class="e-membership-plan" data-aos="fade-up" data-aos-delay="200" data-aos-once="true">
+			<div class="active-plan"></div>
+			<section>
+			<h6>ANNUAL PLATINUM</h6>
+			<img src="static/images/plan-sep.jpg" width="37" height="3" alt="sep">
+			<label><sup>$</sup>174.99</label>
+			<small class="desc">per year</small>
+			</section>
+			<ul>
+			<li>25% Off On Membership</li>
+			<li>30% Off On Store</li>
+			<li>No Free 8th T-Shirt</li>
+			<li>Unlimited Downloads Audio &amp; Video</li>
+			<li>All content id3 Tagged</li>
+			<li>Serato Ready Cue Points</li>
+			<li>Fast Downloads</li>
+			<li>Trending Charts</li>
+			<li>Desktop Application</li>
+			<li>High Quality 320kbps Files</li>
+			<li>Exclusive Remix Video Edits</li>
+			<li>Multiple Versions Available</li>
+			</ul>
+			<div class="center"><a href="https://www.8thwonderpromos.com/amember/signup" data-text="subscribe" class="sim-button button3">subscribe</a></div>
+		</div>
+		<div class="e-membership-plan" data-aos="fade-up" data-aos-delay="200" data-aos-once="true">
+			<section>
+			<h6>monthly bronze</h6>
+			<img src="static/images/plan-sep.jpg" width="37" height="3" alt="sep">
+			<label><sup>$</sup>9.99<sup>*</sup></label>
+			<small class="desc">For 1st month then $19.99/Mo.</small>
+			</section>
+			<ul>
+			<li>10% Off On Membership</li>
+			<li>20% Off On Store</li>
+			<li>No Free 8th T-Shirt</li>
+			<li>Unlimited Downloads Audio &amp; Video</li>
+			<li>All content id3 Tagged</li>
+			<li>Serato Ready Cue Points</li>
+			<li>Fast Downloads</li>
+			<li>Trending Charts</li>
+			<li>Desktop Application</li>
+			<li>High Quality 320kbps Files</li>
+			<li>Exclusive Remix Video Edits</li>
+			<li>Multiple Versions Available</li>
+			</ul>
+			<div class="center"><a href="https://www.8thwonderpromos.com/amember/signup" data-text="subscribe" class="sim-button button3">subscribe</a></div>
+		</div>
+	</section>
+	
+<!--/e-pool-plans -->
 </div>
-<div class="shopify-section index-section">
-    <div class="page-width">
-        <div class="section-header text-center">
-            <h2>FEATURED SHOP COLLECTION</h2>
-        </div>
-        <div class="grid grid--uniform grid--view-items">
-            <?php foreach($products as $product): ?>
+<div class="e-featured-shop ui-full e-pdngTop158">
+	<section class="ui-inner">
+	<h2 data-aos="fade-up" data-aos-once="true">featured shop collection</h2>
+	<i data-aos="fade-up" data-aos-delay="200" data-aos-once="true" class="wave"><img src="static/images/wave-b.png" width="98" height="14" alt="wave"></i>
+	<div class="e-collection-slider" data-aos="fade-up" data-aos-delay="200" data-aos-once="true">
+		<ul class="banner-carousel">
+			<?php foreach($products as $product): ?>
                 <?php
                     $arr = explode("../", $product->main_image);
                     $img = \yii\helpers\Url::toRoute($arr[1]);
                 ?>
-            <div class="grid__item grid__item--featured-collections small--one-half medium-up--one-fifth">
-               <div class="grid-view-item">
-                  <a class="grid-view-item__link grid-view-item__image-container" href="<?php echo Url::toRoute('/shop/detail?product='.$product->slug); ?>">
-                     <div class="featured-collections grid-view-item__image-wrapper">
-                        <div style="padding-top:100.0%;">
-                           <img
-                              class="featured-collections-img grid-view-item__image"
-                              src="<?php echo $img; ?>"
-                              data-src="<?php echo $img; ?>"
-                              data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
-                              data-aspectratio="1.0"
-                              data-sizes="auto"
-                              alt="<?php echo $product->name; ?>">
-                        </div>
-                     </div>
-                     <noscript>
-                        <img class="grid-view-item__image" src="<?php echo $img; ?>" alt="<?php echo $product->name; ?>" style="max-width: 195.0px;">
-                     </noscript>
-                     <div class="h4 grid-view-item__title"><?php echo $product->name; ?></div>
-                     <div class="grid-view-item__meta">
-                        <!-- snippet/product-price.liquid -->
-                        <span class="visually-hidden">Regular price</span>
-                        <span class="product-price__price">$<?php echo $product->unit_price; ?></span>
-                     </div>
-                  </a>
-               </div>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <div class="text-center goto-link-wrapper">
-          <a href="/shop" class="btn btn--secondary btn--has-icon-before return-link">
-              Visit Shop
-          </a>
-        </div>
-  </div> 
+			<li>
+				<a href="<?php echo Url::toRoute('/shop/detail?product='.$product->slug); ?>">
+					<div class="e-shop-box">
+						<figure><img src="<?php echo $img; ?>" width="156" height="158" alt="shop"></figure>
+						<h3><?php echo $product->name; ?></h3>
+						<span>$<?php echo $product->unit_price; ?></span>
+					</div>
+				</a>
+			</li>
+			<?php endforeach; ?>
+		</ul>
+	</div>
+	<hr>
+	<a href="<?php echo Url::toRoute('/shop'); ?>" data-text="visit shop" class="e-visit-shop sim-button button3 btn">visit shop</a>
+	</section>
+<!-- /e-featured-shop -->
 </div>
-<div id="shopify-section-featured-collections" class="shopify-section index-section">
-    <div class="page-width">
-        <div class="section-header text-center">
-            <h2>FEATURED DROPS COLLECTION</h2>
-        </div>
-        <div class="grid grid--uniform grid--view-items">
-            <?php foreach($drops as $drop): ?>
-                <?php
-                    if($drop->youtube != '' && $drop->type == 'video'){
-                      $video_id = getUtubeId($drop->youtube);
-                    }
-                    if($drop->type == 'video'){
-                      $img = 'https://img.youtube.com/vi/'.$video_id.'/hqdefault.jpg';
-                    } else{
-                      $img = Url::toRoute('/images/audio-drop.png');
-                    }
-                ?>
-            <div class="grid__item grid__item--featured-collections small--one-half medium-up--one-fifth">
-               <div class="grid-view-item">
-                  <a class="grid-view-item__link grid-view-item__image-container" href="<?php echo Url::toRoute('/djdrops/details?drop='.$drop->slug); ?>">
-                     <div class="featured-collections grid-view-item__image-wrapper">
-                        <div style="padding-top:100.0%;">
-                           <img
-                              class="featured-collections-img grid-view-item__image"
-                              src="<?php echo $img; ?>"
-                              data-src="<?php echo $img; ?>"
-                              data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
-                              data-aspectratio="1.0"
-                              data-sizes="auto"
-                              alt="<?php echo $drop->title; ?>">
-                        </div>
-                     </div>
-                     <noscript>
-                        <img class="grid-view-item__image" src="<?php echo $img; ?>" alt="<?php echo $drop->title; ?>" style="max-width: 195.0px;">
-                     </noscript>
-                     <div class="h4 grid-view-item__title"><?php echo $drop->title; ?></div>
-                     <div class="grid-view-item__meta">
-                        <!-- snippet/product-price.liquid -->
-                        <span class="visually-hidden">Regular price</span>
-                        <span class="product-price__price">$<?php echo $drop->price; ?></span>
-                     </div>
-                  </a>
-               </div>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <div class="text-center goto-link-wrapper">
-          <a href="/shop" class="btn btn--secondary btn--has-icon-before return-link">
-              View All Drops
-          </a>
-        </div>
-  </div>
+<div class="e-top-dj ui-full e-pdngTop158">
+	<h2 data-aos="fade-up" data-aos-once="true">Trusted by top DJ</h2>
+	<i data-aos="fade-up" data-aos-delay="200" data-aos-once="true" class="wave"><img src="static/images/wave-b.png" width="98" height="14" alt="wave"></i>
+	
+	<section class="ui-inner">
+		<ul class="trusted-dj" data-aos="fade-up" data-aos-delay="200" data-aos-once="true">
+			<li><img src="static/images/trusted01.jpg" alt="1"></li>
+		</ul>
+	</section>
+<!-- /e-top-dj -->
 </div>
 <?php
 $this->registerJs(
-    "$(window).on('load', function(){
-        $('.flexslider').flexslider({
-            animation: 'slide',
-            slideshow: true,
-            start: function(slider){
-                $('body').removeClass('loading');
-            }
-        });
-    });
-    $(window).on('load',function(){
+    "$(window).on('load',function(){
         $('#notificationModal').modal({show: true,backdrop: false});
     });"
 );

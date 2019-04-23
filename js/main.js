@@ -23,7 +23,7 @@ $(document).ready(function(){
 		var email = $("#Email").val();
 		var pattern = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i
 		if(email != '' && pattern.test(email)){
-			var data = $(this).serialize();
+			var data = "email="+email;
 			$.ajax({
 				url: base_url + "contact/subscribe",
 				method: "POST",

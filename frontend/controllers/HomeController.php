@@ -21,11 +21,14 @@ class HomeController extends Controller {
 		$this->layout = 'homepage';
 		$trending = [];
 		$audioUrl = 'https://pool.8thwonderpromos.com/day-trending?search[query][type]=audio&search[query][sort]=createdAt%20DESC';
-		$resp = file_get_contents($audioUrl);
+		$context = stream_context_create(array('https' => array('header'=>'Connection: close\r\n')));
+		$resp = file_get_contents($audioUrl,false,$context);
+	    	// $resp = file_get_contents($audioUrl);
 		$resp = json_decode($resp);
 		$trending['audio'] = $resp;
 		$videoUrl = 'https://pool.8thwonderpromos.com/day-trending?search[query][type]=video&search[query][sort]=createdAt%20DESC';
-		$videoResp = file_get_contents($videoUrl);
+		// $videoResp = file_get_contents($videoUrl);
+	    	$videoResp = file_get_contents($videoUrl,false,$context);
 		$videoResp = json_decode($videoResp);
 		$trending['video'] = $videoResp;
 		$banners = Banners::find()->all();

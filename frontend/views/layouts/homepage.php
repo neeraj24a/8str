@@ -98,7 +98,7 @@ AppAsset::register($this);
 			
 			<div class="e-home-content">
 				<h1 data-aos="fade-up" data-aos-delay="200" data-aos-once="true">High Quality Audio &amp; Video</h1>
-				<span data-aos="fade-up" data-aos-delay="350" data-aos-once="true">Your a DJ? looking for a place to get all your visual and audio content? 8th Wonder is the right place for you with an easy to use website. </span>
+				<span data-aos="fade-up" data-aos-delay="350" data-aos-once="true">Your a DJ? Looking for a place to get all your visual and audio content? 8th Wonder is the right place for you with an easy-to-use website. </span>
 				<div class="btnOuter" data-aos="fade-up" data-aos-delay="450" data-aos-once="true">
 					<a href="https://www.8thwonderpromos.com/amember/signup" data-text="Join now for free" class="sim-button button3 btn">Join now for free</a>
 				</div>	

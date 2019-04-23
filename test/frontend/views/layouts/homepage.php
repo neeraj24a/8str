@@ -21,8 +21,8 @@ AppAsset::register($this);
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, target-densityDpi=device-dpi, user-scalable=0" />
         <?= Html::csrfMetaTags() ?>
         <link rel="SHORTCUT ICON" href="<?php echo base_url(); ?>/images/logo.png">
-        <meta name="description" content="">
-        <meta name="keywords" content="">
+        <meta name="description" content="8thwonderpromos Digital DJ Pool, Recordpool, Video DJ, CD Pool & DJ Customs Shop">
+        <meta name="keywords" content="digital dj, recordpool, video dj, audio dj, cd pool, DJ shop">
         <meta charset="UTF-8">
 		<meta name="theme-color" content="#333333" />
 		<!-- Windows Phone -->
@@ -39,10 +39,12 @@ AppAsset::register($this);
         <meta name="twitter:title" content="8thwonderpromos">
         <meta name="twitter:description" content="8thwonderpromos">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+		<link href="static/css/lity.min.css" rel="stylesheet" />
+		<link href="static/css/jplayer.css" rel="stylesheet" />
 		<link href="static/css/reset.css" rel="stylesheet" />
 		<link href="static/css/main.css" rel="stylesheet" />
 		<link href="static/css/fonts.css" rel="stylesheet" />
-		<link href="static/css/aos.css" rel="stylesheet" />		
+		<link href="static/css/aos.css" rel="stylesheet" />
 		<link rel="stylesheet" href="static/jscript/lib/slick/slick.css">
 		<link rel="stylesheet" href="static/jscript/lib/slick/slick-theme.css">
 		<link href="static/css/responsive.css" rel="stylesheet" />
@@ -141,6 +143,9 @@ AppAsset::register($this);
 					<h3>Affordable Membership Pricing </h3>
 				</div>
 			</section>
+			<div class="e-more-videos ui-full">
+				<a href="https://www.8thwonderpromos.com/amember/signup" data-text="join now" class="sim-button button3 btn">Join Now</a>
+			</div>
 		<!-- /e-join-wonder -->
 		</div>
 		<?php echo $content; ?>
@@ -173,8 +178,15 @@ AppAsset::register($this);
 					</ul>
 				<small data-aos="fade-up" data-aos-delay="200" data-aos-once="true">©copy 2019 8thwonderpromos.com | All Rights Reserved</small>
 		</footer>
+		<div id="inline" style="overflow:auto;background:#FDFDF6;padding:20px;width:600px;max-width:100%;border-radius:6px" class="lity-hide">
+			<div id="video-player" class="jPlayer jp-video-270p"></div>
+		</div>
 		<?php $this->endBody() ?>
 		<script src="static/jscript/lib/slick/slick.js"></script>
+		<script src="static/jscript/aos.min.js"></script>
+		<script src="static/jscript/lity.min.js"></script>
+		<script src="static/jscript/jquery.jplayer.min.js"></script>
+		<script src="static/jscript/player.js"></script>
 		<script src="static/jscript/aos.min.js"></script>
 		<script>
 			if (window.hasOwnProperty('AOS')) {
@@ -186,13 +198,50 @@ AppAsset::register($this);
 			}
 			
 			$(document).ready(function() {
-				 
-				 $('.h-hamburger').click(function(){
+				var vfile = "";
+				var afile = "";
+				$('.video-play').click(function(){
+					vfile = $(this).data('file');
+				});
+				$('.audio-play').click(function(){
+					afile = $(this).data('file');
+					$("#audio-player").plyr("destroy");
+					$("#audio-player").html("");
+					$("#audio-player").plyr({
+						media: {
+							mp3: afile
+						},
+						swfPath: "static/jscript/jquery.jplayer.swf"
+					});
+					setTimeout(function(){ $(".play").click(); }, 200);
+				});
+				$(document).on('click', '[data-lightbox]', lity);
+				$(document).on('lity:open', function(event, instance) {
+					console.log(instance.element());
+					console.log('Lightbox opened');
+					$("#video-player").plyr({
+						media: {
+							title: "",
+							mp4: vfile,
+							m4v: vfile,
+							poster: "static/images/poster.png"
+						},
+						swfPath: "static/jscript/jquery.jplayer.swf"
+					});
+					setTimeout(function(){ $(".play").click(); }, 200);
+				});
+				$(document).on('lity:close', function(event, instance) {
+					console.log('Lightbox closed');
+					$("#video-player").plyr("destroy");
+					$("#video-player").html("");
+					vfile = "";
+				});
+				$('.h-hamburger').click(function(){
 					$('.e-home-banner').toggleClass('mobileNav');
-				 });
-				 $('.h-nav__close-btn').click(function(){
+				});
+				$('.h-nav__close-btn').click(function(){
 					$('.e-home-banner').removeClass('mobileNav');
-				 });
+				});
 				 
 			});
 			

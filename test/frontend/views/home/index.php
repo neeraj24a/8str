@@ -24,8 +24,8 @@ use common\widgets\Alert;
 		?>
 		<div class="e-video-box" data-aos="fade-up" data-aos-delay="200" data-aos-once="true">
 			<div class="videoPlay-box ui-full postionR">
-				<figure><img src="static/images/video<?php echo$j; ?>.jpg" width="223" height="156" alt="video"></figure> 
-				<a href="javascript:void(0);"><img src="static/images/thumb.png" width="39" height="38" alt="play"></a>
+				<figure><img src="static/images/thumb.jpg" width="223" height="156" alt="video"></figure> 
+				<a href="#inline" data-lity class="video-play" data-file="<?php echo $v->url; ?>"><img src="static/images/play.png" width="39" height="38" alt="play"></a>
 			</div>
 			<h3 title="<?php echo $v->title; ?>"><?php echo excerpt($v->title, 40); ?></h3>
 			<p title="<?php echo $v->artist; ?>"><?php echo excerpt($v->artist, 25); ?></p>
@@ -57,7 +57,7 @@ use common\widgets\Alert;
 					?>
 						<li>
 							<div class="e-audio-left">
-								<i class="icon-play"><img src="static/images/audio-play.png" width="10" height="13" alt="play"></i>
+								<i class="icon-play-1 audio-play" data-file="<?php echo $a->url; ?>"><img src="static/images/audio-play.png" width="10" height="13" alt="play"></i>
 								<h4><?php echo $a->title; ?></h4>
 							  <span><?php echo $a->artist; ?></span>
 							</div>
@@ -71,6 +71,9 @@ use common\widgets\Alert;
 					<?php
 					$k++;
 					endforeach; ?>
+					<li>
+						<div id="audio-player" class="jPlayer audioPlayer"></div>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -185,7 +188,7 @@ use common\widgets\Alert;
 	</section>
 <!-- /e-featured-shop -->
 </div>
-<div class="e-top-dj ui-full e-pdngTop158">
+<!--<div class="e-top-dj ui-full e-pdngTop158">
 	<h2 data-aos="fade-up" data-aos-once="true">Trusted by top DJ</h2>
 	<i data-aos="fade-up" data-aos-delay="200" data-aos-once="true" class="wave"><img src="static/images/wave-b.png" width="98" height="14" alt="wave"></i>
 	
@@ -194,8 +197,7 @@ use common\widgets\Alert;
 			<li><img src="static/images/trusted01.jpg" alt="1"></li>
 		</ul>
 	</section>
-<!-- /e-top-dj -->
-</div>
+</div>-->
 <?php
 $this->registerJs(
     "$(window).on('load',function(){

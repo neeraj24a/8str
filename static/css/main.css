@@ -1,0 +1,154 @@
+/*COMMON*/
+.ui-full{ width:100%; float:left;}
+.ui-inner{ width:1206px; margin:auto;}
+.e-pdngTop158{ padding-top:158px;}
+.e-pdngTop308{padding-top:308px;}
+h2{ font-size:40px; text-transform:uppercase; text-align:center; line-height:40px; font-family: 'proxima_novabold';}
+.wave{ text-align:center; display:inline-block; width: 100%; margin:42px auto 70px;}
+hr { width: 100%;}
+.mobileView{ display:none;}
+.e-join-wonder h2 sup {font-size: 20px; padding-right: 7px;}
+
+/*HOME*/
+.e-home-banner{ height:1107px; background:url(../images/homebg.jpg) no-repeat center; background-size:cover; background-attachment:fixed;}
+header{ width:100%; float:left;}
+.e-logo{ float:left; margin:32px 0 0 63px;}
+.e-home-banner ul{ float:right; margin:52px 0 0;}
+.e-home-banner ul li{ float:left;}
+.e-home-banner ul li a{ float:left; font-size:16px; color:#aaaaaa; margin:0 16px 0 0;}
+.e-home-banner ul li a.active{ color:#fff;}
+.e-home-banner a.e-signup { float: right; margin: 40px 42px 0 0; width:98px; height:40px; text-align:center; line-height:40px; text-transform:uppercase; font-size:13px; color:#000; background:#fff; border-radius:30px;}
+
+header.fixed-header {position: fixed;top: 0;left: 0; width: 100%; z-index: 991; background: #fff; border-bottom: 1px solid #e9e9e9;
+-webkit-transform: translateZ(0); -moz-transform: translateZ(0); transform: translateZ(0); -webkit-transition: all 350ms ease;
+    -o-transition: all 350ms ease; -moz-transition: all 350ms ease; transition: all 350ms ease;}
+.fixed-header a.e-signup { background: #000; color: #fff;-webkit-transition: all 0.3s; -moz-transition: all 0.3s; transition: all 0.3s;}
+header.fixed-header .e-logo { margin: 10px 0 10px 63px;}
+.fixed-header a.e-signup:after{content: ''; position: absolute; z-index: -1; -webkit-transition: all 0.3s; -moz-transition: all 0.3s; transition: all 0.3s;}
+.fixed-header a.e-signup:hover{color: #000; background: #fff;}
+
+/*e-home-content*/
+.e-home-content{ width:660px; float:left; margin:275px 0 0 305px;}
+.e-home-content h1{ font-size:90px; color:#fff; text-transform:uppercase; line-height:90px; float:left; width:100%; font-family: 'proxima_novabold';}
+.e-home-content span{ font-size:20px; color:#fff; line-height:26px; float:left; width:100%; margin:48px 0 50px 0;}
+
+
+
+/*e-join-wonder*/
+.e-join-wonder{ background:#fff; padding-bottom:153px;}
+.e-join-box{ width:185px; height:220px; float:left; border:1px solid #e9e9e9; text-align:center; padding:51px 48px 0; margin:0 24px 27px 0;
+	background:#000;}
+.e-join-box:nth-child(4n) { margin-right: 0;}
+.e-join-box h3{ text-transform:uppercase; font-size:16px; color:#fff; margin:30px 0 22px;}
+
+
+
+/*e-top-video-download*/
+.e-top-video-download{ height:934px; background:url(../images/downloadsbg.jpg) no-repeat center; background-size:cover; background-attachment:fixed;}
+.e-video-box { width: 223px; height: 240px;float: left; background: #fff; margin:0 22px 29px 0;}
+.e-video-box:nth-child(5n) { margin-right: 0;}
+.videoPlay-box{height: 155px;position: relative;}
+.videoPlay-box a img { position: absolute; top: 50%; left: 50%; width: 38px; height: 39px; margin: -19px 0 0 -19px;}
+.e-video-box h3 { padding: 23px 12px 3px 12px; font-size: 16px; color: #000; font-family: 'proxima_novasemibold'; float: left; width: calc(100% - 22px);}	
+.e-video-box p {font-size: 14px; color: #9d9d9d; padding: 22px 12px 0 12px;}
+.e-more-videos{ text-align:center; margin:50px auto auto;}
+.e-more-videos a{background:#000; width:205px; height:62px; line-height:62px; float: none; display: inline-block; color:#fff;}
+	
+	
+
+/*e-audio-download*/	
+.e-audio-download{ /*height:1104px;*/ background:url(../images/audiobg.jpg) no-repeat center top;background-size: 2000px 1006px;}
+.e-audio-download h2 {font-size: 40px; text-transform: uppercase; color: #fff; text-align: left; line-height: 36px; width: 56%; float: right;}
+.e-audio-download h2 .wave { text-align: left; display: inline-block; width: 100%; margin: 42px auto 70px;}
+.e-audio-listen{ width:56%; float:right;}
+.e-audio-listen-border{ float:left; width:671px; background:#000; height:823px;box-shadow: 0 20px 39px -2px #c5c5c5;}
+.e-audio-listen-inner{ width:calc(100% - 30px); margin:-15px 15px 0; background:#fff; float:left; height:823px;}
+
+.e-audio-listen-inner li{ width:calc(100% - 80px); float:left; border-bottom:1px solid #e6eaf0; margin:0 40px; position: relative; padding: 22px 0 14px 0;}
+.e-audio-left{ width:310px; float:left;}
+.e-audio-right{ width:230px; float:right;}
+.e-audio-left i.icon-play-1 { cursor:pointer; position: absolute; left: 0; top: 23px;}
+.e-audio-left h4 {color: #272727; font-size: 16px; padding: 0 0 0 27px; font-family: 'proxima_novasemibold';}
+.e-audio-left span { color: #858585; font-size: 14px; padding: 0 0 0 27px;}
+.e-audio-right a { font-size: 10px; color: #9d9d9d; text-transform: uppercase; height: 22px; line-height: 22px; border-radius: 12px; border: 1px solid #d6dadf;padding: 0 11px;display: inline-block;margin-right:5px;}
+.e-audio-right small { background: #ebebeb; font-size: 10px; width: 25px; height: 25px; text-align: center; color: #8e99a4; display: inline-block; border-radius: 30px;line-height: 25px; margin-left:4px;}
+
+
+
+
+/*e-membership-plan*/
+.e-membership-plan{ width:373px; float:left; background:#fff; box-shadow: 0px 0px 30px 10px #e8ecf1;  margin:0 43px 180px 0; position:relative;}
+.e-membership-plan:nth-child(3n){ margin:0 0 180px 0;}
+.e-membership-plan section{ width:100%; float:left; height:202px; background:#000; text-align:center; padding:54px 0 0;}
+.e-membership-plan h6{ font-size:14px; text-transform:uppercase; color:#fff;font-family: 'proxima_novasemibold';}
+.e-membership-plan img { display: inline-block; margin: 26px auto 20px; }
+.e-membership-plan label { width: 100%; float: left; font-size:60px;color: #fff; font-family: 'proxima_novabold';line-height:42px;}
+.e-membership-plan .desc { float: left; width: 100%;color: #fff; font-size: 14px; margin: 14px 0 0;}
+.e-membership-plan label sup { font-style: normal; font-size: 35px;}
+.e-membership-plan ul{ padding:49px 0 0 57px; float:left;}
+.e-membership-plan ul li{ font-size:16px; color:#858585; margin:0 0 14px 0;}
+.e-membership-plan .subscribe.active{ background:#2fc28e; color:#fff;}
+.e-membership-plan a{ width:167px; height:57px; border:2px solid #e7e9ec; font-size:14px; color:#272727; display:inline-block;line-height:57px;	margin:29px 0 62px 0; float: none;background: #fff;}
+.e-membership-plan small { color: #272727; font-size: 14px; margin: 14px 0 0;}
+
+
+
+/*e-featured-shop*/
+.e-featured-shop{height:836px; background:url(../images/collectionbg.jpg) no-repeat center; background-size:cover; background-attachment:fixed;}
+.e-collection-slider{ width:752px; float:left;}
+.e-featured-shop h2 { text-align: left;}
+.e-featured-shop i.wave { text-align: left;}
+.e-collection-slider li{ float:left; margin-right:20px;}
+.e-shop-box{ width:156px; height:308px; float:left; background:#fff; text-align:center; padding:32px 36px 0;}
+.e-shop-box h3{ font-size:16px; color:#272727; font-family: 'proxima_novasemibold'; margin:30px 0 17px 0;}
+.e-shop-box span{ font-size:16px; color:#9d9d9d;}
+.e-visit-shop{width: 203px; height: 61px; text-align: center; font-size: 14px;background: #2fc28e;color: #fff; border-radius: 30px; display: inline-block; text-transform: uppercase; line-height: 61px; margin: 44px 0 0 0;}
+
+
+
+/*e-top-dj*/
+.e-top-dj li { float: left; margin:0 5px 0 0;}
+.e-top-dj li:nth-child(6n){margin:0 0 0 0;}
+.e-top-dj i.wave { margin: 42px auto 38px;}
+
+.h-nav__close-btn {display: none;}
+.h-hamburger {display: none;}
+
+
+
+/*Footer*/
+footer{ background:#272727; padding:116px 0;}
+footer figure { display: inline-block;}
+footer span{ text-transform:uppercase; font-size:14px; color:#fff; font-family: 'proxima_novasemibold'; padding:25px 0; display:inline-block; width: 100%;}
+footer p{ color:#a2a2a2; font-size:14px;}
+footer .e-subscribe{ width:532px; height:64px; margin:34px auto 78px; position:relative;}
+.e-subscribe input{ width:calc(100% - 140px); height:63px; float:left; padding:0 20px 0 32px; background:#fff; border-radius:30px; font-size:14px; color:#5d5d5d;}
+.e-subscribe button{ float:right; background:#cecece; text-align:center; height:63px; color:#000; line-height:63px; border-radius:0 30px 30px 0; width:140px; font-size:14px; text-transform:uppercase; position:absolute; right:0;}
+footer ul li { display: inline-block; margin: 0 2px 35px;}
+
+
+.sim-button {background:#fff; width:254px; height:70px; line-height:70px; border-radius:50px; color:#000; font-size:16px; text-transform:uppercase; float:left; text-align:center; margin-right: auto; margin-left: auto; cursor: pointer;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;}
+.btn:after { content: ''; position: absolute; z-index: -1; -webkit-transition: all 0.3s; -moz-transition: all 0.3s; transition: all 0.3s;}
+.btn:hover{ color: #000; background: #fff;}
+
+
+
+.e-membership-plan .button3:hover { font-size:14px; background: #000; color: #fff; border: 2px solid rgba(90, 90, 90, 0.5);}
+.e-membership-plan .button3:hover::after{ color: #fff;}
+
+.e-visit-shop.sim-button {width: 203px; height: 61px; font-size: 14px;text-transform: uppercase; line-height: 61px; background:#000; color:#fff;}
+.e-visit-shop.button3:hover{ color: rgb(134, 133, 133); font-size:14px;}
+.e-visit-shop.sim-button:hover{ background:#fff; color:#000;}
+
+.active-plan{ width:23px; height:26px; background:url(../images/flip.png) no-repeat 0 0; position:absolute; right:20px; top:0px;}
+
+.videoPlay-box figure img{ -webkit-filter: grayscale(100%); filter: grayscale(100%); -webkit-transition: .3s ease-in-out; transition: .3s ease-in-out;}
+.videoPlay-box:hover img{ -webkit-filter: grayscale(0); filter: grayscale(0);}	
+
+.e-home-banner a.e-signup:hover{ color:#000; background:#cecece;}
+.e-home-content .sim-button:hover{ color:#000; background:#cecece;}
+
+/*Jplayer URL https://cdn.prahec.com/project/flatie-jplayer-skin*/

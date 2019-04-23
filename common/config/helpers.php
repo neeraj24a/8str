@@ -22,6 +22,20 @@ function getParams($key) {
 	return Yii::$app->params[$key];
 }
 
+function excerpt($str, $len = 25) {
+	if (strlen($str) < $len) {
+		return $str;
+	} else {
+
+	   $new = wordwrap($str, $len - 2);
+	   $new = explode("\n", $new);
+
+	   $new = $new[0] . '...';
+
+	   return $new;
+	}
+}
+
 function getOrderDetails($detail){
 	$detail = unserialize($detail);
 	$text = '';

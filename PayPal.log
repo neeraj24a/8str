@@ -482,3 +482,7 @@
 [15-04-2019 08:17:02] PayPal\Core\PayPalHttpConnection : INFO: Response Status 	: 200
 [15-04-2019 08:17:02] PayPal\Core\PayPalHttpConnection : INFO: POST https://api.paypal.com/v1/payments/payment
 [15-04-2019 08:17:03] PayPal\Core\PayPalHttpConnection : INFO: Response Status 	: 201
+[22-04-2019 20:12:26] PayPal\Core\PayPalHttpConnection : INFO: POST https://api.paypal.com/v1/oauth2/token
+[22-04-2019 20:12:27] PayPal\Core\PayPalHttpConnection : INFO: Response Status 	: 200
+[22-04-2019 20:12:27] PayPal\Core\PayPalHttpConnection : INFO: POST https://api.paypal.com/v1/payments/payment
+[22-04-2019 20:12:28] PayPal\Core\PayPalHttpConnection : INFO: Response Status 	: 201

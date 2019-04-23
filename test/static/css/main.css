@@ -67,7 +67,7 @@ header.fixed-header .e-logo { margin: 10px 0 10px 63px;}
 .e-audio-listen-inner li{ width:calc(100% - 80px); float:left; border-bottom:1px solid #e6eaf0; margin:0 40px; position: relative; padding: 22px 0 14px 0;}
 .e-audio-left{ width:310px; float:left;}
 .e-audio-right{ width:230px; float:right;}
-.e-audio-left i.icon-play { cursor:pointer; position: absolute; left: 0; top: 23px;}
+.e-audio-left i.icon-play-1 { cursor:pointer; position: absolute; left: 0; top: 23px;}
 .e-audio-left h4 {color: #272727; font-size: 16px; padding: 0 0 0 27px; font-family: 'proxima_novasemibold';}
 .e-audio-left span { color: #858585; font-size: 14px; padding: 0 0 0 27px;}
 .e-audio-right a { font-size: 10px; color: #9d9d9d; text-transform: uppercase; height: 22px; line-height: 22px; border-radius: 12px; border: 1px solid #d6dadf;padding: 0 11px;display: inline-block;margin-right:5px;}

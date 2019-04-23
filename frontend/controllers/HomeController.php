@@ -18,6 +18,7 @@ class HomeController extends Controller {
      */
     public function actionIndex()
     {
+		$this->layout = 'homepage';
 		$trending = [];
 		$audioUrl = 'https://pool.8thwonderpromos.com/day-trending?search[query][type]=audio&search[query][sort]=createdAt%20DESC';
 		$resp = file_get_contents($audioUrl);
@@ -39,7 +40,7 @@ class HomeController extends Controller {
             }
             return $this->refresh();
         } else {
-            return $this->render('index',['banners' => $banners, 'drops' => $drops, 'model' => $model, 'products' => $products]);
+            return $this->render('index',['banners' => $banners, 'drops' => $drops, 'model' => $model, 'products' => $products, 'trending' => $trending]);
         }
     }
     

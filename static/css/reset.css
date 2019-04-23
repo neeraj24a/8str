@@ -1,0 +1,28 @@
+*{margin:0;padding:0;border:0;outline:0;-webkit-text-size-adjust: none; }
+article, aside, figure, footer, header, hgroup, nav, section{display:block;}
+object, embed{max-width:100%;}
+ul{margin:0px; list-style:none;}
+a{border:none;margin:0;padding:0;font-size:100%;vertical-align:baseline;background:transparent;text-decoration:none;}
+img{border:none;}
+:focus{outline:0;}
+table{border-collapse:collapse;border-spacing:0;}
+th{font-weight:bold;vertical-align:bottom;}
+td{font-weight:normal;vertical-align:top;}
+input, select{vertical-align:middle;}
+a:hover, a:active{outline:none;}
+.clickable, input[type=button], input[type=submit], button{cursor:pointer;}
+button, input, select, textarea{margin:0;}
+button{width:auto;overflow:visible;}
+body{ -webkit-text-size-adjust: none; background:#fff; font-family: 'proxima_novaregular'; color:#858585; font-size:16px; height:100%; overflow-x:hidden;}
+html{font-size:100%; -webkit-text-size-adjust:none; height:100%; -webkit-font-smoothing:antialiased;}
+.clear{clear:both;}
+textarea, input[type="text"], input[type="button"], input[type="submit"] { -webkit-appearance: none; }
+a:hover{color: rgba(28, 144, 203, 1);}
+textarea{resize:none;}
+h1, h2, h3, h4, h5, h6{font-family: 'proxima_novasemibold'; color:#000000;}
+.floatL{ float:left;}
+.floatR{ float: right;}
+.marginAuto{ margin:auto;}
+.center{ text-align:center;}
+.postionR{ position:relative;}
+.postionA{ position: absolute;}

@@ -1,0 +1,93 @@
+/* iPad Portrait and Landscape */
+@media (min-width:768px) and (max-width:1206px){
+	.ui-inner { width: 96%;}
+	.e-home-content{ margin: 200px 0 0 10%;}
+	.e-home-content h1{line-height: 66px; font-size: 65px;}
+	.e-home-content span{ font-size: 18px;  width: 80%; margin: 40px 0 40px 0;}
+	.e-home-content a{width: 200px; font-size: 15px; height: 60px; line-height: 60px;}
+	.e-join-box {width: calc(25% - 30px); height: 150px;padding: 10px 10px 0; margin: 0 10px 27px 0;}
+	.e-join-box h3{ margin: 5px 0 5px; font-size: 13px;}
+	.e-join-box p {font-size: 13px;}
+	.e-video-box{margin: 0 12px 29px 0; padding-bottom: 20px;width: calc(20% - 10px);height: auto;}
+	.e-top-video-download{  height: auto;}
+	.e-more-videos{ margin: 50px auto;}
+	.videoPlay-box {height: auto;}
+	.videoPlay-box img { height: auto; width: 100%;}
+	.e-video-box h3{ padding: 14px 0 3px 10px; font-size: 15px;width: calc(100% - 10px);}
+	.e-video-box p{font-size: 12px;padding: 22px 0 0 10px;}
+	.e-audio-listen{ width: 90%;}
+	.e-audio-download h2{width: 90%;}
+	.e-membership-plan { width: calc(33.33333% - 14px);margin: 0 20px 180px 0;}
+	.e-membership-plan label{line-height: 34px; font-size: 54px;}
+	.e-membership-plan ul{padding: 49px 20px 0 20px;}
+	.e-membership-plan ul li{margin: 0 0 10px 0; font-size: 15px;}
+	.e-top-dj li{float: left; align-items: center; margin-bottom: 5rem; margin-left: 3%; margin-right: 3%; width: 27%;}
+	.e-top-dj li img {display: block; margin-left: auto;margin-right: auto; max-width: 100%;}	
+	.e-logo{ margin: 10px 0 0 63px;}
+}
+
+/* iPhone/Android Portrait and Landscape */
+@media screen and (max-width: 767px) {
+	.e-pdngTop158 { padding-top: 58px;}
+	h2 {font-size: 7vw; line-height: 8vw;}
+	.ui-inner {width: 96%; max-width: 144rem;}
+	.e-home-banner ul{ display:none;}
+	.e-home-content { width: 45vw; margin: 75px 0 0 30px;}
+	.e-home-content h1{font-size: 6vw;line-height: 7vw;}
+	.e-home-content span{ margin: 30px 0; line-height: 5vw; font-size: 4vw;}
+	.e-home-content a{font-size: 13px; width: 155px;height: 38px; line-height: 38px;}
+	.e-join-wonder{ padding-bottom: 53px;}
+	.e-join-wonder .ui-inner { text-align: center;}
+	.e-video-box { width: calc(50% - 20px);margin: 0 10px 29px 10px;height: auto;padding-bottom: 20px;}
+	.videoPlay-box { height: auto;}
+	.e-video-box img { width: 100%; height: auto;}
+	.e-video-box h3{ padding: 14px 0 3px 10px; font-size: 12px;width: calc(100% - 10px);}
+	.e-video-box p{font-size: 12px;padding: 22px 0 0 10px;}
+	.e-join-box{float: none;display: inline-block;  margin: 0 10px 27px 10px;}
+	.e-top-video-download { height: auto;}
+	.e-more-videos{ margin:30px auto 50px auto;}
+	.e-more-videos a, .e-visit-shop{ width: 170px; height: 50px;line-height: 50px;}
+	.e-audio-listen{ width: 96%;}
+	.e-audio-download h2{ width: 96%;}
+	.e-audio-listen-border{width: calc(100% - 14px); height: auto;}
+	.e-audio-listen-inner li{ margin: 0 20px; width: calc(100% - 40px);}
+	.e-audio-left{ width: 100%;}
+	.e-audio-listen-inner{height: auto;}
+	.e-audio-right{padding: 8px 0 0 27px;width: calc(100% - 27px);}
+	.e-membership-plan{ width: 90%; margin: 0 5% 40px 5%;}
+	.e-membership-plan ul{padding: 25px 25px 0 25px;width: calc(100% - 25px);}
+	.e-membership-plan:nth-child(3n) {margin: 0 5% 40px 5%;}
+	.e-featured-shop{ height: auto; background-position: 72% 34%;background: #E7E8EC;}
+	.e-collection-slider{ width: 228px;height: 327px; margin: auto; float: none;}
+	.e-visit-shop { margin: 50px auto 40px auto; display: block;}
+	.e-top-dj li{float: left; align-items: center; margin-bottom: 2rem; margin-left: 3%; margin-right: 3%; width: 27%;}
+	.e-top-dj li img {height: 58px;display: block; margin-left: auto;margin-right: auto; max-width: 100%;}	
+	
+    .h-nav__close-btn {display: none; position: absolute; top: 4.2rem; right: 2.2rem; padding: 0; background-color: transparent; border: 0;
+	  outline: 0; cursor: pointer;	}
+	.h-hamburger {display: block; padding: 0; background-color: transparent; border: 0; outline: 0; cursor: pointer; position:absolute; top:18px; right:33px;
+		width:32px; height:32px;}
+    /*.fixed-header .h-hamburger{background:url(../images/menu-b.png) no-repeat center;}*/
+	.e-signup{ display:none;}
+	.e-logo{ margin:15px 0 0 32px !important; width: 53px;}
+	.e-logo img { width: 100%; height: auto; max-width: 83px;}
+	
+	.mobileNav.e-home-banner ul { display: block; width: 100%; height: 640px; position: fixed;background: rgba(55, 55, 55, 1); top: 0;margin: 0;z-index: 92;padding: 80px 0;}
+	.mobileNav.e-home-banner ul li {width: 100%; text-align: center;margin: 10px 0;}
+	.mobileNav.e-home-banner ul li a { float: none; font-size: 26px; margin: 0;color: #c0c0c0;}
+	.mobileView{ display:block;}
+	.e-mob-signup{ display:inline-block; margin: 40px 42px 0 0; width:98px; height:40px; text-align:center; line-height:40px; text-transform:uppercase; font-size:13px; color:#000; background:#fff; border-radius:30px;}
+    .mobileNav.e-home-banner ul li a.e-mob-signup { font-size: 15px; color: #000;}
+    .mobileNav .h-nav__close-btn { display: block; z-index: 992; top: 9px; right: 20px;color: #ffffff;}
+    .slick-next { right: -17px;}  
+    .e-home-banner{padding-bottom: 200px; height: auto;background-position: 78% 80%;}   
+    footer .e-subscribe{ width: 320px; margin: 34px auto 58px;}
+    .h-nav__close-btn img { width: 24px; height: auto;}
+    .e-visit-shop.sim-button{float: none;}
+	.e-featured-shop h2, .e-audio-download h2{text-align: center;}
+	.e-featured-shop i.wave, .e-audio-download h2 .wave{ text-align: center;}
+}
+
+@media screen and (max-width: 912px) {
+    .e-collection-slider{ width: 228px;height: 327px; margin: auto; float: none;}
+}

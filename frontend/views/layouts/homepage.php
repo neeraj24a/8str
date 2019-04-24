@@ -23,7 +23,7 @@ AppAsset::register($this);
         <link rel="SHORTCUT ICON" href="<?php echo base_url(); ?>/images/logo.png">
         <meta name="title" content="MP3 download. Record pool. MP4 download Video Record pool. | 8thwonderpromos">
 		<meta name="keywords" content="mp3 download, mp3, mp4 download, mp4, record pool, remix, club hits, dj, vdj, electronic music">
-		<meta name="description" content="MP3 download Mp4 download subscription platform. Record pool for djs.Record pool for video djs. The best club hits and remixes validated for us.">
+		<meta name="description" content="MP3 download Mp4 download platform. Record pool for djs.Record pool for video djs.">
         <meta charset="UTF-8">
 		<meta name="theme-color" content="#333333" />
 		<!-- Windows Phone -->
@@ -38,10 +38,10 @@ AppAsset::register($this);
         <meta property="og:description" content="8thwonderpromos">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="MP3 download. Record pool. MP4 download Video Record pool. | 8thwonderpromos">
-        <meta name="twitter:description" content="MP3 download Mp4 download subscription platform. Record pool for djs.Record pool for video djs. The best club hits and remixes validated for us.">
+        <meta name="twitter:description" content="MP3 download Mp4 download platform. Record pool for djs.Record pool for video djs.">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-		<link href="static/css/lity.min.css" rel="stylesheet" />
-		<link href="static/css/jplayer.css" rel="stylesheet" />
+		<!--<link href="static/css/lity.min.css" rel="stylesheet" />
+		<link href="static/css/jplayer.css" rel="stylesheet" />-->
 		<link href="static/css/reset.css" rel="stylesheet" />
 		<link href="static/css/main.css" rel="stylesheet" />
 		<link href="static/css/fonts.css" rel="stylesheet" />
@@ -100,7 +100,7 @@ AppAsset::register($this);
 				<h1 data-aos="fade-up" data-aos-delay="200" data-aos-once="true">High Quality Audio &amp; Video</h1>
 				<span data-aos="fade-up" data-aos-delay="350" data-aos-once="true">Are you a DJ? Looking for a place to get all your visual and audio content? 8th Wonder is the right place for you with an easy-to-use website. </span>
 				<div class="btnOuter" data-aos="fade-up" data-aos-delay="450" data-aos-once="true">
-					<a href="https://www.8thwonderpromos.com/amember/signup" data-text="Join now for free" class="sim-button button3 btn">Join now for free</a>
+					<a href="https://www.8thwonderpromos.com/amember/signup" data-text="Get Started" class="sim-button button3 btn">Get Started</a>
 				</div>	
 			   
 			<!--/e-home-content --></div>
@@ -185,9 +185,9 @@ AppAsset::register($this);
 		<?php $this->endBody() ?>
 		<script src="static/jscript/lib/slick/slick.js"></script>
 		<script src="static/jscript/aos.min.js"></script>
-		<script src="static/jscript/lity.min.js"></script>
+		<!--<script src="static/jscript/lity.min.js"></script>
 		<script src="static/jscript/jquery.jplayer.min.js"></script>
-		<script src="static/jscript/player.js"></script>
+		<script src="static/jscript/player.js"></script>-->
 		<script src="static/jscript/aos.min.js"></script>
 		<script>
 			if (window.hasOwnProperty('AOS')) {
@@ -199,7 +199,7 @@ AppAsset::register($this);
 			}
 			
 			$(document).ready(function() {
-				$(this).bind("contextmenu", function(e) {
+				/*$(this).bind("contextmenu", function(e) {
 					e.preventDefault();
 				});
 				var vfile = "";
@@ -239,7 +239,7 @@ AppAsset::register($this);
 					$("#video-player").plyr("destroy");
 					$("#video-player").html("");
 					vfile = "";
-				});
+				});*/
 				$('.h-hamburger').click(function(){
 					$('.e-home-banner').toggleClass('mobileNav');
 				});

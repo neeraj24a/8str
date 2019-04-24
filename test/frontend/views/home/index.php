@@ -17,7 +17,7 @@ use common\widgets\Alert;
 	<section class="ui-inner">
 		<?php
 		$j = 1;
-		foreach($trending['video']->tracks as $v): 
+		foreach($trending['video'] as $v): 
 			if($j == 11){
 				break;
 			}
@@ -50,7 +50,7 @@ use common\widgets\Alert;
 				<ul>
 					<?php
 					$k = 1;
-					foreach($trending['audio']->tracks as $a): 
+					foreach($trending['audio'] as $a): 
 						if($k == 11){
 							break;
 						}

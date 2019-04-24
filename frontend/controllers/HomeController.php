@@ -20,17 +20,12 @@ class HomeController extends Controller {
     {
 		$this->layout = 'homepage';
 		$trending = [];
-		$audioUrl = 'https://pool.8thwonderpromos.com/day-trending?search[query][type]=audio&search[query][sort]=createdAt%20DESC';
+		$tUrl = 'https://pool.8thwonderpromos.com/top-trending';
 		$context = stream_context_create(array('https' => array('header'=>'Connection: close\r\n')));
-		$resp = file_get_contents($audioUrl,false,$context);
-	    	// $resp = file_get_contents($audioUrl);
-		$resp = json_decode($resp);
-		$trending['audio'] = $resp;
-		$videoUrl = 'https://pool.8thwonderpromos.com/day-trending?search[query][type]=video&search[query][sort]=createdAt%20DESC';
-		// $videoResp = file_get_contents($videoUrl);
-	    	$videoResp = file_get_contents($videoUrl,false,$context);
-		$videoResp = json_decode($videoResp);
-		$trending['video'] = $videoResp;
+		$resp = file_get_contents($tUrl,false,$context);
+	    $resp = json_decode($resp);
+		$trending['audio'] = $resp->data->audio;
+		$trending['video'] = $resp->data->video;
 		$banners = Banners::find()->all();
         $products = Products::find()->where('is_featured = :featured',[':featured' => 1])->orderBy(['date_entered' => 'DESC'])->limit(5)->all();
         $drops = Drops::find()->orderBy(['date_entered' => 'DESC'])->limit(5)->all();

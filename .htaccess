@@ -4,3 +4,15 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 # Otherwise forward it to index.php
 RewriteRule . index.php
+
+<IfModule mod_headers.c>
+    # WEEK
+    <FilesMatch "\.(jpg|jpeg|png|gif|swf|woff2)$">
+        Header set Cache-Control "max-age=604800, public"
+    </FilesMatch>
+
+    # WEEK
+    <FilesMatch "\.(js|css|swf)$">
+        Header set Cache-Control "max-age=604800"
+    </FilesMatch>
+</IfModule>

@@ -32,7 +32,7 @@
 	h2 {font-size: 7vw; line-height: 8vw;}
 	.ui-inner {width: 96%; max-width: 144rem;}
 	.e-home-banner ul{ display:none;}
-	.e-home-content { width: 90%; margin: 75px 0 0 30px;}
+	.e-home-content { width: 90%; margin: 55% 0 0 30px;}
 	.e-home-content h1{font-size: 6vw;line-height: 7vw;}
 	.e-home-content span{ margin: 30px 0; line-height: 5vw; font-size: 4vw;}
 	.e-home-content a{font-size: 13px; width: 155px;height: 38px; line-height: 38px;}
@@ -80,7 +80,7 @@
     .mobileNav.e-home-banner ul li a.e-mob-signup { font-size: 15px; color: #000;}
     .mobileNav .h-nav__close-btn { display: block; z-index: 992; top: 9px; right: 20px;color: #ffffff;}
     .slick-next { right: -17px;}  
-    .e-home-banner{padding-bottom: 200px; height: auto;background-position: 78% 80%;}   
+    .e-home-banner{padding-bottom: 250px; height: auto;background-position: 78% 80%;}   
     footer .e-subscribe{ width: 320px; margin: 34px auto 58px;}
     .h-nav__close-btn img { width: 24px; height: auto;}
     .e-visit-shop.sim-button{float: none;}

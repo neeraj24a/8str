@@ -150,5 +150,4 @@ footer ul li { display: inline-block; margin: 0 2px 35px;}
 
 .e-home-banner a.e-signup:hover{ color:#000; background:#cecece;}
 .e-home-content .sim-button:hover{ color:#000; background:#cecece;}
-
-/*Jplayer URL https://cdn.prahec.com/project/flatie-jplayer-skin*/
+.lity-hide{display: none;}

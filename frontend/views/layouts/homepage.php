@@ -40,8 +40,8 @@ AppAsset::register($this);
         <meta name="twitter:title" content="MP3 download. Record pool. MP4 download Video Record pool. | 8thwonderpromos">
         <meta name="twitter:description" content="MP3 download Mp4 download platform. Record pool for djs.Record pool for video djs.">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-		<!--<link href="static/css/lity.min.css" rel="stylesheet" />
-		<link href="static/css/jplayer.css" rel="stylesheet" />-->
+		<link href="static/css/lity.min.css" rel="stylesheet" />
+		<link href="static/css/jplayer.css" rel="stylesheet" />
 		<link href="static/css/reset.css" rel="stylesheet" />
 		<link href="static/css/main.css" rel="stylesheet" />
 		<link href="static/css/fonts.css" rel="stylesheet" />
@@ -185,11 +185,12 @@ AppAsset::register($this);
 		<?php $this->endBody() ?>
 		<script src="static/jscript/lib/slick/slick.js"></script>
 		<script src="static/jscript/aos.min.js"></script>
-		<!--<script src="static/jscript/lity.min.js"></script>
+		<script src="static/jscript/lity.min.js"></script>
 		<script src="static/jscript/jquery.jplayer.min.js"></script>
-		<script src="static/jscript/player.js"></script>-->
+		<script src="static/jscript/player.js"></script>
 		<script src="static/jscript/aos.min.js"></script>
 		<script>
+			'use strict';
 			if (window.hasOwnProperty('AOS')) {
 			  AOS.init({
 				offset: 0,
@@ -199,7 +200,7 @@ AppAsset::register($this);
 			}
 			
 			$(document).ready(function() {
-				/*$(this).bind("contextmenu", function(e) {
+				$(this).bind("contextmenu", function(e) {
 					e.preventDefault();
 				});
 				var vfile = "";
@@ -239,7 +240,7 @@ AppAsset::register($this);
 					$("#video-player").plyr("destroy");
 					$("#video-player").html("");
 					vfile = "";
-				});*/
+				});
 				$('.h-hamburger').click(function(){
 					$('.e-home-banner').toggleClass('mobileNav');
 				});

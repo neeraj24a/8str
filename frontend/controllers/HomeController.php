@@ -6,6 +6,7 @@ use yii\web\Controller;
 use backend\models\Products;
 use backend\models\Drops;
 use backend\models\Banners;
+use backend\models\Trending;
 use frontend\models\SubscribeForm;
 use frontend\models\AddToCartForm;
 
@@ -20,12 +21,13 @@ class HomeController extends Controller {
     {
 	$this->layout = 'homepage';
 	$trending = [];
-	/*$tUrl = 'https://pool.8thwonderpromos.com/top-trending';
-	$context = stream_context_create(array('https' => array('header'=>'Connection: close\r\n')));
-	$resp = file_get_contents($tUrl,false,$context);
-	$resp = json_decode($resp);
+	$t = Trending::find()->all();
+	if($t !== null){
+		$resp = json_decode($t[0]->data);
+	}
+	
 	$trending['audio'] = $resp->data->audio;
-	$trending['video'] = $resp->data->video;*/
+	$trending['video'] = $resp->data->video;
 	$banners = Banners::find()->all();
         $products = Products::find()->where('is_featured = :featured',[':featured' => 1])->orderBy(['date_entered' => 'DESC'])->limit(5)->all();
         $drops = Drops::find()->orderBy(['date_entered' => 'DESC'])->limit(5)->all();
@@ -69,5 +71,17 @@ class HomeController extends Controller {
             ]);
         }
     }
+	
+	public function actionTrend()
+	{
+		$tUrl = 'https://pool.8thwonderpromos.com/top-trending';
+		$context = stream_context_create(array('https' => array('header'=>'Connection: close\r\n')));
+		$resp = file_get_contents($tUrl,false,$context);
+		$t = Trending::find()->all();
+		if($t !== null){
+			$t[0]->data = $resp;
+			$t[0]->save();
+		}
+	}
     
 }

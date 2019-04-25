@@ -10,8 +10,9 @@ hr { width: 100%;}
 .e-join-wonder h2 sup {font-size: 20px; padding-right: 7px;}
 
 /*HOME*/
-.e-home-banner{ height:1107px; background:url(../images/homebg.jpg) no-repeat center; background-size:cover; background-attachment:fixed;}
+.e-home-banner{ /*height:1107px;*/ background:url(../images/homebg.jpg) no-repeat center; background-size:cover; background-attachment:fixed;-webkit-filter: grayscale(100%);filter: grayscale(100%);-webkit-transition: .3s ease-in-out;transition: .3s ease-in-out;}
 header{ width:100%; float:left;}
+.e-home-banner:hover{ -webkit-filter: grayscale(0); filter: grayscale(0);}
 .e-logo{ float:left; margin:32px 0 0 63px;}
 .e-home-banner ul{ float:right; margin:52px 0 0;}
 .e-home-banner ul li{ float:left;}
@@ -28,7 +29,7 @@ header.fixed-header .e-logo { margin: 10px 0 10px 63px;}
 .fixed-header a.e-signup:hover{color: #000; background: #fff;}
 
 /*e-home-content*/
-.e-home-content{ width:660px; float:left; margin:275px 0 0 305px;}
+.e-home-content{ width:660px; float:left; margin:250px 0 60px 305px;}
 .e-home-content h1{ font-size:90px; color:#fff; text-transform:uppercase; line-height:90px; float:left; width:100%; font-family: 'proxima_novabold';}
 .e-home-content span{ font-size:20px; color:#fff; line-height:26px; float:left; width:100%; margin:48px 0 50px 0;}
 
@@ -57,7 +58,8 @@ header.fixed-header .e-logo { margin: 10px 0 10px 63px;}
 	
 
 /*e-audio-download*/	
-.e-audio-download{ /*height:1104px;*/ background:url(../images/audiobg.jpg) no-repeat center top;background-size: 2000px 1006px;}
+.e-audio-download{ /*height:1104px;*/ background:url(../images/audiobg.jpg) no-repeat center top;background-size: 2000px 1006px;-webkit-filter: grayscale(100%);filter: grayscale(100%);-webkit-transition: .3s ease-in-out;transition: .3s ease-in-out;}
+.e-audio-download:hover{ -webkit-filter: grayscale(0); filter: grayscale(0);}
 .e-audio-download h2 {font-size: 40px; text-transform: uppercase; color: #fff; text-align: left; line-height: 36px; width: 56%; float: right;}
 .e-audio-download h2 .wave { text-align: left; display: inline-block; width: 100%; margin: 42px auto 70px;}
 .e-audio-listen{ width:56%; float:right;}

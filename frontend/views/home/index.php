@@ -10,13 +10,13 @@ use common\widgets\Alert;
 /* @var $model backend\models\Banners */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-<!--
+
 <div class="e-top-video-download ui-full e-pdngTop158">
 	<h2 data-aos="fade-up" data-aos-once="true">Top Video downloads</h2>
 	<i data-aos="fade-up" data-aos-delay="200" data-aos-once="true" class="wave"><img src="static/images/wave-b.png" width="98" height="14" alt="wave"></i>
 	
 	<section class="ui-inner">
-		<!--?php
+		<?php
 		$j = 1;
 		foreach($trending['video'] as $v): 
 			if($j == 11){
@@ -26,12 +26,12 @@ use common\widgets\Alert;
 		<div class="e-video-box" data-aos="fade-up" data-aos-delay="200" data-aos-once="true">
 			<div class="videoPlay-box ui-full postionR">
 				<figure><img src="static/images/thumb.jpg" width="223" height="156" alt="video"></figure> 
-				<a href="#inline" data-lity class="video-play" data-file="<!--?php echo $v->url; ?>"><img src="static/images/play.png" width="39" height="38" alt="play"></a>
+				<a href="#inline" data-lity class="video-play" data-file="<?php echo $v->url; ?>"><img src="static/images/play.png" width="39" height="38" alt="play"></a>
 			</div>
-			<h3 title="<!--?php echo $v->title; ?>"><!--?php echo excerpt($v->title, 40); ?></h3>
-			<p title="<!--?php echo $v->artist; ?>"><!--?php echo excerpt($v->artist, 25); ?></p>
+			<h3 title="<?php echo $v->title; ?>"><?php echo excerpt($v->title, 40); ?></h3>
+			<p title="<?php echo $v->artist; ?>"><?php echo excerpt($v->artist, 25); ?></p>
 		</div>
-		<!--?php
+		<?php
 		$j++;
 		endforeach; ?>
 	</section>    
@@ -48,7 +48,7 @@ use common\widgets\Alert;
 		<div class="e-audio-listen-border" data-aos="fade-up" data-aos-delay="200" data-aos-once="true">
 			<div class="e-audio-listen-inner">
 				<ul>
-					<!--?php
+					<?php
 					$k = 1;
 					foreach($trending['audio'] as $a): 
 						if($k == 11){
@@ -57,18 +57,18 @@ use common\widgets\Alert;
 					?>
 						<li>
 							<div class="e-audio-left">
-								<i class="icon-play-1 audio-play" data-file="<!--?php echo $a->url; ?>"><img src="static/images/audio-play.png" width="10" height="13" alt="play"></i>
-								<h4><!--?php echo $a->title; ?></h4>
-							  <span><!--?php echo $a->artist; ?></span>
+								<i class="icon-play-1 audio-play" data-file="<?php echo $a->url; ?>"><img src="static/images/audio-play.png" width="10" height="13" alt="play"></i>
+								<h4><?php echo $a->title; ?></h4>
+							  <span><?php echo $a->artist; ?></span>
 							</div>
 							<div class="e-audio-right">
-								<a href="javascript:void(0);"><!--?php echo $a->genre; ?></a>
-								<a href="javascript:void(0);"><!--?php echo $a->subgenre; ?></a>
-								<small><!--?php echo $a->bpm; ?></small>
-								<small><!--?php echo $a->key; ?></small>
+								<a href="javascript:void(0);"><?php echo $a->genre; ?></a>
+								<a href="javascript:void(0);"><?php echo $a->subgenre; ?></a>
+								<small><?php echo $a->bpm; ?></small>
+								<small><?php echo $a->key; ?></small>
 							</div>
 						</li>
-					<!--?php
+					<?php
 					$k++;
 					endforeach; ?>
 					<li>
